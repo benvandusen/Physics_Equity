@@ -114,7 +114,7 @@ WFC = c(1,0,1,0,1)
 BFL = c(1,1,1,0,0)
 BFC = c(1,1,1,0,1)
 
-contrast_forms_mod4 <- rbind('White Male Lecture'=WML, 'White Male Collab'=WMC, 
+contrast_forms_mod5 <- rbind('White Male Lecture'=WML, 'White Male Collab'=WMC, 
                           'Black Male Lecture'=BML, 'Black Male Collab'=BMC, 
                           'White Female Lecture'=WFL,'White Female Collab'=WFC, 
                           'Black Female Lecture'=BFL,'Black Female Collab'=BFC)
@@ -123,11 +123,11 @@ contrast_forms_mod4 <- rbind('White Male Lecture'=WML, 'White Male Collab'=WMC,
 These are the differences with same group in lecture
 ```{r}
 WM = c(0,0,0,0, 1)
-BM = c(0,1,0,0, 1)
-WF = c(0,0,1,0, 1)
-BF = c(0,1,1,0, 1)
+BM = c(0,0,0,0, 1)
+WF = c(0,0,0,0, 1)
+BF = c(0,0,0,0, 1)
 
-difference_forms_self_4 <- rbind('White Male' = WM,
+difference_forms_self_5 <- rbind('White Male' = WM,
                           'Black Male'=BM, 
                           'White Female'=WF, 
                           'Black Female'=BF)
@@ -135,14 +135,14 @@ difference_forms_self_4 <- rbind('White Male' = WM,
 
 These are the differences with white males in that learning environment
 ```{r}
-BML = c(0,-1,0,0, 0)
-WFL = c(0,0,-1,0, 0)
-BFL = c(0,-1,-1,0, 0)
-BMC = c(0,-1,0,0, 0)
-WFC = c(0,0,0,-1, 0)
-BFC = c(0,-1,0,-1, 0)
+BML = c(0,1,0,0, 0)
+WFL = c(0,0,1,0, 0)
+BFL = c(0,1,1,0, 0)
+BMC = c(0,1,0,0, 0)
+WFC = c(0,0,1,0, 0)
+BFC = c(0,1,1,0, 0)
 
-difference_forms_wm_4 <- rbind( 
+difference_forms_wm_5 <- rbind( 
                           'Black Male Lecture'=BML, 'Black Male Collab'=BMC, 
                           'White Female Lecture'=WFL,'White Female Collab'=WFC, 
                           'Black Female Lecture'=BFL,'Black Female Collab'=BFC)
@@ -178,26 +178,26 @@ return <- p3est}
 ```
 
 ```{r}
-diff_self_g4_est <- pool_and_cov_diffwm(gain4,difference_forms_self_4)
-ggplot(data=diff_self_g4_est, aes(x=group, y=Q)) +geom_bar(stat = "identity") + geom_errorbar(aes( ymax= Q+SE, ymin=Q-SE))#+
+diff_self_g5_est <- pool_and_cov_diffwm(gain5,difference_forms_self_5)
+ggplot(data=diff_self_g5_est, aes(x=group, y=Q)) +geom_bar(stat = "identity") + geom_errorbar(aes( ymax= Q+SE, ymin=Q-SE))#+
   facet_grid(.~race_gender)+
   theme(legend.position = "bottom", axis.title.x=element_blank(), axis.text.x=element_blank(), axis.ticks.x=element_blank()) 
 ```
 
 ```{r}
-diff_wm_g4_est <- pool_and_cov_diffwm(gain4,difference_forms_wm_4)
-ggplot(data=diff_wm_g4_est, aes(x=group, y=Q, fill=instruction)) +geom_bar(stat = "identity") + geom_errorbar(aes( ymax= Q+1.96*SE, ymin=Q-1.96*SE))+
+diff_wm_g5_est <- pool_and_cov_diffwm(gain5,difference_forms_wm_5)
+ggplot(data=diff_wm_g5_est, aes(x=group, y=Q, fill=instruction)) +geom_bar(stat = "identity") + geom_errorbar(aes( ymax= Q+1.96*SE, ymin=Q-1.96*SE))+
   facet_grid(.~race_gender)+
   theme(legend.position = "bottom", axis.title.x=element_blank(), axis.text.x=element_blank(), axis.ticks.x=element_blank()) 
 ```
 ```{r}
-contrast_g4_est <- pool_and_cov_diffwm(gain4,contrast_forms_mod4)
-ggplot(data=contrast_g4_est, aes(x=group, y=Q, fill=instruction)) +geom_bar(stat = "identity") + geom_errorbar(aes( ymax= Q+SE, ymin=Q-SE))+
+contrast_g5_est <- pool_and_cov_diffwm(gain5,contrast_forms_mod5)
+ggplot(data=contrast_g5_est, aes(x=group, y=Q, fill=instruction)) +geom_bar(stat = "identity") + geom_errorbar(aes( ymax= Q+SE, ymin=Q-SE))+
   facet_grid(.~race_gender)+
   theme(legend.position = "bottom", axis.title.x=element_blank(), axis.text.x=element_blank(), axis.ticks.x=element_blank()) 
 ```
 ```{r}
-temp <- contrast_g4_est[c(2,11,12)]
+temp <- contrast_g5_est[c(2,11,12)]
 temp2 <- temp[temp$instruction=="Collab",]
 temp3 <- temp[temp$instruction=="Lecture",]
 temp4 <- left_join(temp2,temp3, by="race_gender")
@@ -209,7 +209,7 @@ ggplot(data=temp4, aes(x=race_gender, y=ratio_self)) +geom_bar(stat = "identity"
 ```
 
 ```{r}
-temp <- contrast_g4_est[c(1,2,11,12)] 
+temp <- contrast_g5_est[c(1,2,11,12)] 
 temp$ratio_wml <- temp$Q/15.32
 ggplot(data=temp, aes(x=group, y=ratio_wml, fill=instruction)) +geom_bar(stat = "identity") + 
   facet_grid(.~race_gender)+
@@ -218,11 +218,11 @@ ggplot(data=temp, aes(x=group, y=ratio_wml, fill=instruction)) +geom_bar(stat = 
 
 
 ```{r}
-temp <- contrast_g4_est[c(1,2,11,12)]
+temp <- contrast_g5_est[c(1,2,11,12)]
 temp2 <- temp[temp$instruction=="Collab",]
-temp2$ratio_wm_same <- temp2$Q/22.08
+temp2$ratio_wm_same <- temp2$Q/21.993
 temp3 <- temp[temp$instruction=="Lecture",]
-temp3$ratio_wm_same <- temp3$Q/15.32
+temp3$ratio_wm_same <- temp3$Q/15.931
 temp4 <- bind_rows(temp2,temp3)
 
 ggplot(data=temp4, aes(x=group, y=ratio_wm_same, fill=instruction)) +geom_bar(stat = "identity") + 
