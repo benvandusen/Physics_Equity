@@ -4,7 +4,7 @@ output: html_document
 ---
 
 Load stuff (There are some packages that we don't need here, but I didn't clean them up. Sorry.)
-```{r}
+```{r message=FALSE, warning=FALSE}
 load("~/Physics_Equity/hmifall2018_m10_better")
 
 library(tidyr)
@@ -58,8 +58,6 @@ p3est$instruction <- word(p3est$group, 3)
 p3est$race_gender <- paste(p3est$race,p3est$gender, sep= " ")
 return <- p3est}
 ```
-
-
 
 Creating mitml and extra variables
 ```{r}
