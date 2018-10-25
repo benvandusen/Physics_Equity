@@ -206,7 +206,7 @@ mod4 <- gain~1 + stud_pre_cent + race_URM + gend_URM + (1|course_id)
 mod5 <- gain~1 + stud_pre_cent + race_URM*gend_URM + (1|course_id)
 mod6 <- gain~1 + race_URM + gend_URM + stud_pre_cent + coll + (1|course_id)
 mod7 <- gain~1 +race_URM*coll + gend_URM*coll+ stud_pre_cent + (1|course_id)
-#mod8 <- gain~1 +race_URM + gend_URM + stud_pre_cent + coll + (1 + stud_pre_cent + gend_URM + race_URM |course_id)
+mod8 <- gain~1 +race_URM + gend_URM + stud_pre_cent + coll + (1 + stud_pre_cent + gend_URM + race_URM |course_id)
 ```
 
 ```{r }
@@ -217,7 +217,7 @@ gain4 <- with(MIdata,{lmer(gain~1 + stud_pre_cent + race_URM + gend_URM + (1|cou
 gain5 <- with(MIdata,{lmer(gain~1 + stud_pre_cent + race_URM*gend_URM + (1|course_id))})
 gain6 <- with(MIdata,{lmer(gain~1 + race_URM + gend_URM + stud_pre_cent + coll + (1|course_id))})
 gain7 <- with(MIdata,{lmer(gain~1 +race_URM*coll + gend_URM*coll+ stud_pre_cent + (1|course_id))})
-#gain8 <- with(MIdata,{lmer(gain~1 +race_URM + gend_URM + stud_pre_cent + coll + (1 + stud_pre_cent + gend_URM + race_URM |course_id))})
+gain8 <- with(MIdata,{lmer(gain~1 +race_URM + gend_URM + stud_pre_cent + coll + (1 + stud_pre_cent + gend_URM + race_URM |course_id))})
 ```
 
 ```{r eval=FALSE, include=FALSE}
@@ -228,12 +228,12 @@ testEstimates(gain4, var.comp=TRUE)
 testEstimates(gain5, var.comp=TRUE) 
 testEstimates(gain6, var.comp=TRUE) #best model
 testEstimates(gain7, var.comp=TRUE)
-#testEstimates(gain8, var.comp=TRUE)
+testEstimates(gain8, var.comp=TRUE)
 ```
 
 This makes a table for the model development. Two sections need to be modified. The models and the equation column.
 ```{r}
-models <- c("gain1","gain2","gain3","gain4","gain5","gain6","gain7")
+models <- c("gain1","gain2","gain3","gain4","gain5","gain6","gain7",)
 
 mod_var_tab <- data_frame(model = NA,
                           level2 = NA,
@@ -337,13 +337,13 @@ contrast_g6_est <- pool_and_cov_diffwm(gain6,contrast_forms_mod6)
 contrast_g6_est$instruction <- factor(contrast_g6_est$instruction, levels = c("Lecture","Collab"))
 
 
-ggplot(data=contrast_g6_est, aes(x=instruction, y=Q, fill=instruction)) +geom_bar(stat = "identity") + geom_errorbar(aes( ymax= Q+1.96*SE, ymin=Q-1.96*SE))+
+ggplot(data=contrast_g6_est, aes(x=instruction, y=Q, fill=instruction)) +geom_bar(stat = "identity") + geom_errorbar(aes( ymax= Q+SE, ymin=Q-SE))+
   facet_grid(.~race_gender, scales = "free", space = "free")+
   theme(legend.position = "bottom", axis.title.x=element_blank(), axis.text.x=element_blank(), axis.ticks.x=element_blank(),panel.grid.major = element_blank(), panel.grid.minor = element_blank(),panel.background = element_blank(), axis.line = element_line(colour = "black"),text = element_text(size=16, color = "black")) +
   ylab("Gain (Percentage Points)") +
   scale_fill_manual(name="Instruction",
                      breaks= c("Lecture","Collab"),
-                     labels=c("Traditional","Collaborative"),
+                     labels=c("Lecture-based","Collaborative"),
                      values=plot_col) 
 
 kable(contrast_g6_est[c(1,2,6,7)], digits = 2)
