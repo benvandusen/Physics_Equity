@@ -5,8 +5,8 @@ output: html_document
 
 Load stuff (There are some packages that we don't need here, but I didn't clean them up. Sorry.)
 ```{r message=FALSE, warning=FALSE}
-#load("~/Physics_Equity/hmifall2018_m10_better")
-load("~/Documents/LA Postdoc stuff copy/RData/LASSO/Denver-Chico_collaboration/Physics_Equity_new/hmifall2018_m10_better")
+load("~/Physics_Equity/hmifall2018_m10_better")
+#load("~/Documents/LA Postdoc stuff copy/RData/LASSO/Denver-Chico_collaboration/Physics_Equity_new/hmifall2018_m10_better")
 
 
 library(tidyr)
@@ -213,11 +213,23 @@ mod8 <- gain~1 +race_URM + gend_URM + stud_pre_cent + coll + (1 + stud_pre_cent 
 gain1 <- with(MIdata,{lmer(gain~1 + (1|course_id))})
 gain2 <- with(MIdata,{lmer(gain~1 + stud_pre_cent + (1|course_id))})
 gain3 <- with(MIdata,{lmer(gain~1 + stud_pre_cent + class_pre_cent + (1|course_id))})
-gain4 <- with(MIdata,{lmer(gain~1 + stud_pre_cent + race_URM + gend_URM + (1|course_id))})
-gain5 <- with(MIdata,{lmer(gain~1 + stud_pre_cent + race_URM*gend_URM + (1|course_id))})
-gain6 <- with(MIdata,{lmer(gain~1 + race_URM + gend_URM + stud_pre_cent + coll + (1|course_id))})
-gain7 <- with(MIdata,{lmer(gain~1 +race_URM*coll + gend_URM*coll+ stud_pre_cent + (1|course_id))})
-gain8 <- with(MIdata,{lmer(gain~1 +race_URM + gend_URM + stud_pre_cent + coll + (1 + stud_pre_cent + gend_URM + race_URM |course_id))})
+gain3 <- with(MIdata,{lmer(gain~1 + stud_pre_cent + class_pre_cent + lec (1|course_id))})
+gain4 <- with(MIdata,{lmer(gain~1 + stud_pre_cent + class_pre_cent + lec + retake + (1|course_id))})
+gain4 <- with(MIdata,{lmer(gain~1 + stud_pre_cent + female + asian + black + other + Hispanic + lec + retake + (1|course_id))})
+gain5 <- with(MIdata,{lmer(gain~1 + stud_pre_cent + female*(asian + black + other + Hispanic) + lec + retake + (1|course_id))})
+gain6 <- with(MIdata,{lmer(gain~1 + stud_pre_cent + female*(asian + black + other + Hispanic) + female*lec + retake + (1|course_id))})
+gain7 <- with(MIdata,{lmer(gain~1 + lec*female*(asian + black + other + Hispanic) + stud_pre_cent + retake + (1|course_id))})
+gain8 <- with(MIdata,{lmer(gain~1 + lec*female*(asian + black + other + Hispanic) + stud_pre_cent + retake + (1 + stud_pre_cent + gend_URM + race_URM |course_id))})
+
+#Old models
+#gain1 <- with(MIdata,{lmer(gain~1 + (1|course_id))})
+#gain2 <- with(MIdata,{lmer(gain~1 + stud_pre_cent + (1|course_id))})
+#gain3 <- with(MIdata,{lmer(gain~1 + stud_pre_cent + class_pre_cent + (1|course_id))})
+#gain4 <- with(MIdata,{lmer(gain~1 + stud_pre_cent + race_URM + gend_URM + (1|course_id))})
+#gain5 <- with(MIdata,{lmer(gain~1 + stud_pre_cent + race_URM*gend_URM + (1|course_id))})
+#gain6 <- with(MIdata,{lmer(gain~1 + race_URM + gend_URM + stud_pre_cent + coll + (1|course_id))})
+#gain7 <- with(MIdata,{lmer(gain~1 + (race_URM + gend_URM)*coll + stud_pre_cent + (1|course_id))})
+#gain8 <- with(MIdata,{lmer(gain~1 +race_URM + gend_URM + stud_pre_cent + coll + (1 + stud_pre_cent + gend_URM + race_URM |course_id))})
 ```
 
 ```{r eval=FALSE, include=FALSE}
