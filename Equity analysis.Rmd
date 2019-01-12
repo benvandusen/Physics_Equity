@@ -5,7 +5,8 @@ output: html_document
 
 Load stuff (There are some packages that we don't need here, but I didn't clean them up. Sorry.)
 ```{r message=FALSE, warning=FALSE}
-load("~/Physics_Equity/hmifall2018_m10_better")
+load("~/hmi_data_1_10_19")
+#load("~/Physics_Equity/hmifall2018_m10_better")
 #load("~/Documents/LA Postdoc stuff copy/RData/LASSO/Denver-Chico_collaboration/Physics_Equity_new/hmifall2018_m10_better")
 
 
@@ -179,7 +180,7 @@ Creating mitml and extra variables
 ```{r}
 #df_full <- complete(hmi.fall.2018)
 #str(df_full)
-MIdata<-mids2mitml.list(hmi.fall.2018) #converts file type
+MIdata<-mids2mitml.list(hmi_1_19) #converts file type
 
 thing <- list()
 for (i in 1:10){
@@ -189,7 +190,14 @@ for (i in 1:10){
   temp <- left_join(temp,class_means, by="course_id")
   temp$stud_pre_cent <- temp$pre_score - temp$pre_mean_class
   temp$gain <- temp$post_score - temp$pre_score
-  temp$coll <- temp$colab_no_la + temp$used_las
+  temp$colab_no_la <- as.numeric(temp$colab_no_la)
+  temp$la_in_lab <- as.numeric(temp$la_in_lab)
+  temp$la_in_lecture <- as.numeric(temp$la_in_lecture)
+  temp$la_in_rec <- as.numeric(temp$la_in_rec)
+  temp$first_time <- as.numeric(temp$first_time)
+  temp$coll <- temp$colab_no_la + temp$la_in_lab + temp$la_in_lecture + temp$la_in_rec - 4
+  temp$retake <- ifelse (temp$first_time==1,1,0)
+  temp$lec <- ifelse (temp$coll==1,0,1)
   #assign(df.names[i], temp)
   thing[[i]] <- temp
   }
@@ -202,15 +210,16 @@ MIdata <- as.mitml.list(thing)
 gain1 <- with(MIdata,{lmer(gain~1 + (1|course_id))})
 gain2 <- with(MIdata,{lmer(gain~1 + stud_pre_cent + (1|course_id))})
 gain3 <- with(MIdata,{lmer(gain~1 + stud_pre_cent + retake + (1|course_id))})
-gain4 <- with(MIdata,{lmer(gain~1 + stud_pre_cent + retake + course_pre + (1|course_id))})
+gain4 <- with(MIdata,{lmer(gain~1 + stud_pre_cent + retake + pre_mean_class + (1|course_id))})
 gain5 <- with(MIdata,{lmer(gain~1 + stud_pre_cent + retake + FMCE + (1|course_id))})
-gain6 <- with(MIdata,{lmer(gain~1 + stud_pre_cent + retake + female + (1|course_id))})
-gain7 <- with(MIdata,{lmer(gain~1 + stud_pre_cent + retake + female + asian + black + Hispanic + (1|course_id))})
-gain8 <- with(MIdata,{lmer(gain~1 + stud_pre_cent + retake + female + asian + black + Hispanic + lec + (1|course_id))})
-gain9 <- with(MIdata,{lmer(gain~1 + stud_pre_cent + retake + female*(asian + black + other + Hispanic) + lec + (1|course_id))})
-gain10 <- with(MIdata,{lmer(gain~1 + stud_pre_cent + retake + female*(asian + black + other + Hispanic) + female*lec +  (1|course_id))})
-gain11 <- with(MIdata,{lmer(gain~1 + lec*female*(asian + black + other + Hispanic) + stud_pre_cent + retake + (1|course_id))})
-gain12 <- with(MIdata,{lmer(gain~1 + lec*female*(asian + black + other + Hispanic) + stud_pre_cent + retake + (1 + stud_pre_cent + gend_URM + race_URM |course_id))})
+gain6 <- with(MIdata,{lmer(gain~1 + stud_pre_cent + retake + gend_URM + (1|course_id))})
+gain7 <- with(MIdata,{lmer(gain~1 + stud_pre_cent + retake + gend_URM + asian_no_int + black_no_int + hispanic_no_int + race_other_no_int + (1|course_id))})
+gain8 <- with(MIdata,{lmer(gain~1 + stud_pre_cent + retake + gend_URM + asian_no_int + black_no_int + hispanic_no_int + race_other_no_int + lec + (1|course_id))})
+gain8.5 <- with(MIdata,{lmer(gain~1 + stud_pre_cent + gend_URM + asian_no_int + black_no_int + hispanic_no_int + race_other_no_int + lec + (1|course_id))})
+gain9 <- with(MIdata,{lmer(gain~1 + stud_pre_cent + retake + gend_URM*(asian_no_int + black_no_int + hispanic_no_int + race_other_no_int) + lec + (1|course_id))})
+gain10 <- with(MIdata,{lmer(gain~1 + stud_pre_cent + retake + asian_no_int + black_no_int + hispanic_no_int + race_other_no_int + gend_URM*lec +  (1|course_id))})
+gain11 <- with(MIdata,{lmer(gain~1 + lec*(asian_no_int + black_no_int + hispanic_no_int + race_other_no_int) + gend_URM + stud_pre_cent + retake + (1|course_id))})
+gain12 <- with(MIdata,{lmer(gain~1 + stud_pre_cent + retake + gend_URM + asian_no_int + black_no_int + hispanic_no_int + race_other_no_int + lec + (1 + stud_pre_cent + gend_URM + asian_no_int + black_no_int + hispanic_no_int + race_other_no_int |course_id))})
 ```
 
 ```{r eval=FALSE, include=FALSE}
@@ -221,11 +230,12 @@ testEstimates(gain4, var.comp=TRUE)
 testEstimates(gain5, var.comp=TRUE) 
 testEstimates(gain6, var.comp=TRUE)
 testEstimates(gain7, var.comp=TRUE)
-testEstimates(gain8, var.comp=TRUE)
+testEstimates(gain8, var.comp=TRUE) #best model
+testEstimates(gain8.5, var.comp=TRUE) #retake could preferentially impact races differently. Nope, not better.
 testEstimates(gain9, var.comp=TRUE)
 testEstimates(gain10, var.comp=TRUE)
 testEstimates(gain11, var.comp=TRUE)
-testEstimates(gain12, var.comp=TRUE)
+testEstimates(gain12, var.comp=TRUE) # very similar coefficients to model 8
 ```
 
 This makes a table for the model development. Two sections need to be modified. The models and the equation column.
