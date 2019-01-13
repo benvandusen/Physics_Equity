@@ -158,8 +158,8 @@ contrast_forms_mod8 <- rbind('White Male Lecture'=WML, 'White Male Collab'=WMC,
                           'Asian Female Lecture'=AFL,'Asian Female Collab'=AFC,
                           'Hispanic Male Lecture'=HML, 'Hispanic Male Collab'=HMC, 
                           'Hispanic Female Lecture'=HFL,'Hispanic Female Collab'=HFC,
-                          'Other Male Lecture'=OML, 'Other Male Collab'=WMC, 
-                          'Other Female Lecture'=WFL,'Other Female Collab'=WFC,)
+                          'Other Male Lecture'=OML, 'Other Male Collab'=OMC, 
+                          'Other Female Lecture'=OFL,'Other Female Collab'=OFC)
 ```
 
 These are the differences with same group in lecture
