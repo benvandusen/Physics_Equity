@@ -162,8 +162,31 @@ contrast_forms_mod8 <- rbind('White Male Lecture'=WML, 'White Male Collab'=WMC,
                           'Other Female Lecture'=OFL,'Other Female Collab'=OFC)
 ```
 
+
+These are the differences with white males in that learning environment
+```{r}
+WF = c(0,0,0,1,0,0,0,0,0)
+BM = c(0,0,0,0,0,1,0,0,0)
+BF = c(0,0,0,1,0,1,0,0,0)
+AM = c(0,0,0,0,1,0,0,0,0)
+AF = c(0,0,0,1,1,0,0,0,0)
+HM = c(0,0,0,0,0,0,1,0,0)
+HF = c(0,0,0,1,0,0,1,0,0)
+OM = c(0,0,0,0,0,0,0,1,0)
+OL = c(0,0,0,1,0,0,0,1,0)
+
+
+difference_forms_wm_6 <- rbind( 
+                          'White Female'=WF, 
+                          'Black Male'=BM, 'Black Female'=BF,
+                          'Asian Male'=AM, 'Asian Female'=AF,
+                          'Hispanic Male'=HM, 'Hispanic Female'=HF,
+                          'Other Male'=OM, 'Other Female'=OF)
+```
+
 These are the differences with same group in lecture
 ```{r}
+
 WM = c(0,0,0,0, 1)
 BM = c(0,0,0,0, 1)
 WF = c(0,0,0,0, 1)
@@ -173,21 +196,6 @@ difference_forms_self_6 <- rbind('White Male' = WM,
                           'Black Male'=BM, 
                           'White Female'=WF, 
                           'Black Female'=BF)
-```
-
-These are the differences with white males in that learning environment
-```{r}
-BML = c(0,1,0,0, 0)
-WFL = c(0,0,1,0, 0)
-BFL = c(0,1,1,0, 0)
-BMC = c(0,1,0,0, 0)
-WFC = c(0,0,1,0, 0)
-BFC = c(0,1,1,0, 0)
-
-difference_forms_wm_6 <- rbind( 
-                          'URM Male Lecture'=BML, 'URM Male Collab'=BMC, 
-                          'Majority Female Lecture'=WFL,'Majority Female Collab'=WFC, 
-                          'URM Female Lecture'=BFL,'URM Female Collab'=BFC)
 ```
 
 
