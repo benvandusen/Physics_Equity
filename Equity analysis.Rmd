@@ -37,6 +37,160 @@ cbbpalette <- c('#000000','#E69F00','#56B4E9')
 
 ```
 
+Creating mitml and extra variables
+```{r}
+#df_full <- complete(hmi.fall.2018)
+#str(df_full)
+MIdata<-mids2mitml.list(hmi_1_19) #converts file type
+
+thing <- list()
+for (i in 1:10){
+  temp <- MIdata[[i]]
+  class_means <- temp %>% group_by(course_id) %>% summarise(pre_mean_class = mean(pre_score))
+  class_means$class_pre_cent <- class_means$pre_mean_class - mean(class_means$pre_mean_class)
+  temp <- left_join(temp,class_means, by="course_id")
+  temp$stud_pre_cent <- temp$pre_score - temp$pre_mean_class
+  temp$gain <- temp$post_score - temp$pre_score
+  temp$colab_no_la <- as.numeric(temp$colab_no_la)
+  temp$la_in_lab <- as.numeric(temp$la_in_lab)
+  temp$la_in_lecture <- as.numeric(temp$la_in_lecture)
+  temp$la_in_rec <- as.numeric(temp$la_in_rec)
+  temp$first_time <- as.numeric(temp$first_time)
+  temp$coll <- temp$colab_no_la + temp$la_in_lab + temp$la_in_lecture + temp$la_in_rec - 4
+  temp$retake <- ifelse (temp$first_time==1,1,0)
+  temp$lec <- ifelse (temp$coll==1,0,1)
+  #assign(df.names[i], temp)
+  thing[[i]] <- temp
+  }
+MIdata <- as.mitml.list(thing)
+
+```
+
+
+```{r }
+gain1 <- with(MIdata,{lmer(gain~1 + (1|course_id))})
+gain2 <- with(MIdata,{lmer(gain~1 + stud_pre_cent + (1|course_id))})
+gain3 <- with(MIdata,{lmer(gain~1 + stud_pre_cent + retake + (1|course_id))})
+gain4 <- with(MIdata,{lmer(gain~1 + stud_pre_cent + retake + pre_mean_class + (1|course_id))})
+gain5 <- with(MIdata,{lmer(gain~1 + stud_pre_cent + retake + FMCE + (1|course_id))})
+gain6 <- with(MIdata,{lmer(gain~1 + stud_pre_cent + retake + gend_URM + (1|course_id))})
+gain7 <- with(MIdata,{lmer(gain~1 + stud_pre_cent + retake + gend_URM + asian_no_int + black_no_int + hispanic_no_int + race_other_no_int + (1|course_id))})
+gain8 <- with(MIdata,{lmer(gain~1 + stud_pre_cent + retake + gend_URM + asian_no_int + black_no_int + hispanic_no_int + race_other_no_int + lec + (1|course_id))})
+#gain8.3 <- with(MIdata,{lmer(gain~1 + stud_pre_cent + retake + gend_URM + asian_no_int + black_no_int + hispanic_no_int + race_other_no_int + lec + (1|course_id) + (1|inst_id))})
+gain8.5 <- with(MIdata,{lmer(gain~1 + stud_pre_cent + gend_URM + asian_no_int + black_no_int + hispanic_no_int + race_other_no_int + lec + (1|course_id))})
+gain9 <- with(MIdata,{lmer(gain~1 + stud_pre_cent + retake + gend_URM*(asian_no_int + black_no_int + hispanic_no_int + race_other_no_int) + lec + (1|course_id))})
+gain10 <- with(MIdata,{lmer(gain~1 + stud_pre_cent + retake + asian_no_int + black_no_int + hispanic_no_int + race_other_no_int + gend_URM*lec +  (1|course_id))})
+gain11 <- with(MIdata,{lmer(gain~1 + lec*(asian_no_int + black_no_int + hispanic_no_int + race_other_no_int) + gend_URM + stud_pre_cent + retake + (1|course_id))})
+gain12 <- with(MIdata,{lmer(gain~1 + stud_pre_cent + retake + gend_URM + asian_no_int + black_no_int + hispanic_no_int + race_other_no_int + lec + (1 + stud_pre_cent + gend_URM + asian_no_int + black_no_int + hispanic_no_int + race_other_no_int |course_id))})
+```
+
+```{r eval=FALSE, include=FALSE}
+testEstimates(gain1, var.comp=TRUE)
+testEstimates(gain2, var.comp=TRUE)
+testEstimates(gain3, var.comp=TRUE)
+testEstimates(gain4, var.comp=TRUE)
+testEstimates(gain5, var.comp=TRUE) 
+testEstimates(gain6, var.comp=TRUE)
+testEstimates(gain7, var.comp=TRUE)
+testEstimates(gain8, var.comp=TRUE) #best model
+#testEstimates(gain8.3, var.comp=TRUE) we need to add in inst. ID.
+testEstimates(gain8.5, var.comp=TRUE) #retake could preferentially impact races differently. Nope, not better.
+testEstimates(gain9, var.comp=TRUE)
+testEstimates(gain10, var.comp=TRUE)
+testEstimates(gain11, var.comp=TRUE)
+testEstimates(gain12, var.comp=TRUE) # very similar coefficients to model 8
+```
+
+This makes a table for the model development. Two sections need to be modified. The models and the equation column.
+```{r}
+models <- c("gain1","gain2","gain3","gain4","gain5","gain6","gain7","gain8","gain9","gain10","gain11","gain12")
+
+mod_var_tab <- data_frame(model = NA,
+                          level2 = NA,
+                          level1 = NA,
+                          ICC = NA)
+
+for(i in 1:12){
+  temp <- testEstimates(get(models[i]), var.comp=TRUE)
+  mod_var_tab[i,1] <- models[i]
+  mod_var_tab[i,2] <- temp$var.comp[1]
+  mod_var_tab[i,3] <- temp$var.comp[2]
+  mod_var_tab[i,4] <- temp$var.comp[3]
+  }
+
+mod_var_tab$lvl1change <- (mod_var_tab$level1[1]- mod_var_tab$level1)/mod_var_tab$level1[1]
+mod_var_tab$lvl2change <- (mod_var_tab$level2[1]- mod_var_tab$level2)/mod_var_tab$level2[1]
+
+mod_var_tab$equation <- c("gain~1 + (1|course_id)","gain~1 + stud_pre_cent + (1|course_id))","gain~1 + stud_pre_cent + retake + (1|course_id)","gain~1 + stud_pre_cent + retake + FMCE + (1|course_id)","gain~1 + stud_pre_cent + retake + FMCE + (1|course_id)","gain~1 + stud_pre_cent + retake + gend_URM + (1|course_id)", "gain~1 + stud_pre_cent + retake + gend_URM + asian_no_int + black_no_int + hispanic_no_int + race_other_no_int + (1|course_id)","gain~1 + stud_pre_cent + retake + gend_URM + asian_no_int + black_no_int + hispanic_no_int + race_other_no_int + lec + (1|course_id)","gain~1 + stud_pre_cent + retake + gend_URM*(asian_no_int + black_no_int + hispanic_no_int + race_other_no_int) + lec + (1|course_id)","gain~1 + stud_pre_cent + retake + asian_no_int + black_no_int + hispanic_no_int + race_other_no_int + gend_URM*lec +  (1|course_id)","gain~1 + lec*(asian_no_int + black_no_int + hispanic_no_int + race_other_no_int) + gend_URM + stud_pre_cent + retake + (1|course_id)","gain~1 + stud_pre_cent + retake + gend_URM + asian_no_int + black_no_int + hispanic_no_int + race_other_no_int + lec + (1 + stud_pre_cent + gend_URM + asian_no_int + black_no_int + hispanic_no_int + race_other_no_int |course_id)")
+  
+  
+
+```
+
+This produces the estimates for gain8
+```{r}
+WML = c(1,0,0,0,0,0,0,0,1)
+WMC = c(1,0,0,0,0,0,0,0,0)
+WFL = c(1,0,0,1,0,0,0,0,1)
+WFC = c(1,0,0,1,0,0,0,0,0)
+BML = c(1,0,0,0,0,1,0,0,1)
+BMC = c(1,0,0,0,0,1,0,0,0)
+BFL = c(1,0,0,1,0,1,0,0,1)
+BFC = c(1,0,0,1,0,1,0,0,0)
+AML = c(1,0,0,0,1,0,0,0,1)
+AMC = c(1,0,0,0,1,0,0,0,0)
+AFL = c(1,0,0,1,1,0,0,0,1)
+AFC = c(1,0,0,1,1,0,0,0,0)
+HML = c(1,0,0,0,0,0,1,0,1)
+HMC = c(1,0,0,0,0,0,1,0,0)
+HFL = c(1,0,0,1,0,0,1,0,1)
+HFC = c(1,0,0,1,0,0,1,0,0)
+OML = c(1,0,0,0,0,0,0,1,1)
+OMC = c(1,0,0,0,0,0,0,1,0)
+OFL = c(1,0,0,1,0,0,0,1,1)
+OFC = c(1,0,0,1,0,0,0,1,0)
+
+
+contrast_forms_mod8 <- rbind('White Male Lecture'=WML, 'White Male Collab'=WMC, 
+                          'White Female Lecture'=WFL,'White Female Collab'=WFC,                           'Black Male Lecture'=BML, 'Black Male Collab'=BMC, 
+                          'Black Female Lecture'=BFL,'Black Female Collab'=BFC,
+                          'Asian Male Lecture'=AML, 'Asian Male Collab'=AMC, 
+                          'Asian Female Lecture'=AFL,'Asian Female Collab'=AFC,
+                          'Hispanic Male Lecture'=HML, 'Hispanic Male Collab'=HMC, 
+                          'Hispanic Female Lecture'=HFL,'Hispanic Female Collab'=HFC,
+                          'Other Male Lecture'=OML, 'Other Male Collab'=WMC, 
+                          'Other Female Lecture'=WFL,'Other Female Collab'=WFC,)
+```
+
+These are the differences with same group in lecture
+```{r}
+WM = c(0,0,0,0, 1)
+BM = c(0,0,0,0, 1)
+WF = c(0,0,0,0, 1)
+BF = c(0,0,0,0, 1)
+
+difference_forms_self_6 <- rbind('White Male' = WM,
+                          'Black Male'=BM, 
+                          'White Female'=WF, 
+                          'Black Female'=BF)
+```
+
+These are the differences with white males in that learning environment
+```{r}
+BML = c(0,1,0,0, 0)
+WFL = c(0,0,1,0, 0)
+BFL = c(0,1,1,0, 0)
+BMC = c(0,1,0,0, 0)
+WFC = c(0,0,1,0, 0)
+BFC = c(0,1,1,0, 0)
+
+difference_forms_wm_6 <- rbind( 
+                          'URM Male Lecture'=BML, 'URM Male Collab'=BMC, 
+                          'Majority Female Lecture'=WFL,'Majority Female Collab'=WFC, 
+                          'URM Female Lecture'=BFL,'URM Female Collab'=BFC)
+```
+
+
 ```{r}
 BML = c(0,1,0,0, 0)
 WFL = c(0,0,1,0, 0)
@@ -176,140 +330,6 @@ p3est$race_gender <- paste(p3est$race,p3est$gender, sep= " ")
 return <- p3est}
 ```
 
-Creating mitml and extra variables
-```{r}
-#df_full <- complete(hmi.fall.2018)
-#str(df_full)
-MIdata<-mids2mitml.list(hmi_1_19) #converts file type
-
-thing <- list()
-for (i in 1:10){
-  temp <- MIdata[[i]]
-  class_means <- temp %>% group_by(course_id) %>% summarise(pre_mean_class = mean(pre_score))
-  class_means$class_pre_cent <- class_means$pre_mean_class - mean(class_means$pre_mean_class)
-  temp <- left_join(temp,class_means, by="course_id")
-  temp$stud_pre_cent <- temp$pre_score - temp$pre_mean_class
-  temp$gain <- temp$post_score - temp$pre_score
-  temp$colab_no_la <- as.numeric(temp$colab_no_la)
-  temp$la_in_lab <- as.numeric(temp$la_in_lab)
-  temp$la_in_lecture <- as.numeric(temp$la_in_lecture)
-  temp$la_in_rec <- as.numeric(temp$la_in_rec)
-  temp$first_time <- as.numeric(temp$first_time)
-  temp$coll <- temp$colab_no_la + temp$la_in_lab + temp$la_in_lecture + temp$la_in_rec - 4
-  temp$retake <- ifelse (temp$first_time==1,1,0)
-  temp$lec <- ifelse (temp$coll==1,0,1)
-  #assign(df.names[i], temp)
-  thing[[i]] <- temp
-  }
-MIdata <- as.mitml.list(thing)
-
-```
-
-
-```{r }
-gain1 <- with(MIdata,{lmer(gain~1 + (1|course_id))})
-gain2 <- with(MIdata,{lmer(gain~1 + stud_pre_cent + (1|course_id))})
-gain3 <- with(MIdata,{lmer(gain~1 + stud_pre_cent + retake + (1|course_id))})
-gain4 <- with(MIdata,{lmer(gain~1 + stud_pre_cent + retake + pre_mean_class + (1|course_id))})
-gain5 <- with(MIdata,{lmer(gain~1 + stud_pre_cent + retake + FMCE + (1|course_id))})
-gain6 <- with(MIdata,{lmer(gain~1 + stud_pre_cent + retake + gend_URM + (1|course_id))})
-gain7 <- with(MIdata,{lmer(gain~1 + stud_pre_cent + retake + gend_URM + asian_no_int + black_no_int + hispanic_no_int + race_other_no_int + (1|course_id))})
-gain8 <- with(MIdata,{lmer(gain~1 + stud_pre_cent + retake + gend_URM + asian_no_int + black_no_int + hispanic_no_int + race_other_no_int + lec + (1|course_id))})
-#gain8.3 <- with(MIdata,{lmer(gain~1 + stud_pre_cent + retake + gend_URM + asian_no_int + black_no_int + hispanic_no_int + race_other_no_int + lec + (1|course_id) + (1|inst_id))})
-gain8.5 <- with(MIdata,{lmer(gain~1 + stud_pre_cent + gend_URM + asian_no_int + black_no_int + hispanic_no_int + race_other_no_int + lec + (1|course_id))})
-gain9 <- with(MIdata,{lmer(gain~1 + stud_pre_cent + retake + gend_URM*(asian_no_int + black_no_int + hispanic_no_int + race_other_no_int) + lec + (1|course_id))})
-gain10 <- with(MIdata,{lmer(gain~1 + stud_pre_cent + retake + asian_no_int + black_no_int + hispanic_no_int + race_other_no_int + gend_URM*lec +  (1|course_id))})
-gain11 <- with(MIdata,{lmer(gain~1 + lec*(asian_no_int + black_no_int + hispanic_no_int + race_other_no_int) + gend_URM + stud_pre_cent + retake + (1|course_id))})
-gain12 <- with(MIdata,{lmer(gain~1 + stud_pre_cent + retake + gend_URM + asian_no_int + black_no_int + hispanic_no_int + race_other_no_int + lec + (1 + stud_pre_cent + gend_URM + asian_no_int + black_no_int + hispanic_no_int + race_other_no_int |course_id))})
-```
-
-```{r eval=FALSE, include=FALSE}
-testEstimates(gain1, var.comp=TRUE)
-testEstimates(gain2, var.comp=TRUE)
-testEstimates(gain3, var.comp=TRUE)
-testEstimates(gain4, var.comp=TRUE)
-testEstimates(gain5, var.comp=TRUE) 
-testEstimates(gain6, var.comp=TRUE)
-testEstimates(gain7, var.comp=TRUE)
-testEstimates(gain8, var.comp=TRUE) #best model
-#testEstimates(gain8.3, var.comp=TRUE) we need to add in inst. ID.
-testEstimates(gain8.5, var.comp=TRUE) #retake could preferentially impact races differently. Nope, not better.
-testEstimates(gain9, var.comp=TRUE)
-testEstimates(gain10, var.comp=TRUE)
-testEstimates(gain11, var.comp=TRUE)
-testEstimates(gain12, var.comp=TRUE) # very similar coefficients to model 8
-```
-
-This makes a table for the model development. Two sections need to be modified. The models and the equation column.
-```{r}
-models <- c("gain1","gain2","gain3","gain4","gain5","gain6","gain7",)
-
-mod_var_tab <- data_frame(model = NA,
-                          level2 = NA,
-                          level1 = NA,
-                          ICC = NA)
-
-for(i in 1:7){
-  temp <- testEstimates(get(models[i]), var.comp=TRUE)
-  mod_var_tab[i,1] <- models[i]
-  mod_var_tab[i,2] <- temp$var.comp[1]
-  mod_var_tab[i,3] <- temp$var.comp[2]
-  mod_var_tab[i,4] <- temp$var.comp[3]
-  }
-
-mod_var_tab$lvl1change <- (mod_var_tab$level1[1]- mod_var_tab$level1)/mod_var_tab$level1[1]
-mod_var_tab$lvl2change <- (mod_var_tab$level2[1]- mod_var_tab$level2)/mod_var_tab$level2[1]
-
-mod_var_tab$equation <- c("gain~1 + (1|course_id)","gain~1 + stud_pre_cent + (1|course_id)","gain~1 + stud_pre_cent + class_pre_cent + (1|course_id)","gain~1 + stud_pre_cent + race_URM + gend_URM + (1|course_id)","gain~1 + stud_pre_cent + race_URM*gend_URM + (1|course_id)","gain~1 + race_URM + gend_URM + stud_pre_cent + coll + (1|course_id)","gain~1 +race_URM*coll + gend_URM*coll+ stud_pre_cent + (1|course_id)")
-  
-  
-
-```
-
-This produces the estimates for gain6
-```{r}
-WML = c(1,0,0,0,0)
-WMC = c(1,0,0,0,1)
-BML = c(1,1,0,0,0)
-BMC = c(1,1,0,0,1)
-WFL = c(1,0,1,0,0)
-WFC = c(1,0,1,0,1)
-BFL = c(1,1,1,0,0)
-BFC = c(1,1,1,0,1)
-
-contrast_forms_mod6 <- rbind('Majority Male Lecture'=WML, 'Majority Male Collab'=WMC, 
-                          'URM Male Lecture'=BML, 'URM Male Collab'=BMC, 
-                          'Majority Female Lecture'=WFL,'Majority Female Collab'=WFC, 
-                          'URM Female Lecture'=BFL,'URM Female Collab'=BFC)
-```
-
-These are the differences with same group in lecture
-```{r}
-WM = c(0,0,0,0, 1)
-BM = c(0,0,0,0, 1)
-WF = c(0,0,0,0, 1)
-BF = c(0,0,0,0, 1)
-
-difference_forms_self_6 <- rbind('White Male' = WM,
-                          'Black Male'=BM, 
-                          'White Female'=WF, 
-                          'Black Female'=BF)
-```
-
-These are the differences with white males in that learning environment
-```{r}
-BML = c(0,1,0,0, 0)
-WFL = c(0,0,1,0, 0)
-BFL = c(0,1,1,0, 0)
-BMC = c(0,1,0,0, 0)
-WFC = c(0,0,1,0, 0)
-BFC = c(0,1,1,0, 0)
-
-difference_forms_wm_6 <- rbind( 
-                          'URM Male Lecture'=BML, 'URM Male Collab'=BMC, 
-                          'Majority Female Lecture'=WFL,'Majority Female Collab'=WFC, 
-                          'URM Female Lecture'=BFL,'URM Female Collab'=BFC)
-```
 
 ```{r}
 pool_and_cov_diffwm <- function(x,y){
