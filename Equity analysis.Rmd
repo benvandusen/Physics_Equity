@@ -59,6 +59,8 @@ for (i in 1:10){
   temp$coll <- temp$colab_no_la + temp$la_in_lab + temp$la_in_lecture + temp$la_in_rec - 4
   temp$retake <- ifelse (temp$first_time==1,1,0)
   temp$lec <- ifelse (temp$coll==1,0,1)
+  temp$race_URM <- as.numeric(temp$black_no_int) + as.numeric(temp$hispanic_no_int) +
+    as.numeric(temp$race_other_no_int)
   #assign(df.names[i], temp)
   thing[[i]] <- temp
   }
@@ -74,8 +76,10 @@ gain3 <- with(MIdata,{lmer(gain~1 + stud_pre_cent + retake + (1|course_id))})
 gain4 <- with(MIdata,{lmer(gain~1 + stud_pre_cent + retake + pre_mean_class + (1|course_id))})
 gain5 <- with(MIdata,{lmer(gain~1 + stud_pre_cent + retake + FMCE + (1|course_id))})
 gain6 <- with(MIdata,{lmer(gain~1 + stud_pre_cent + retake + gend_URM + (1|course_id))})
+gain6.1 <- with(MIdata,{lmer(gain~1 + stud_pre_cent + retake + gend_URM + race_URM + (1|course_id))})
 gain7 <- with(MIdata,{lmer(gain~1 + stud_pre_cent + retake + gend_URM + asian_no_int + black_no_int + hispanic_no_int + race_other_no_int + (1|course_id))})
 gain8 <- with(MIdata,{lmer(gain~1 + stud_pre_cent + retake + gend_URM + asian_no_int + black_no_int + hispanic_no_int + race_other_no_int + lec + (1|course_id))})
+gain8.1 <- with(MIdata,{lmer(gain~1 + stud_pre_cent + retake + asian_no_int + gend_URM*black_no_int + hispanic_no_int + race_other_no_int + lec + (1|course_id))})
 #gain8.3 <- with(MIdata,{lmer(gain~1 + stud_pre_cent + retake + gend_URM + asian_no_int + black_no_int + hispanic_no_int + race_other_no_int + lec + (1|course_id) + (1|inst_id))})
 gain8.5 <- with(MIdata,{lmer(gain~1 + stud_pre_cent + gend_URM + asian_no_int + black_no_int + hispanic_no_int + race_other_no_int + lec + (1|course_id))})
 gain9 <- with(MIdata,{lmer(gain~1 + stud_pre_cent + retake + gend_URM*(asian_no_int + black_no_int + hispanic_no_int + race_other_no_int) + lec + (1|course_id))})
@@ -91,8 +95,10 @@ testEstimates(gain3, var.comp=TRUE)
 testEstimates(gain4, var.comp=TRUE)
 testEstimates(gain5, var.comp=TRUE) 
 testEstimates(gain6, var.comp=TRUE)
+testEstimates(gain6.1, var.comp=TRUE)
 testEstimates(gain7, var.comp=TRUE)
 testEstimates(gain8, var.comp=TRUE) #best model
+testEstimates(gain8.1, var.comp=TRUE)
 #testEstimates(gain8.3, var.comp=TRUE) we need to add in inst. ID.
 testEstimates(gain8.5, var.comp=TRUE) #retake could preferentially impact races differently. Nope, not better.
 testEstimates(gain9, var.comp=TRUE)
@@ -122,8 +128,6 @@ mod_var_tab$lvl1change <- (mod_var_tab$level1[1]- mod_var_tab$level1)/mod_var_ta
 mod_var_tab$lvl2change <- (mod_var_tab$level2[1]- mod_var_tab$level2)/mod_var_tab$level2[1]
 
 mod_var_tab$equation <- c("gain~1 + (1|course_id)","gain~1 + stud_pre_cent + (1|course_id))","gain~1 + stud_pre_cent + retake + (1|course_id)","gain~1 + stud_pre_cent + retake + FMCE + (1|course_id)","gain~1 + stud_pre_cent + retake + FMCE + (1|course_id)","gain~1 + stud_pre_cent + retake + gend_URM + (1|course_id)", "gain~1 + stud_pre_cent + retake + gend_URM + asian_no_int + black_no_int + hispanic_no_int + race_other_no_int + (1|course_id)","gain~1 + stud_pre_cent + retake + gend_URM + asian_no_int + black_no_int + hispanic_no_int + race_other_no_int + lec + (1|course_id)","gain~1 + stud_pre_cent + retake + gend_URM*(asian_no_int + black_no_int + hispanic_no_int + race_other_no_int) + lec + (1|course_id)","gain~1 + stud_pre_cent + retake + asian_no_int + black_no_int + hispanic_no_int + race_other_no_int + gend_URM*lec +  (1|course_id)","gain~1 + lec*(asian_no_int + black_no_int + hispanic_no_int + race_other_no_int) + gend_URM + stud_pre_cent + retake + (1|course_id)","gain~1 + stud_pre_cent + retake + gend_URM + asian_no_int + black_no_int + hispanic_no_int + race_other_no_int + lec + (1 + stud_pre_cent + gend_URM + asian_no_int + black_no_int + hispanic_no_int + race_other_no_int |course_id)")
-  
-  
 
 ```
 
@@ -152,7 +156,8 @@ OFC = c(1,0,0,1,0,0,0,1,0)
 
 
 contrast_forms_mod8 <- rbind('White Male Lecture'=WML, 'White Male Collab'=WMC, 
-                          'White Female Lecture'=WFL,'White Female Collab'=WFC,                           'Black Male Lecture'=BML, 'Black Male Collab'=BMC, 
+                          'White Female Lecture'=WFL,'White Female Collab'=WFC,
+                          'Black Male Lecture'=BML, 'Black Male Collab'=BMC, 
                           'Black Female Lecture'=BFL,'Black Female Collab'=BFC,
                           'Asian Male Lecture'=AML, 'Asian Male Collab'=AMC, 
                           'Asian Female Lecture'=AFL,'Asian Female Collab'=AFC,
@@ -173,7 +178,7 @@ AF = c(0,0,0,1,1,0,0,0,0)
 HM = c(0,0,0,0,0,0,1,0,0)
 HF = c(0,0,0,1,0,0,1,0,0)
 OM = c(0,0,0,0,0,0,0,1,0)
-OL = c(0,0,0,1,0,0,0,1,0)
+OF = c(0,0,0,1,0,0,0,1,0)
 
 
 difference_forms_wm_6 <- rbind( 
