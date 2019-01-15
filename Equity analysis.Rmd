@@ -308,8 +308,10 @@ rats <- foreach(i=1:10, .combine=rbind) %do% {
   data.frame(names=names,
              ratio = ratio)
 }
-
-
+rats2 <- foreach(i=1:10, .combine=rbind) %do% {
+se <- sqrt( (p3est$Q[2*i-1]/p3est$Q[2*i])^2 *  ((p3est$T[2*i])/(p3est$Q[2*i]^2)  +  (p3est$T[2*i-1])/(p3est$Q[2*i-1]^2)  -2*(p3est[2*i,(11+2*i)]/((p3est$Q[2*i-1])*(p3est$Q[2*i])) )))
+  data.frame(se=se)
+}
 
 ```
 
@@ -341,8 +343,7 @@ ratios <- data.frame(name = c(p3est$race_gender[2],p3est$race_gender[4],p3est$ra
 
 
 rats <- foreach(i=1:10, .combine=rbind) %do% {
-  se <- sqrt( (p3est$Q[2*i-1]/p3est$Q[2*i])^2 *  ((p3est$T[2*i])/(p3est$Q[2*i]^2)  +  (p3est$T[2*i-1])/(p3est$Q[2*i-1]^2)  -2*(p3est[2*i,(11+2*i)]/((p3est$Q[2*i-1])*(p3est$Q[2*i])) )))
-  data.frame(se=se)
+  
 }
 
 rm(i)
