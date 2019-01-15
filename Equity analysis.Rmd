@@ -85,7 +85,7 @@ gain8.5 <- with(MIdata,{lmer(gain~1 + stud_pre_cent + gend_URM + asian_no_int + 
 gain9 <- with(MIdata,{lmer(gain~1 + stud_pre_cent + retake + gend_URM*(asian_no_int + black_no_int + hispanic_no_int + race_other_no_int) + lec + (1|course_id))})
 gain10 <- with(MIdata,{lmer(gain~1 + stud_pre_cent + retake + asian_no_int + black_no_int + hispanic_no_int + race_other_no_int + gend_URM*lec +  (1|course_id))})
 gain11 <- with(MIdata,{lmer(gain~1 + lec*(asian_no_int + black_no_int + hispanic_no_int + race_other_no_int) + gend_URM + stud_pre_cent + retake + (1|course_id))})
-gain12 <- with(MIdata,{lmer(gain~1 + stud_pre_cent + retake + gend_URM + asian_no_int + black_no_int + hispanic_no_int + race_other_no_int + lec + (1 + stud_pre_cent + gend_URM + asian_no_int + black_no_int + hispanic_no_int + race_other_no_int |course_id))})
+#gain12 <- with(MIdata,{lmer(gain~1 + stud_pre_cent + retake + gend_URM + asian_no_int + black_no_int + hispanic_no_int + race_other_no_int + lec + (1 + stud_pre_cent + gend_URM + asian_no_int + black_no_int + hispanic_no_int + race_other_no_int |course_id))})
 ```
 
 ```{r eval=FALSE, include=FALSE}
@@ -104,19 +104,19 @@ testEstimates(gain8.5, var.comp=TRUE) #retake could preferentially impact races 
 testEstimates(gain9, var.comp=TRUE)
 testEstimates(gain10, var.comp=TRUE)
 testEstimates(gain11, var.comp=TRUE)
-testEstimates(gain12, var.comp=TRUE) # very similar coefficients to model 8
+#testEstimates(gain12, var.comp=TRUE) # very similar coefficients to model 8
 ```
 
 This makes a table for the model development. Two sections need to be modified. The models and the equation column.
 ```{r}
-models <- c("gain1","gain2","gain3","gain4","gain5","gain6","gain7","gain8","gain9","gain10","gain11","gain12")
+models <- c("gain1","gain2","gain3","gain4","gain5","gain6","gain7","gain8","gain9","gain10","gain11")
 
 mod_var_tab <- data_frame(model = NA,
                           level2 = NA,
                           level1 = NA,
                           ICC = NA)
 
-for(i in 1:12){
+for(i in 1:11){
   temp <- testEstimates(get(models[i]), var.comp=TRUE)
   mod_var_tab[i,1] <- models[i]
   mod_var_tab[i,2] <- temp$var.comp[1]
@@ -127,7 +127,9 @@ for(i in 1:12){
 mod_var_tab$lvl1change <- (mod_var_tab$level1[1]- mod_var_tab$level1)/mod_var_tab$level1[1]
 mod_var_tab$lvl2change <- (mod_var_tab$level2[1]- mod_var_tab$level2)/mod_var_tab$level2[1]
 
-mod_var_tab$equation <- c("gain~1 + (1|course_id)","gain~1 + stud_pre_cent + (1|course_id))","gain~1 + stud_pre_cent + retake + (1|course_id)","gain~1 + stud_pre_cent + retake + FMCE + (1|course_id)","gain~1 + stud_pre_cent + retake + FMCE + (1|course_id)","gain~1 + stud_pre_cent + retake + gend_URM + (1|course_id)", "gain~1 + stud_pre_cent + retake + gend_URM + asian_no_int + black_no_int + hispanic_no_int + race_other_no_int + (1|course_id)","gain~1 + stud_pre_cent + retake + gend_URM + asian_no_int + black_no_int + hispanic_no_int + race_other_no_int + lec + (1|course_id)","gain~1 + stud_pre_cent + retake + gend_URM*(asian_no_int + black_no_int + hispanic_no_int + race_other_no_int) + lec + (1|course_id)","gain~1 + stud_pre_cent + retake + asian_no_int + black_no_int + hispanic_no_int + race_other_no_int + gend_URM*lec +  (1|course_id)","gain~1 + lec*(asian_no_int + black_no_int + hispanic_no_int + race_other_no_int) + gend_URM + stud_pre_cent + retake + (1|course_id)","gain~1 + stud_pre_cent + retake + gend_URM + asian_no_int + black_no_int + hispanic_no_int + race_other_no_int + lec + (1 + stud_pre_cent + gend_URM + asian_no_int + black_no_int + hispanic_no_int + race_other_no_int |course_id)")
+mod_var_tab$equation <- c("gain~1 + (1|course_id)","gain~1 + stud_pre_cent + (1|course_id))","gain~1 + stud_pre_cent + retake + (1|course_id)","gain~1 + stud_pre_cent + retake + FMCE + (1|course_id)","gain~1 + stud_pre_cent + retake + FMCE + (1|course_id)","gain~1 + stud_pre_cent + retake + gend_URM + (1|course_id)", "gain~1 + stud_pre_cent + retake + gend_URM + asian_no_int + black_no_int + hispanic_no_int + race_other_no_int + (1|course_id)","gain~1 + stud_pre_cent + retake + gend_URM + asian_no_int + black_no_int + hispanic_no_int + race_other_no_int + lec + (1|course_id)","gain~1 + stud_pre_cent + retake + gend_URM*(asian_no_int + black_no_int + hispanic_no_int + race_other_no_int) + lec + (1|course_id)","gain~1 + stud_pre_cent + retake + asian_no_int + black_no_int + hispanic_no_int + race_other_no_int + gend_URM*lec +  (1|course_id)","gain~1 + lec*(asian_no_int + black_no_int + hispanic_no_int + race_other_no_int) + gend_URM + stud_pre_cent + retake + (1|course_id)")
+
+#"gain~1 + stud_pre_cent + retake + gend_URM + asian_no_int + black_no_int + hispanic_no_int + race_other_no_int + lec + (1 + stud_pre_cent + gend_URM + asian_no_int + black_no_int + hispanic_no_int + race_other_no_int |course_id)"
 
 ```
 
@@ -181,7 +183,7 @@ OM = c(0,0,0,0,0,0,0,1,0)
 OF = c(0,0,0,1,0,0,0,1,0)
 
 
-difference_forms_wm_6 <- rbind( 
+difference_forms_wm_8 <- rbind( 
                           'White Female'=WF, 
                           'Black Male'=BM, 'Black Female'=BF,
                           'Asian Male'=AM, 'Asian Female'=AF,
@@ -191,6 +193,26 @@ difference_forms_wm_6 <- rbind(
 
 These are the differences with same group in lecture
 ```{r}
+difference_forms_self_6 <- data.frame(
+WML = c(1,0,0,0,0,0,0,0,1)
+WFL = c(1,0,0,1,0,0,0,0,1)
+WFC = c(1,0,0,1,0,0,0,0,0)
+BML = c(1,0,0,0,0,1,0,0,1)
+BMC = c(1,0,0,0,0,1,0,0,0)
+BFL = c(1,0,0,1,0,1,0,0,1)
+BFC = c(1,0,0,1,0,1,0,0,0)
+AML = c(1,0,0,0,1,0,0,0,1)
+AMC = c(1,0,0,0,1,0,0,0,0)
+AFL = c(1,0,0,1,1,0,0,0,1)
+AFC = c(1,0,0,1,1,0,0,0,0)
+HML = c(1,0,0,0,0,0,1,0,1)
+HMC = c(1,0,0,0,0,0,1,0,0)
+HFL = c(1,0,0,1,0,0,1,0,1)
+HFC = c(1,0,0,1,0,0,1,0,0)
+OML = c(1,0,0,0,0,0,0,1,1)
+OMC = c(1,0,0,0,0,0,0,1,0)
+OFL = c(1,0,0,1,0,0,0,1,1)
+OFC = c(1,0,0,1,0,0,0,1,0))
 
 WM = c(0,0,0,0, 1)
 BM = c(0,0,0,0, 1)
@@ -223,11 +245,12 @@ contrast_g6_est <- pool_and_cov_diffwm(gain6,contrast_forms_mod6)
 
 This function pools the results across the MI for each of the groups and calculates their covariance with themselves in lecture
 x=model, y= formula matrix
-```{r}
+```{r message=FALSE, warning=FALSE}
 #pool_and_cov <- function(x,y){ #I'm just not going ot make this as a function for now since I am only going to run it once and it might be really tricky with differing sizes and positions for the variables
+#This pulls out all of the relevant data from the anaylysis of the MId data.
   get.est <- foreach(i=1:10, .combine=rbind) %do% {
-  sxp3 <- summary(glht(gain6[[i]], linfct=contrast_forms_mod6)) #specifically for post3
-  covp3 <- vcov(glht(gain6[[i]], linfct=contrast_forms_mod6))
+  sxp3 <- summary(glht(gain8[[i]], linfct=contrast_forms_mod8)) #specifically for post3
+  covp3 <- vcov(glht(gain8[[i]], linfct=contrast_forms_mod8))
   data.frame(imp=i, 
              group=rownames(sxp3$linfct),
              d = sxp3$test$coefficients, 
@@ -235,7 +258,7 @@ x=model, y= formula matrix
              cov = covp3)
 }
 
-
+# this pools the above data
 p3est <- get.est %>% group_by(group) %>% 
                   summarise(Q = mean(d), 
                             U = mean(var.d), 
@@ -245,7 +268,7 @@ p3est <- get.est %>% group_by(group) %>%
                             UCL = Q + 1.96*sqrt(T),
                             SE = sqrt(T))
 
-
+#these add variable names useful for making figures
 p3est$race <- word(p3est$group, 1)
 p3est$gender <- word(p3est$group, 2)
 p3est$instruction <- word(p3est$group, 3)
@@ -253,40 +276,40 @@ p3est$race_gender <- paste(p3est$race,p3est$gender, sep= " ")
 #return <- p3est
 #return <- get.est}
 
-rat_maj_fem <- p3est$Q[1]/p3est$Q[2]
-rat_maj_mal <- p3est$Q[3]/p3est$Q[4]
-rat_urm_fem <- p3est$Q[5]/p3est$Q[6]
-rat_urm_mal <- p3est$Q[7]/p3est$Q[8]
+#colnames(get.est)
+#This needs to be organized alphabetically for the ratio code to work. Otherwise it will index with the wrong covariances.
+cov_pooled <- get.est %>% group_by(group) %>% summarise(cov.Asian.Female.Collab = mean(cov.Asian.Female.Collab),
+                                                   cov.Asian.Female.Lecture = mean(cov.Asian.Female.Lecture),
+                                                   cov.Asian.Male.Collab = mean(cov.Asian.Male.Collab),
+                                                   cov.Asian.Male.Lecture = mean(cov.Asian.Male.Lecture),
+                                                   cov.Black.Female.Collab = mean(cov.Black.Female.Collab),
+                                                   cov.Black.Female.Lecture = mean(cov.Black.Female.Lecture),
+                                                   cov.Black.Male.Collab = mean(cov.Black.Male.Collab),
+                                                   cov.Black.Male.Lecture = mean(cov.Black.Male.Lecture),
+                                                   cov.Hispanic.Female.Collab = mean(cov.Hispanic.Female.Collab),
+                                                   cov.Hispanic.Female.Lecture = mean(cov.Hispanic.Female.Lecture),
+                                                   cov.Hispanic.Male.Collab = mean(cov.Hispanic.Male.Collab),
+                                                   cov.Hispanic.Male.Lecture = mean(cov.Hispanic.Male.Lecture),
+                                                   cov.Other.Female.Collab = mean(cov.Other.Female.Collab),
+                                                   cov.Other.Female.Lecture = mean(cov.Other.Female.Lecture),
+                                                   cov.Other.Male.Collab = mean(cov.Other.Male.Collab),
+                                                   cov.Other.Male.Lecture = mean(cov.Other.Male.Lecture),
+                                                   cov.White.Female.Collab = mean(cov.White.Female.Collab),
+                                                   cov.White.Female.Lecture = mean(cov.White.Female.Lecture),
+                                                   cov.White.Male.Collab = mean(cov.White.Male.Collab),
+                                                   cov.White.Male.Lecture = mean(cov.White.Male.Lecture))
 
-temp <- get.est[get.est$group=="Majority Female Lecture",]
-cov_maj_fem <- mean(temp$cov.Majority.Female.Collab)
+p3est <- left_join(p3est, cov_pooled, by = "group")
 
-temp <- get.est[get.est$group=="Majority Male Lecture",]
-cov_maj_mal <- mean(temp$cov.Majority.Male.Collab)
-
-temp <- get.est[get.est$group=="URM Female Lecture",]
-cov_urm_fem <- mean(temp$cov.URM.Female.Collab)
-
-temp <- get.est[get.est$group=="URM Male Lecture",]
-cov_urm_mal <- mean(temp$cov.URM.Male.Collab)
+rats <- foreach(i=1:10, .combine=rbind) %do% {
+  names <- p3est$race_gender[2*i]
+  ratio <- p3est$Q[2*i-1]/p3est$Q[2*i]
+  
+  data.frame(names=names,
+             ratio = ratio)
+}
 
 
- 
-se_rat_maj_fem <- sqrt( (rat_maj_fem)^2 *  ((p3est$T[2])/(p3est$Q[2]^2)  +  (p3est$T[1])/(p3est$Q[1]^2)  -2*(cov_maj_fem/((p3est$Q[1])*(p3est$Q[2])) )))
-
-se_rat_maj_mal <- sqrt( (rat_maj_mal)^2 *  ((p3est$T[4])/(p3est$Q[4]^2)  +  (p3est$T[3])/(p3est$Q[3]^2)  -2*(cov_maj_mal/((p3est$Q[3])*(p3est$Q[4])) )))
-
-se_rat_urm_fem <- sqrt( (rat_urm_fem)^2 *  ((p3est$T[6])/(p3est$Q[6]^2)  +  (p3est$T[5])/(p3est$Q[5]^2)  -2*(cov_urm_fem/((p3est$Q[5])*(p3est$Q[6])) )))
-
-se_rat_urm_mal <- sqrt( (rat_urm_mal)^2 *  ((p3est$T[8])/(p3est$Q[8]^2)  +  (p3est$T[7])/(p3est$Q[7]^2)  -2*(cov_urm_mal/((p3est$Q[7])*(p3est$Q[8])) )))
-
-
-rat_self_table <- data.frame(group=c("Majority Female","Majority Male","URM Female","URM Male"),
-                             ratio = c(p3est$Q[1]/p3est$Q[2],p3est$Q[3]/p3est$Q[4],p3est$Q[5]/p3est$Q[6], p3est$Q[7]/p3est$Q[8]),
-                             se = c(sqrt( (rat_maj_fem)^2 *  ((p3est$T[2])/(p3est$Q[2]^2)  +  (p3est$T[1])/(p3est$Q[1]^2)  -2*(cov_maj_fem/((p3est$Q[1])*(p3est$Q[2])) ))),
-                                    sqrt( (rat_maj_mal)^2 *  ((p3est$T[4])/(p3est$Q[4]^2)  +  (p3est$T[3])/(p3est$Q[3]^2)  -2*(cov_maj_mal/((p3est$Q[3])*(p3est$Q[4])) ))),
-                                    sqrt( (rat_urm_fem)^2 *  ((p3est$T[6])/(p3est$Q[6]^2)  +  (p3est$T[5])/(p3est$Q[5]^2)  -2*(cov_urm_fem/((p3est$Q[5])*(p3est$Q[6])) ))),
-                                    sqrt( (rat_urm_mal)^2 *  ((p3est$T[8])/(p3est$Q[8]^2)  +  (p3est$T[7])/(p3est$Q[7]^2)  -2*(cov_urm_mal/((p3est$Q[7])*(p3est$Q[8])) )))))
 
 ```
 
@@ -305,6 +328,49 @@ ggplot(data=contrast_g6_est, aes(x=instruction, y=Q, fill=instruction)) +geom_ba
                      breaks= c("Lecture","Collab"),
                      labels=c("Traditional","Collaborative"),
                      values=plot_col) 
+
+#things to delete
+#Makes the ratios. This is slightly better but there must still be a better way.
+ratios <- data.frame(name = c(p3est$race_gender[2],p3est$race_gender[4],p3est$race_gender[6],p3est$race_gender[8],p3est$race_gender[10],p3est$race_gender[12],p3est$race_gender[14],p3est$race_gender[16],p3est$race_gender[18],p3est$race_gender[20]),
+                     ratio = c(p3est$Q[1]/p3est$Q[2],p3est$Q[3]/p3est$Q[4],p3est$Q[5]/p3est$Q[6],p3est$Q[7]/p3est$Q[8],p3est$Q[9]/p3est$Q[10],p3est$Q[11]/p3est$Q[12],p3est$Q[12]/p3est$Q[14],p3est$Q[15]/p3est$Q[16],p3est$Q[17]/p3est$Q[18],p3est$Q[19]/p3est$Q[20]))
+
+#rat_maj_fem <- p3est$Q[1]/p3est$Q[2]
+#rat_maj_mal <- p3est$Q[3]/p3est$Q[4]
+#rat_urm_fem <- p3est$Q[5]/p3est$Q[6]
+#rat_urm_mal <- p3est$Q[7]/p3est$Q[8]
+
+
+rats <- foreach(i=1:10, .combine=rbind) %do% {
+  se <- sqrt( (p3est$Q[2*i-1]/p3est$Q[2*i])^2 *  ((p3est$T[2*i])/(p3est$Q[2*i]^2)  +  (p3est$T[2*i-1])/(p3est$Q[2*i-1]^2)  -2*(p3est[2*i,(11+2*i)]/((p3est$Q[2*i-1])*(p3est$Q[2*i])) )))
+  data.frame(se=se)
+}
+
+rm(i)
+i=1
+sqrt( (p3est$Q[2*i-1]/p3est$Q[2*i])^2 *  ((p3est$T[2*i])/(p3est$Q[2*i]^2)  +  (p3est$T[2*i-1])/(p3est$Q[2*i-1]^2)  -2*(p3est[2*i,(11+2*i)]/((p3est$Q[2*i-1])*(p3est$Q[2*i])) )))
+
+sqrt( (p3est$Q[2*1-1]/p3est$Q[2*1])^2 *  ((p3est$T[2*1])/(p3est$Q[2*1]^2)  +  (p3est$T[2*1-1])/(p3est$Q[2*1-1]^2)  -2*(p3est[2*1,(11+2*1)]/((p3est$Q[2*1-1])*(p3est$Q[2*1])) )))
+
+
+warnings()
+se_rat_maj_fem <- 
+
+ 
+se_rat_maj_fem <- sqrt( (rat_maj_fem)^2 *  ((p3est$T[2])/(p3est$Q[2]^2)  +  (p3est$T[1])/(p3est$Q[1]^2)  -2*(cov_maj_fem/((p3est$Q[1])*(p3est$Q[2])) )))
+
+se_rat_maj_mal <- sqrt( (rat_maj_mal)^2 *  ((p3est$T[4])/(p3est$Q[4]^2)  +  (p3est$T[3])/(p3est$Q[3]^2)  -2*(cov_maj_mal/((p3est$Q[3])*(p3est$Q[4])) )))
+
+se_rat_urm_fem <- sqrt( (rat_urm_fem)^2 *  ((p3est$T[6])/(p3est$Q[6]^2)  +  (p3est$T[5])/(p3est$Q[5]^2)  -2*(cov_urm_fem/((p3est$Q[5])*(p3est$Q[6])) )))
+
+se_rat_urm_mal <- sqrt( (rat_urm_mal)^2 *  ((p3est$T[8])/(p3est$Q[8]^2)  +  (p3est$T[7])/(p3est$Q[7]^2)  -2*(cov_urm_mal/((p3est$Q[7])*(p3est$Q[8])) )))
+
+
+rat_self_table <- data.frame(group=c("Majority Female","Majority Male","URM Female","URM Male"),
+                             ratio = c(p3est$Q[1]/p3est$Q[2],p3est$Q[3]/p3est$Q[4],p3est$Q[5]/p3est$Q[6], p3est$Q[7]/p3est$Q[8]),
+                             se = c(sqrt( (rat_maj_fem)^2 *  ((p3est$T[2])/(p3est$Q[2]^2)  +  (p3est$T[1])/(p3est$Q[1]^2)  -2*(cov_maj_fem/((p3est$Q[1])*(p3est$Q[2])) ))),
+                                    sqrt( (rat_maj_mal)^2 *  ((p3est$T[4])/(p3est$Q[4]^2)  +  (p3est$T[3])/(p3est$Q[3]^2)  -2*(cov_maj_mal/((p3est$Q[3])*(p3est$Q[4])) ))),
+                                    sqrt( (rat_urm_fem)^2 *  ((p3est$T[6])/(p3est$Q[6]^2)  +  (p3est$T[5])/(p3est$Q[5]^2)  -2*(cov_urm_fem/((p3est$Q[5])*(p3est$Q[6])) ))),
+                                    sqrt( (rat_urm_mal)^2 *  ((p3est$T[8])/(p3est$Q[8]^2)  +  (p3est$T[7])/(p3est$Q[7]^2)  -2*(cov_urm_mal/((p3est$Q[7])*(p3est$Q[8])) )))))
 
 ```
 
