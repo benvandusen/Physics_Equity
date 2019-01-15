@@ -2,7 +2,7 @@
 title: "Equity analysis"
 output: html_document
 ---
-
+I made a change
 Load stuff (There are some packages that we don't need here, but I didn't clean them up. Sorry.)
 ```{r message=FALSE, warning=FALSE}
 load("~/hmi_data_1_10_19")
