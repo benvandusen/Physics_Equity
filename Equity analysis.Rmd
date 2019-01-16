@@ -304,22 +304,19 @@ p3est <- left_join(p3est, cov_pooled, by = "group")
 rats <- foreach(i=1:10, .combine=rbind) %do% {
   names <- p3est$race_gender[2*i]
   ratio <- p3est$Q[2*i-1]/p3est$Q[2*i]
-  
-  data.frame(names=names,
-             ratio = ratio)
+  se <-   sqrt( (p3est$Q[2*i-1]/p3est$Q[2*i])^2 *  ((p3est$T[2*i])/(p3est$Q[2*i]^2)  +  (p3est$T[2*i-1])/(p3est$Q[2*i-1]^2)  -2*(p3est[2*i,(11+2*i)]/((p3est$Q[2*i-1])*(p3est$Q[2*i])) )))
+  data.frame(group=names,
+             ratio = ratio,
+             se=se[[1]])
 }
-rats2 <- foreach(i=1:10, .combine=rbind) %do% {
-se <- sqrt( (p3est$Q[2*i-1]/p3est$Q[2*i])^2 *  ((p3est$T[2*i])/(p3est$Q[2*i]^2)  +  (p3est$T[2*i-1])/(p3est$Q[2*i-1]^2)  -2*(p3est[2*i,(11+2*i)]/((p3est$Q[2*i-1])*(p3est$Q[2*i])) )))
-  data.frame(se=se)
-}
-
+#the se[[1]] is necessary due to a name problem. for whatever reasion the se function returns an object with a name.
 ```
 
 ```{r}
-ggplot(rat_self_table, aes(y=ratio, x=group)) +geom_bar(stat="identity", fill='#fc8d62') +
+ggplot(rats, aes(y=ratio, x=group)) +geom_bar(stat="identity", fill='#fc8d62') +
   geom_errorbar(aes( ymax= ratio+1.96*se, ymin=ratio-1.96*se, width=0.5)) +
-  theme(legend.position = "bottom", axis.title.x=element_blank(),panel.grid.major = element_blank(), panel.grid.minor = element_blank(),panel.background = element_blank(), axis.line = element_line(colour = "black"),text = element_text(size=16, color = "black")) +
-  ylab("Ratio with Self in Lecture")
+  theme(legend.position = "bottom", axis.title.x=element_blank(),panel.grid.major = element_blank(), panel.grid.minor = element_blank(),panel.background = element_blank(), axis.line = element_line(colour = "black"),text = element_text(size=16, color = "black"),axis.text.x = element_text(angle = 90)) +
+  ylab("Ratio with Self in Lecture") 
   ylim(c(0.8,2.4))
 
 ggplot(data=contrast_g6_est, aes(x=instruction, y=Q, fill=instruction)) +geom_bar(stat = "identity", fill='#fc8d62') + geom_errorbar(aes( ymax= Q+1.96*SE, ymin=Q-1.96*SE))+
@@ -331,47 +328,7 @@ ggplot(data=contrast_g6_est, aes(x=instruction, y=Q, fill=instruction)) +geom_ba
                      labels=c("Traditional","Collaborative"),
                      values=plot_col) 
 
-#things to delete
-#Makes the ratios. This is slightly better but there must still be a better way.
-ratios <- data.frame(name = c(p3est$race_gender[2],p3est$race_gender[4],p3est$race_gender[6],p3est$race_gender[8],p3est$race_gender[10],p3est$race_gender[12],p3est$race_gender[14],p3est$race_gender[16],p3est$race_gender[18],p3est$race_gender[20]),
-                     ratio = c(p3est$Q[1]/p3est$Q[2],p3est$Q[3]/p3est$Q[4],p3est$Q[5]/p3est$Q[6],p3est$Q[7]/p3est$Q[8],p3est$Q[9]/p3est$Q[10],p3est$Q[11]/p3est$Q[12],p3est$Q[12]/p3est$Q[14],p3est$Q[15]/p3est$Q[16],p3est$Q[17]/p3est$Q[18],p3est$Q[19]/p3est$Q[20]))
 
-#rat_maj_fem <- p3est$Q[1]/p3est$Q[2]
-#rat_maj_mal <- p3est$Q[3]/p3est$Q[4]
-#rat_urm_fem <- p3est$Q[5]/p3est$Q[6]
-#rat_urm_mal <- p3est$Q[7]/p3est$Q[8]
-
-
-rats <- foreach(i=1:10, .combine=rbind) %do% {
-  
-}
-
-rm(i)
-i=1
-sqrt( (p3est$Q[2*i-1]/p3est$Q[2*i])^2 *  ((p3est$T[2*i])/(p3est$Q[2*i]^2)  +  (p3est$T[2*i-1])/(p3est$Q[2*i-1]^2)  -2*(p3est[2*i,(11+2*i)]/((p3est$Q[2*i-1])*(p3est$Q[2*i])) )))
-
-sqrt( (p3est$Q[2*1-1]/p3est$Q[2*1])^2 *  ((p3est$T[2*1])/(p3est$Q[2*1]^2)  +  (p3est$T[2*1-1])/(p3est$Q[2*1-1]^2)  -2*(p3est[2*1,(11+2*1)]/((p3est$Q[2*1-1])*(p3est$Q[2*1])) )))
-
-
-warnings()
-se_rat_maj_fem <- 
-
- 
-se_rat_maj_fem <- sqrt( (rat_maj_fem)^2 *  ((p3est$T[2])/(p3est$Q[2]^2)  +  (p3est$T[1])/(p3est$Q[1]^2)  -2*(cov_maj_fem/((p3est$Q[1])*(p3est$Q[2])) )))
-
-se_rat_maj_mal <- sqrt( (rat_maj_mal)^2 *  ((p3est$T[4])/(p3est$Q[4]^2)  +  (p3est$T[3])/(p3est$Q[3]^2)  -2*(cov_maj_mal/((p3est$Q[3])*(p3est$Q[4])) )))
-
-se_rat_urm_fem <- sqrt( (rat_urm_fem)^2 *  ((p3est$T[6])/(p3est$Q[6]^2)  +  (p3est$T[5])/(p3est$Q[5]^2)  -2*(cov_urm_fem/((p3est$Q[5])*(p3est$Q[6])) )))
-
-se_rat_urm_mal <- sqrt( (rat_urm_mal)^2 *  ((p3est$T[8])/(p3est$Q[8]^2)  +  (p3est$T[7])/(p3est$Q[7]^2)  -2*(cov_urm_mal/((p3est$Q[7])*(p3est$Q[8])) )))
-
-
-rat_self_table <- data.frame(group=c("Majority Female","Majority Male","URM Female","URM Male"),
-                             ratio = c(p3est$Q[1]/p3est$Q[2],p3est$Q[3]/p3est$Q[4],p3est$Q[5]/p3est$Q[6], p3est$Q[7]/p3est$Q[8]),
-                             se = c(sqrt( (rat_maj_fem)^2 *  ((p3est$T[2])/(p3est$Q[2]^2)  +  (p3est$T[1])/(p3est$Q[1]^2)  -2*(cov_maj_fem/((p3est$Q[1])*(p3est$Q[2])) ))),
-                                    sqrt( (rat_maj_mal)^2 *  ((p3est$T[4])/(p3est$Q[4]^2)  +  (p3est$T[3])/(p3est$Q[3]^2)  -2*(cov_maj_mal/((p3est$Q[3])*(p3est$Q[4])) ))),
-                                    sqrt( (rat_urm_fem)^2 *  ((p3est$T[6])/(p3est$Q[6]^2)  +  (p3est$T[5])/(p3est$Q[5]^2)  -2*(cov_urm_fem/((p3est$Q[5])*(p3est$Q[6])) ))),
-                                    sqrt( (rat_urm_mal)^2 *  ((p3est$T[8])/(p3est$Q[8]^2)  +  (p3est$T[7])/(p3est$Q[7]^2)  -2*(cov_urm_mal/((p3est$Q[7])*(p3est$Q[8])) )))))
 
 ```
 
