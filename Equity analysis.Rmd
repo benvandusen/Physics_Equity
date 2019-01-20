@@ -32,8 +32,9 @@ library(kableExtra)
 
 
 plot_col <- c('#66c2a5', '#fc8d62', '#8da0cb')
-cbbpalette <- c('#000000','#E69F00','#56B4E9')
-
+#cbbpalette <- c('#000000','#E69F00','#56B4E9')
+cbbpalette <- c( "#009E73", "#e79f00", "#9ad0f3", "#0072B2", "#D55E00", 
+    "#CC79A7","#000000", "#F0E442") #colorblind and grayscale friendly.
 
 ```
 
@@ -88,7 +89,7 @@ gain11 <- with(MIdata,{lmer(gain~1 + lec*(asian_no_int + black_no_int + hispanic
 #gain12 <- with(MIdata,{lmer(gain~1 + stud_pre_cent + retake + gend_URM + asian_no_int + black_no_int + hispanic_no_int + race_other_no_int + lec + (1 + stud_pre_cent + gend_URM + asian_no_int + black_no_int + hispanic_no_int + race_other_no_int |course_id))})
 ```
 
-```{r eval=FALSE, include=FALSE}
+```{r echo=FALSE}
 testEstimates(gain1, var.comp=TRUE)
 testEstimates(gain2, var.comp=TRUE)
 testEstimates(gain3, var.comp=TRUE)
@@ -192,26 +193,27 @@ difference_forms_wm_8 <- rbind(
 ```
 
 These are the differences with same group in lecture
-```{r}
+These are really pointless and boring so I don't know why we would run them. I didn't finish updating this.
+```{r include=FALSE}
 difference_forms_self_6 <- data.frame(
-WML = c(1,0,0,0,0,0,0,0,1)
-WFL = c(1,0,0,1,0,0,0,0,1)
-WFC = c(1,0,0,1,0,0,0,0,0)
-BML = c(1,0,0,0,0,1,0,0,1)
-BMC = c(1,0,0,0,0,1,0,0,0)
-BFL = c(1,0,0,1,0,1,0,0,1)
-BFC = c(1,0,0,1,0,1,0,0,0)
-AML = c(1,0,0,0,1,0,0,0,1)
-AMC = c(1,0,0,0,1,0,0,0,0)
-AFL = c(1,0,0,1,1,0,0,0,1)
-AFC = c(1,0,0,1,1,0,0,0,0)
-HML = c(1,0,0,0,0,0,1,0,1)
-HMC = c(1,0,0,0,0,0,1,0,0)
-HFL = c(1,0,0,1,0,0,1,0,1)
-HFC = c(1,0,0,1,0,0,1,0,0)
-OML = c(1,0,0,0,0,0,0,1,1)
-OMC = c(1,0,0,0,0,0,0,1,0)
-OFL = c(1,0,0,1,0,0,0,1,1)
+"White Male" = c(0,0,0,0,0,0,0,0,1),
+WFL = c(0,0,0,0,0,0,0,0,1),
+WFC = c(0,0,0,0,0,0,0,0,1),
+BML = c(0,0,0,0,0,0,0,0,1),
+BMC = c(0,0,0,0,0,0,0,0,1),
+BFL = c(0,0,0,0,0,0,0,0,1),
+BFC = c(0,0,0,0,0,0,0,0,1),
+AML = c(0,0,0,0,0,0,0,0,1),
+AMC = c(0,0,0,0,0,0,0,0,1),
+AFL = c(0,0,0,0,0,0,0,0,1),
+AFC = c(0,0,0,0,0,0,0,0,1),
+HML = c(0,0,0,0,0,0,0,0,1),
+HMC = c(1,0,0,0,0,0,1,0,0),
+HFL = c(1,0,0,1,0,0,1,0,1),
+HFC = c(1,0,0,1,0,0,1,0,0),
+OML = c(1,0,0,0,0,0,0,1,1),
+OMC = c(1,0,0,0,0,0,0,1,0),
+OFL = c(1,0,0,1,0,0,0,1,1),
 OFC = c(1,0,0,1,0,0,0,1,0))
 
 WM = c(0,0,0,0, 1)
@@ -225,8 +227,9 @@ difference_forms_self_6 <- rbind('White Male' = WM,
                           'Black Female'=BF)
 ```
 
-
-```{r}
+This is the difference with White Males in the same course.
+This is above.
+```{r eval=FALSE, include=FALSE}
 BML = c(0,1,0,0, 0)
 WFL = c(0,0,1,0, 0)
 BFL = c(0,1,1,0, 0)
@@ -398,7 +401,7 @@ return <- p3est}
 ```
 
 ```{r}
-contrast_g6_est <- pool_and_cov_diffwm(gain6,contrast_forms_mod6)
+contrast_g6_est <- pool_and_cov_diffwm(gain8,contrast_forms_mod8)
 
 contrast_g6_est$instruction <- factor(contrast_g6_est$instruction, levels = c("Lecture","Collab"))
 
@@ -411,6 +414,22 @@ ggplot(data=contrast_g6_est, aes(x=instruction, y=Q, fill=instruction)) +geom_ba
                      breaks= c("Lecture","Collab"),
                      labels=c("Lecture-based","Collaborative"),
                      values=plot_col) 
+
+#collab_plot <-  
+levels(contrast_g6_est$instruction) <- c("Lecture", "Collaborative")
+ggplot(data=contrast_g6_est, aes(x=race, y=Q, fill=gender)) +geom_bar(stat = "identity", position = "dodge") + geom_errorbar(aes( ymax= Q+SE, ymin=Q-SE), position="dodge")+
+  facet_grid(.~instruction, scales = "free", space = "free")+
+  theme(legend.position = "right",  axis.text.x=element_text(angle=90) , axis.title.x = element_blank(), axis.ticks.x=element_blank(),panel.grid.major = element_blank(), panel.grid.minor = element_blank(),panel.background = element_blank(), axis.line = element_line(colour = "black"),text = element_text(size=16, color = "black")) +
+  ylab("Gain (Percentage Points)") +
+  scale_fill_manual(name="Gender",
+                     breaks= c("Female","Male"),
+                     values=cbbpalette) 
+
+ggsave("~/Documents/LA Postdoc stuff copy/RData/LASSO/Denver-Chico_collaboration/Physics_Equity/instruction.png", plot= last_plot(), dpi=300, width = 7.3, height = 3.25, units = "in", device = "png")
+
+
+library(cowplot)
+plot_grid(collab_plot, lecture_plot, ncol=2, labels = c("Collaborative", "Lecture"), align="hv")
 
 kable(contrast_g6_est[c(1,2,6,7)], digits = 2)
 ```
