@@ -49,7 +49,7 @@ for (i in 1:10){
   temp$gain <- temp$post_score - temp$pre_score
   temp$coll <- ifelse(temp$lecture %in% 1,0,1)
   temp$retake <- ifelse (temp$first_time==1,1,0)
-  #assign(df.names[i], temp)
+  temp$race_other_no_int[temp$amind_no_int %in% 1] <- 1 # combines the american indian students in to the other group there were 61 if these students
   thing[[i]] <- temp
   }
 MIdata <- as.mitml.list(thing)
@@ -59,38 +59,40 @@ MIdata <- as.mitml.list(thing)
 
 ```{r }
 gain1 <- with(MIdata,{lmer(gain~1 + (1|course_id))})
-gain1.1 <- with(MIdata,{lmer(gain~1 + FMCE + (1|course_id))})
-gain2 <- with(MIdata,{lmer(gain~1 + stud_pre_cent + (1|course_id))})
+#gain2 <- with(MIdata,{lmer(gain~1 + stud_pre_cent + (1|course_id))})
 gain3 <- with(MIdata,{lmer(gain~1 + stud_pre_cent + retake + (1|course_id))})
-gain4 <- with(MIdata,{lmer(gain~1 + stud_pre_cent + retake + pre_mean_class + (1|course_id))})
-gain5 <- with(MIdata,{lmer(gain~1 + stud_pre_cent + retake + FMCE + (1|course_id))})
-gain6 <- with(MIdata,{lmer(gain~1 + stud_pre_cent + retake + gend_URM + (1|course_id))})
-gain6.1 <- with(MIdata,{lmer(gain~1 + stud_pre_cent + retake + gend_URM + race_URM + (1|course_id))})
-gain7 <- with(MIdata,{lmer(gain~1 + stud_pre_cent + retake + gend_URM + asian_no_int + black_no_int + hispanic_no_int + race_other_no_int +  amind_no_int + pacisland_no_int + (1|course_id))})
+#gain4 <- with(MIdata,{lmer(gain~1 + stud_pre_cent + retake + pre_mean_class + (1|course_id))})
+#gain5 <- with(MIdata,{lmer(gain~1 + stud_pre_cent + retake + FMCE + (1|course_id))})
+gain6 <- with(MIdata,{lmer(gain~1 + stud_pre_cent + retake + lecture + (1|course_id))})
+#gain6.1 <- with(MIdata,{lmer(gain~1 + stud_pre_cent + retake + gend_URM + race_URM + (1|course_id))})
+#gain7 <- with(MIdata,{lmer(gain~1 + stud_pre_cent + retake + lecture + gend_URM + asian_no_int + black_no_int + hispanic_no_int + race_other_no_int  + pacisland_no_int + (1|course_id))})
 
-gain8 <- with(MIdata,{lmer(gain~1 + stud_pre_cent + retake + gend_URM + asian_no_int + black_no_int + hispanic_no_int + race_other_no_int +  amind_no_int + pacisland_no_int + lecture +   (1|course_id))})
-gain8.1 <- with(MIdata,{lmer(gain~1 + stud_pre_cent + retake + gend_URM + race_URM + lecture +   (1|course_id))})
+gain8 <- with(MIdata,{lmer(gain~1 + stud_pre_cent + retake + gend_URM + asian_no_int + black_no_int + hispanic_no_int + race_other_no_int  + pacisland_no_int + lecture +   (1|course_id))})
+
+#gain8.1 <- with(MIdata,{lmer(gain~1 + stud_pre_cent + retake + gend_URM + race_URM + lecture +   (1|course_id))})
 #gain8.3 <- with(MIdata,{lmer(gain~1 + stud_pre_cent + retake + gend_URM + asian_no_int + black_no_int + hispanic_no_int + race_other_no_int + lec + (1|course_id) + (1|inst_id))})
 #gain8.5 <- with(MIdata,{lmer(gain~1 + stud_pre_cent + gend_URM + asian_no_int + black_no_int + hispanic_no_int + race_other_no_int + lec + (1|course_id))})
-gain9 <- with(MIdata,{lmer(gain~1 + stud_pre_cent + retake + gend_URM*(asian_no_int + black_no_int + hispanic_no_int + race_other_no_int +  amind_no_int + pacisland_no_int) + lecture + (1|course_id))})
-gain9.1 <- with(MIdata,{lmer(gain~1 + stud_pre_cent + retake + gend_URM*race_URM + lecture +   (1|course_id))})
-gain10 <- with(MIdata,{lmer(gain~1 + stud_pre_cent + retake + asian_no_int + black_no_int + hispanic_no_int + race_other_no_int +  amind_no_int + pacisland_no_int + gend_URM*lecture +  (1|course_id))})
-gain10.1 <- with(MIdata,{lmer(gain~1 + stud_pre_cent + retake + gend_URM*lecture + race_URM + (1|course_id))})
-gain11 <- with(MIdata,{lmer(gain~1 + lecture*(asian_no_int + black_no_int + hispanic_no_int + race_other_no_int +  amind_no_int + pacisland_no_int) + gend_URM + stud_pre_cent + retake + (1|course_id))})
-gain11.1 <- with(MIdata,{lmer(gain~1 + stud_pre_cent + retake + gend_URM + race_URM*lecture + (1|course_id))})
+gain9 <- with(MIdata,{lmer(gain~1 + stud_pre_cent + retake + gend_URM*(asian_no_int + black_no_int + hispanic_no_int + race_other_no_int  + pacisland_no_int) + lecture + (1|course_id))})
+#gain9.1 <- with(MIdata,{lmer(gain~1 + stud_pre_cent + retake + gend_URM*race_URM + lecture +   (1|course_id))})
+gain10 <- with(MIdata,{lmer(gain~1 + stud_pre_cent + retake + asian_no_int + black_no_int + hispanic_no_int + race_other_no_int  + pacisland_no_int + gend_URM*lecture +  (1|course_id))})
+#gain10.1 <- with(MIdata,{lmer(gain~1 + stud_pre_cent + retake + gend_URM*lecture + race_URM + (1|course_id))})
+gain11 <- with(MIdata,{lmer(gain~1 + lecture*(asian_no_int + black_no_int + hispanic_no_int + race_other_no_int  + pacisland_no_int) + gend_URM + stud_pre_cent + retake + (1|course_id))})
+#gain11.1 <- with(MIdata,{lmer(gain~1 + stud_pre_cent + retake + gend_URM + race_URM*lecture + (1|course_id))})
 #gain12 <- with(MIdata,{lmer(gain~1 + stud_pre_cent + retake + gend_URM + asian_no_int + black_no_int + hispanic_no_int + race_other_no_int + lec + (1 + stud_pre_cent + gend_URM + asian_no_int + black_no_int + hispanic_no_int + race_other_no_int |course_id))})
+
+mod9 <- gain~1 + stud_pre_cent + retake + gend_URM*(asian_no_int + black_no_int + hispanic_no_int + race_other_no_int  + pacisland_no_int) + lecture + (1|course_id)
 ```
 
 ```{r echo=FALSE}
 testEstimates(gain1, var.comp=TRUE)
-testEstimates(gain1.1, var.comp=TRUE)
-testEstimates(gain2, var.comp=TRUE)
+#testEstimates(gain1.1, var.comp=TRUE)
+#testEstimates(gain2, var.comp=TRUE)
 testEstimates(gain3, var.comp=TRUE)
-testEstimates(gain4, var.comp=TRUE)
-testEstimates(gain5, var.comp=TRUE) 
+#testEstimates(gain4, var.comp=TRUE)
+#testEstimates(gain5, var.comp=TRUE) 
 testEstimates(gain6, var.comp=TRUE)
 
-testEstimates(gain7, var.comp=TRUE)
+#testEstimates(gain7, var.comp=TRUE)
 testEstimates(gain8, var.comp=TRUE) #best model
  
 #testEstimates(gain8.3, var.comp=TRUE) we need to add in inst. ID.
@@ -98,12 +100,7 @@ testEstimates(gain8, var.comp=TRUE) #best model
 testEstimates(gain9, var.comp=TRUE)
 testEstimates(gain10, var.comp=TRUE)
 testEstimates(gain11, var.comp=TRUE)
-testEstimates(gain6.1, var.comp=TRUE)
-testEstimates(gain8.1, var.comp=TRUE)
-testEstimates(gain9.1, var.comp=TRUE)
-testEstimates(gain10.1, var.comp=TRUE)
-testEstimates(gain11.1, var.comp=TRUE)
-#testEstimates(gain12, var.comp=TRUE) # very similar coefficients to model 8
+
 ```
 
 This makes a table for the model development. Two sections need to be modified. The models and the equation column.
@@ -126,7 +123,143 @@ mod_var_tab$equation <- c("gain~1 + (1|course_id)","gain~1 + stud_pre_cent + (1|
 #"gain~1 + stud_pre_cent + retake + gend_URM + asian_no_int + black_no_int + hispanic_no_int + race_other_no_int + lec + (1 + stud_pre_cent + gend_URM + asian_no_int + black_no_int + hispanic_no_int + race_other_no_int |course_id)"
 ```
 
+The next three blocks make the figures for the estimates for model 9
+```{r}
+pool_and_cov_diffwm <- function(x,y){
+  get.est <- foreach(i=1:10, .combine=rbind) %do% {
+  sxp3 <- summary(glht(x[[i]], linfct=y)) #specifically for post3
+  covp3 <- vcov(glht(x[[i]], linfct=y))
+  data.frame(imp=i, 
+             group=rownames(sxp3$linfct),
+             d = sxp3$test$coefficients, 
+             var.d = (sxp3$test$sigma)^2,
+             cov = covp3)
+}
+p3est <- get.est %>% group_by(group) %>% 
+                  summarise(Q = mean(d), 
+                            U = mean(var.d), 
+                            B = var(d), 
+                            T = U + ((1+1/max(imp))*B), 
+                            LCL = Q - 1.96*sqrt(T), 
+                            UCL = Q + 1.96*sqrt(T),
+                            SE = sqrt(T)) 
+p3est$race <- word(p3est$group, 1)
+p3est$gender <- word(p3est$group, 2)
+p3est$instruction <- word(p3est$group, 3)
+p3est$race_gender <- paste(p3est$race,p3est$gender, sep= " ")
+return <- p3est}
+```
+
+```{r}
+#     c(I,0,0, F,A,B, H,O,P, L,a,b, h,o,p)
+WML = c(1,0,0, 0,0,0, 0,0,0, 1,0,0, 0,0,0)
+WMC = c(1,0,0, 0,0,0, 0,0,0, 0,0,0, 0,0,0)
+WFL = c(1,0,0, 1,0,0, 0,0,0, 1,0,0, 0,0,0)
+WFC = c(1,0,0, 1,0,0, 0,0,0, 0,0,0, 0,0,0)
+
+AML = c(1,0,0, 0,1,0, 0,0,0, 1,0,0, 0,0,0)
+AMC = c(1,0,0, 0,1,0, 0,0,0, 0,0,0, 0,0,0)
+AFL = c(1,0,0, 1,1,0, 0,0,0, 1,1,0, 0,0,0)
+AFC = c(1,0,0, 1,1,0, 0,0,0, 0,1,0, 0,0,0)
+
+BML = c(1,0,0, 0,0,1, 0,0,0, 1,0,0, 0,0,0)
+BMC = c(1,0,0, 0,0,1, 0,0,0, 0,0,0, 0,0,0)
+BFL = c(1,0,0, 1,0,1, 0,0,0, 1,0,1, 0,0,0)
+BFC = c(1,0,0, 1,0,1, 0,0,0, 0,0,1, 0,0,0)
+
+HML = c(1,0,0, 0,0,0, 1,0,0, 1,0,0, 0,0,0)
+HMC = c(1,0,0, 0,0,0, 1,0,0, 0,0,0, 0,0,0)
+HFL = c(1,0,0, 1,0,0, 1,0,0, 1,0,0, 1,0,0)
+HFC = c(1,0,0, 1,0,0, 1,0,0, 0,0,0, 1,0,0)
+
+OML = c(1,0,0, 0,0,0, 0,1,0, 1,0,0, 0,0,0)
+OMC = c(1,0,0, 0,0,0, 0,1,0, 0,0,0, 0,0,0)
+OFL = c(1,0,0, 1,0,0, 0,1,0, 1,0,0, 0,1,0)
+OFC = c(1,0,0, 1,0,0, 0,1,0, 0,0,0, 0,1,0)
+
+PML = c(1,0,0, 0,0,0, 0,0,1, 1,0,0, 0,0,0)
+PMC = c(1,0,0, 0,0,0, 0,0,1, 0,0,0, 0,0,0)
+PFL = c(1,0,0, 1,0,0, 0,0,1, 1,0,0, 0,0,1)
+PFC = c(1,0,0, 1,0,0, 0,0,1, 0,0,0, 0,0,1)
+
+
+contrast_forms_mod9 <- rbind('White Male Lecture'=WML, 'White Male Collab'=WMC, 
+                          'White Female Lecture'=WFL,'White Female Collab'=WFC,
+                          'Black Male Lecture'=BML, 'Black Male Collab'=BMC, 
+                          'Black Female Lecture'=BFL,'Black Female Collab'=BFC,
+                          'Asian Male Lecture'=AML, 'Asian Male Collab'=AMC, 
+                          'Asian Female Lecture'=AFL,'Asian Female Collab'=AFC,
+                          'Hispanic Male Lecture'=HML, 'Hispanic Male Collab'=HMC, 
+                          'Hispanic Female Lecture'=HFL,'Hispanic Female Collab'=HFC,
+                          'Other Male Lecture'=OML, 'Other Male Collab'=OMC, 
+                          'Other Female Lecture'=OFL,'Other Female Collab'=OFC,
+                          'Island Male Lecture'=PML, 'Island Male Collab'=PMC, 
+                          'Island Female Lecture'=PFL,'Island Female Collab'=PFC)
+```
+
+
+
+```{r}
+contrast_g9_est <- pool_and_cov_diffwm(gain9,contrast_forms_mod9)
+contrast_g9_est$instruction <- factor(contrast_g9_est$instruction, levels = c("Lecture","Collab"))
+ggplot(data=contrast_g9_est, aes(x=race_gender, y=Q, fill=instruction)) +geom_bar(stat = "identity", position= "dodge") + geom_errorbar(aes( ymax= Q+SE, ymin=Q-SE), position="dodge")+
+  theme(legend.position = "bottom", axis.title.x=element_blank(), axis.text.x=element_text(angle=90), axis.ticks.x=element_blank(),panel.grid.major = element_blank(), panel.grid.minor = element_blank(),panel.background = element_blank(), axis.line = element_line(colour = "black"),text = element_text(size=16, color = "black")) +
+  ylab("Gain (Percentage Points)") +
+  scale_fill_manual(name="Instruction",
+                     breaks= c("Lecture","Collab"),
+                     labels=c("Lecture-based","Collaborative"),
+                     values=plot_col) 
+#facet_grid(.~race_gender, scales = "free", space = "free")+
+#collab_plot <-  
+#levels(contrast_g6_est$instruction) <- c("Lecture", "Collaborative")
+ggplot(data=contrast_g9_est, aes(x=race, y=Q, fill=gender)) +geom_bar(stat = "identity", position = "dodge") + geom_errorbar(aes( ymax= Q+SE, ymin=Q-SE), position="dodge")+
+  facet_grid(.~instruction, scales = "free", space = "free")+
+  theme(legend.position = "right",  axis.text.x=element_text(angle=90) , axis.title.x = element_blank(), axis.ticks.x=element_blank(),panel.grid.major = element_blank(), panel.grid.minor = element_blank(),panel.background = element_blank(), axis.line = element_line(colour = "black"),text = element_text(size=16, color = "black")) +
+  ylab("Gain (Percentage Points)") +
+  scale_fill_manual(name="Gender",
+                     breaks= c("Female","Male"),
+                     values=cbbpalette) 
+#ggsave("~/Documents/LA Postdoc stuff copy/RData/LASSO/Denver-Chico_collaboration/Physics_Equity/instruction.png", plot= last_plot(), dpi=300, width = 7.3, height = 3.25, units = "in", device = "png")
+kable(contrast_g9_est[c(1,2,6,7)], digits = 2)
+```
+
+
+
+
+
+
 This produces the estimates for gain8
+
+
+
+These are the differences with white males in that learning environment
+```{r}
+WF = c(0,0,0,1,0,0,0,0,0)
+BM = c(0,0,0,0,0,1,0,0,0)
+BF = c(0,0,0,1,0,1,0,0,0)
+AM = c(0,0,0,0,1,0,0,0,0)
+AF = c(0,0,0,1,1,0,0,0,0)
+HM = c(0,0,0,0,0,0,1,0,0)
+HF = c(0,0,0,1,0,0,1,0,0)
+OM = c(0,0,0,0,0,0,0,1,0)
+OF = c(0,0,0,1,0,0,0,1,0)
+difference_forms_wm_8 <- rbind( 
+                          'White Female'=WF, 
+                          'Black Male'=BM, 'Black Female'=BF,
+                          'Asian Male'=AM, 'Asian Female'=AF,
+                          'Hispanic Male'=HM, 'Hispanic Female'=HF,
+                          'Other Male'=OM, 'Other Female'=OF)
+```
+
+
+
+
+
+
+#OLD
+This is the ratio stuff. It hasn't been worked through yet for our final model.
+These are the differences with same group in lecture
+These are really pointless and boring so I don't know why we would run them. I didn't finish updating this.
 ```{r}
 WML = c(1,0,0,0,0,0,0,0,1)
 WMC = c(1,0,0,0,0,0,0,0,0)
@@ -160,76 +293,6 @@ contrast_forms_mod8 <- rbind('White Male Lecture'=WML, 'White Male Collab'=WMC,
                           'Other Female Lecture'=OFL,'Other Female Collab'=OFC)
 typeof(contrast_forms_mod8)
 ```
-
-
-These are the differences with white males in that learning environment
-```{r}
-WF = c(0,0,0,1,0,0,0,0,0)
-BM = c(0,0,0,0,0,1,0,0,0)
-BF = c(0,0,0,1,0,1,0,0,0)
-AM = c(0,0,0,0,1,0,0,0,0)
-AF = c(0,0,0,1,1,0,0,0,0)
-HM = c(0,0,0,0,0,0,1,0,0)
-HF = c(0,0,0,1,0,0,1,0,0)
-OM = c(0,0,0,0,0,0,0,1,0)
-OF = c(0,0,0,1,0,0,0,1,0)
-difference_forms_wm_8 <- rbind( 
-                          'White Female'=WF, 
-                          'Black Male'=BM, 'Black Female'=BF,
-                          'Asian Male'=AM, 'Asian Female'=AF,
-                          'Hispanic Male'=HM, 'Hispanic Female'=HF,
-                          'Other Male'=OM, 'Other Female'=OF)
-```
-
-These are the differences with same group in lecture
-These are really pointless and boring so I don't know why we would run them. I didn't finish updating this.
-```{r include=FALSE}
-difference_forms_self_6 <- data.frame(
-"White Male" = c(0,0,0,0,0,0,0,0,1),
-WFL = c(0,0,0,0,0,0,0,0,1),
-WFC = c(0,0,0,0,0,0,0,0,1),
-BML = c(0,0,0,0,0,0,0,0,1),
-BMC = c(0,0,0,0,0,0,0,0,1),
-BFL = c(0,0,0,0,0,0,0,0,1),
-BFC = c(0,0,0,0,0,0,0,0,1),
-AML = c(0,0,0,0,0,0,0,0,1),
-AMC = c(0,0,0,0,0,0,0,0,1),
-AFL = c(0,0,0,0,0,0,0,0,1),
-AFC = c(0,0,0,0,0,0,0,0,1),
-HML = c(0,0,0,0,0,0,0,0,1),
-HMC = c(1,0,0,0,0,0,1,0,0),
-HFL = c(1,0,0,1,0,0,1,0,1),
-HFC = c(1,0,0,1,0,0,1,0,0),
-OML = c(1,0,0,0,0,0,0,1,1),
-OMC = c(1,0,0,0,0,0,0,1,0),
-OFL = c(1,0,0,1,0,0,0,1,1),
-OFC = c(1,0,0,1,0,0,0,1,0))
-WM = c(0,0,0,0, 1)
-BM = c(0,0,0,0, 1)
-WF = c(0,0,0,0, 1)
-BF = c(0,0,0,0, 1)
-difference_forms_self_6 <- rbind('White Male' = WM,
-                          'Black Male'=BM, 
-                          'White Female'=WF, 
-                          'Black Female'=BF)
-```
-
-This is the difference with White Males in the same course.
-This is above.
-```{r eval=FALSE, include=FALSE}
-BML = c(0,1,0,0, 0)
-WFL = c(0,0,1,0, 0)
-BFL = c(0,1,1,0, 0)
-BMC = c(0,1,0,0, 0)
-WFC = c(0,0,1,0, 0)
-BFC = c(0,1,1,0, 0)
-difference_forms_wm_6 <- rbind( 
-                          'URM Male Lecture'=BML, 'URM Male Collab'=BMC, 
-                          'Majority Female Lecture'=WFL,'Majority Female Collab'=WFC, 
-                          'URM Female Lecture'=BFL,'URM Female Collab'=BFC)
-contrast_g6_est <- pool_and_cov_diffwm(gain6,contrast_forms_mod6)
-```
-
 
 This function pools the results across the MI for each of the groups and calculates their covariance with themselves in lecture
 x=model, y= formula matrix
@@ -345,277 +408,24 @@ return <- p3est}
 ```
 
 
-```{r}
-pool_and_cov_diffwm <- function(x,y){
-  get.est <- foreach(i=1:10, .combine=rbind) %do% {
-  sxp3 <- summary(glht(x[[i]], linfct=y)) #specifically for post3
-  covp3 <- vcov(glht(x[[i]], linfct=y))
-  data.frame(imp=i, 
-             group=rownames(sxp3$linfct),
-             d = sxp3$test$coefficients, 
-             var.d = (sxp3$test$sigma)^2,
-             cov = covp3)
-}
-p3est <- get.est %>% group_by(group) %>% 
-                  summarise(Q = mean(d), 
-                            U = mean(var.d), 
-                            B = var(d), 
-                            T = U + ((1+1/max(imp))*B), 
-                            LCL = Q - 1.96*sqrt(T), 
-                            UCL = Q + 1.96*sqrt(T),
-                            SE = sqrt(T)) 
-p3est$race <- word(p3est$group, 1)
-p3est$gender <- word(p3est$group, 2)
-p3est$instruction <- word(p3est$group, 3)
-p3est$race_gender <- paste(p3est$race,p3est$gender, sep= " ")
-return <- p3est}
-```
-
-
-```{r}
-WML = c(1,0,0, 0,0,0, 0,0,0, 0,1)
-WMC = c(1,0,0, 0,0,0, 0,0,0, 0,0)
-WFL = c(1,0,0, 1,0,0, 0,0,0, 0,1)
-WFC = c(1,0,0, 1,0,0, 0,0,0, 0,0)
-AML = c(1,0,0, 0,1,0, 0,0,0, 0,1)
-AMC = c(1,0,0, 0,1,0, 0,0,0, 0,0)
-AFL = c(1,0,0, 1,1,0, 0,0,0, 0,1)
-AFC = c(1,0,0, 1,1,0, 0,0,0, 0,0)
-BML = c(1,0,0, 0,0,1, 0,0,0, 0,1)
-BMC = c(1,0,0, 0,0,1, 0,0,0, 0,0)
-BFL = c(1,0,0, 1,0,1, 0,0,0, 0,1)
-BFC = c(1,0,0, 1,0,1, 0,0,0, 0,0)
-HML = c(1,0,0, 0,0,0, 1,0,0, 0,1)
-HMC = c(1,0,0, 0,0,0, 1,0,0, 0,0)
-HFL = c(1,0,0, 1,0,0, 1,0,0, 0,1)
-HFC = c(1,0,0, 1,0,0, 1,0,0, 0,0)
-OML = c(1,0,0, 0,0,0, 0,1,0, 0,1)
-OMC = c(1,0,0, 0,0,0, 0,1,0, 0,0)
-OFL = c(1,0,0, 1,0,0, 0,1,0, 0,1)
-OFC = c(1,0,0, 1,0,0, 0,1,0, 0,0)
-IML = c(1,0,0, 0,0,0, 0,0,1, 0,1)
-IMC = c(1,0,0, 0,0,0, 0,0,1, 0,0)
-IFL = c(1,0,0, 1,0,0, 0,0,1, 0,1)
-IFC = c(1,0,0, 1,0,0, 0,0,1, 0,0)
-PML = c(1,0,0, 0,0,0, 0,0,0, 1,1)
-PMC = c(1,0,0, 0,0,0, 0,0,0, 1,0)
-PFL = c(1,0,0, 1,0,0, 0,0,0, 1,1)
-PFC = c(1,0,0, 1,0,0, 0,0,0, 1,0)
-contrast_forms_mod8 <- rbind('White Male Lecture'=WML, 'White Male Collab'=WMC, 
-                          'White Female Lecture'=WFL,'White Female Collab'=WFC,
-                          'Black Male Lecture'=BML, 'Black Male Collab'=BMC, 
-                          'Black Female Lecture'=BFL,'Black Female Collab'=BFC,
-                          'Asian Male Lecture'=AML, 'Asian Male Collab'=AMC, 
-                          'Asian Female Lecture'=AFL,'Asian Female Collab'=AFC,
-                          'Hispanic Male Lecture'=HML, 'Hispanic Male Collab'=HMC, 
-                          'Hispanic Female Lecture'=HFL,'Hispanic Female Collab'=HFC,
-                          'Other Male Lecture'=OML, 'Other Male Collab'=OMC, 
-                          'Other Female Lecture'=OFL,'Other Female Collab'=OFC,
-                          'Amind Male Lecture'=IML, 'Amind Male Collab'=IMC, 
-                          'Amind Female Lecture'=IFL,'Amind Female Collab'=IFC,
-                          'Island Male Lecture'=PML, 'Island Male Collab'=PMC, 
-                          'Island Female Lecture'=PFL,'Island Female Collab'=PFC)
-```
-
-
-
-```{r}
-contrast_g6_est <- pool_and_cov_diffwm(gain8,contrast_forms_mod8)
-contrast_g6_est$instruction <- factor(contrast_g6_est$instruction, levels = c("Lecture","Collab"))
-ggplot(data=contrast_g6_est, aes(x=race_gender, y=Q, fill=instruction)) +geom_bar(stat = "identity", position= "dodge") + geom_errorbar(aes( ymax= Q+SE, ymin=Q-SE), position="dodge")+
-  theme(legend.position = "bottom", axis.title.x=element_blank(), axis.text.x=element_text(angle=90), axis.ticks.x=element_blank(),panel.grid.major = element_blank(), panel.grid.minor = element_blank(),panel.background = element_blank(), axis.line = element_line(colour = "black"),text = element_text(size=16, color = "black")) +
-  ylab("Gain (Percentage Points)") +
-  scale_fill_manual(name="Instruction",
-                     breaks= c("Lecture","Collab"),
-                     labels=c("Lecture-based","Collaborative"),
-                     values=plot_col) 
-#facet_grid(.~race_gender, scales = "free", space = "free")+
-#collab_plot <-  
-levels(contrast_g6_est$instruction) <- c("Lecture", "Collaborative")
-ggplot(data=contrast_g6_est, aes(x=race, y=Q, fill=gender)) +geom_bar(stat = "identity", position = "dodge") + geom_errorbar(aes( ymax= Q+SE, ymin=Q-SE), position="dodge")+
-  facet_grid(.~instruction, scales = "free", space = "free")+
-  theme(legend.position = "right",  axis.text.x=element_text(angle=90) , axis.title.x = element_blank(), axis.ticks.x=element_blank(),panel.grid.major = element_blank(), panel.grid.minor = element_blank(),panel.background = element_blank(), axis.line = element_line(colour = "black"),text = element_text(size=16, color = "black")) +
-  ylab("Gain (Percentage Points)") +
-  scale_fill_manual(name="Gender",
-                     breaks= c("Female","Male"),
-                     values=cbbpalette) 
-ggsave("~/Documents/LA Postdoc stuff copy/RData/LASSO/Denver-Chico_collaboration/Physics_Equity/instruction.png", plot= last_plot(), dpi=300, width = 7.3, height = 3.25, units = "in", device = "png")
-kable(contrast_g6_est[c(1,2,6,7)], digits = 2)
-```
-
-Making the figure for the model with the interactions
-
-```{r}
-WML = c(1,0,0, 0,0,0, 0,0,0, 0,1, 0,0,0, 0,0,0)
-WMC = c(1,0,0, 0,0,0, 0,0,0, 0,0, 0,0,0, 0,0,0)
-WFL = c(1,0,0, 1,0,0, 0,0,0, 0,1, 0,0,0, 0,0,0)
-WFC = c(1,0,0, 1,0,0, 0,0,0, 0,0, 0,0,0, 0,0,0)
-AML = c(1,0,0, 0,1,0, 0,0,0, 0,1, 0,0,0, 0,0,0)
-AMC = c(1,0,0, 0,1,0, 0,0,0, 0,0, 0,0,0, 0,0,0)
-AFL = c(1,0,0, 1,1,0, 0,0,0, 0,1, 1,0,0, 0,0,0)
-AFC = c(1,0,0, 1,1,0, 0,0,0, 0,0, 1,0,0, 0,0,0)
-BML = c(1,0,0, 0,0,1, 0,0,0, 0,1, 0,0,0, 0,0,0)
-BMC = c(1,0,0, 0,0,1, 0,0,0, 0,0, 0,0,0, 0,0,0)
-BFL = c(1,0,0, 1,0,1, 0,0,0, 0,1, 0,1,0, 0,0,0)
-BFC = c(1,0,0, 1,0,1, 0,0,0, 0,0, 0,1,0, 0,0,0)
-HML = c(1,0,0, 0,0,0, 1,0,0, 0,1, 0,0,0, 0,0,0)
-HMC = c(1,0,0, 0,0,0, 1,0,0, 0,0, 0,0,0, 0,0,0)
-HFL = c(1,0,0, 1,0,0, 1,0,0, 0,1, 0,0,1, 0,0,0)
-HFC = c(1,0,0, 1,0,0, 1,0,0, 0,0, 0,0,1, 0,0,0)
-OML = c(1,0,0, 0,0,0, 0,1,0, 0,1, 0,0,0, 0,0,0)
-OMC = c(1,0,0, 0,0,0, 0,1,0, 0,0, 0,0,0, 0,0,0)
-OFL = c(1,0,0, 1,0,0, 0,1,0, 0,1, 0,0,0, 1,0,0)
-OFC = c(1,0,0, 1,0,0, 0,1,0, 0,0, 0,0,0, 1,0,0)
-IML = c(1,0,0, 0,0,0, 0,0,1, 0,1, 0,0,0, 0,0,0)
-IMC = c(1,0,0, 0,0,0, 0,0,1, 0,0, 0,0,0, 0,0,0)
-IFL = c(1,0,0, 1,0,0, 0,0,1, 0,1, 0,0,0, 0,1,0)
-IFC = c(1,0,0, 1,0,0, 0,0,1, 0,0, 0,0,0, 0,1,0)
-PML = c(1,0,0, 0,0,0, 0,0,0, 1,1, 0,0,0, 0,0,0)
-PMC = c(1,0,0, 0,0,0, 0,0,0, 1,0, 0,0,0, 0,0,0)
-PFL = c(1,0,0, 1,0,0, 0,0,0, 1,1, 0,0,0, 0,0,1)
-PFC = c(1,0,0, 1,0,0, 0,0,0, 1,0, 0,0,0, 0,0,1)
-contrast_forms_mod9 <- rbind('White Male Lecture'=WML, 'White Male Collab'=WMC, 
-                          'White Female Lecture'=WFL,'White Female Collab'=WFC,
-                          'Black Male Lecture'=BML, 'Black Male Collab'=BMC, 
-                          'Black Female Lecture'=BFL,'Black Female Collab'=BFC,
-                          'Asian Male Lecture'=AML, 'Asian Male Collab'=AMC, 
-                          'Asian Female Lecture'=AFL,'Asian Female Collab'=AFC,
-                          'Hispanic Male Lecture'=HML, 'Hispanic Male Collab'=HMC, 
-                          'Hispanic Female Lecture'=HFL,'Hispanic Female Collab'=HFC,
-                          'Other Male Lecture'=OML, 'Other Male Collab'=OMC, 
-                          'Other Female Lecture'=OFL,'Other Female Collab'=OFC,
-                          'Amind Male Lecture'=IML, 'Amind Male Collab'=IMC, 
-                          'Amind Female Lecture'=IFL,'Amind Female Collab'=IFC,
-                          'Island Male Lecture'=PML, 'Island Male Collab'=PMC, 
-                          'Island Female Lecture'=PFL,'Island Female Collab'=PFC)
-```
-
-
-
-```{r}
-contrast_g9_est <- pool_and_cov_diffwm(gain9,contrast_forms_mod9)
-contrast_g9_est$instruction <- factor(contrast_g9_est$instruction, levels = c("Lecture","Collab"))
-ggplot(data=contrast_g9_est, aes(x=race_gender, y=Q, fill=instruction)) +geom_bar(stat = "identity", position= "dodge") + geom_errorbar(aes( ymax= Q+SE, ymin=Q-SE), position="dodge")+
-  theme(legend.position = "bottom", axis.title.x=element_blank(), axis.text.x=element_text(angle=90), axis.ticks.x=element_blank(),panel.grid.major = element_blank(), panel.grid.minor = element_blank(),panel.background = element_blank(), axis.line = element_line(colour = "black"),text = element_text(size=16, color = "black")) +
-  ylab("Gain (Percentage Points)") +
-  scale_fill_manual(name="Instruction",
-                     breaks= c("Lecture","Collab"),
-                     labels=c("Lecture-based","Collaborative"),
-                     values=plot_col) 
-#facet_grid(.~race_gender, scales = "free", space = "free")+
-#collab_plot <-  
-levels(contrast_g6_est$instruction) <- c("Lecture", "Collaborative")
-ggplot(data=contrast_g9_est, aes(x=race, y=Q, fill=gender)) +geom_bar(stat = "identity", position = "dodge") + geom_errorbar(aes( ymax= Q+SE, ymin=Q-SE), position="dodge")+
-  facet_grid(.~instruction, scales = "free", space = "free")+
-  theme(legend.position = "right",  axis.text.x=element_text(angle=90) , axis.title.x = element_blank(), axis.ticks.x=element_blank(),panel.grid.major = element_blank(), panel.grid.minor = element_blank(),panel.background = element_blank(), axis.line = element_line(colour = "black"),text = element_text(size=16, color = "black")) +
-  ylab("Gain (Percentage Points)") +
-  scale_fill_manual(name="Gender",
-                     breaks= c("Female","Male"),
-                     values=cbbpalette) 
-#ggsave("~/Documents/LA Postdoc stuff copy/RData/LASSO/Denver-Chico_collaboration/Physics_Equity/instruction.png", plot= last_plot(), dpi=300, width = 7.3, height = 3.25, units = "in", device = "png")
-kable(contrast_g6_est[c(1,2,6,7)], digits = 2)
-```
-
-
-
-
-
-
-This figure isn't very interesting. It shows a difference of 6 with a 95% CI from ~2.4 to 10 
-```{r}
-diff_self_g6_est <- pool_and_cov_diffwm(gain6,difference_forms_self_6)
-ggplot(data=diff_self_g6_est, aes(x=group, y=Q)) +geom_bar(stat = "identity") + geom_errorbar(aes( ymax= Q+2*SE, ymin=Q-2*SE))
-```
-
-
-
-```{r}
-diff_wm_g6_est <- pool_and_cov_diffwm(gain6,difference_forms_wm_6)
-diff_wm_g6_est$instruction <- factor(diff_wm_g6_est$instruction, levels = c("Lecture","Collab"))
-ggplot(data=diff_wm_g6_est[diff_wm_g6_est$instruction=="Lecture",], aes(x=race_gender, y=Q, fill=instruction)) +geom_bar(stat = "identity") + coord_flip() + 
-  geom_errorbar(aes( ymax= Q+1.96*SE, ymin=Q-1.96*SE, width=0.5))+
-  theme(legend.position = "none",strip.background = element_blank(),
-  strip.text.y = element_blank(),panel.grid.major = element_blank(), panel.grid.minor = element_blank(),
-panel.background = element_blank(), axis.line = element_line(colour = "black"),text = element_text(size=16, color = "black")) +
-  xlab("")+ ylab("Gain Relative to Majority Males") +
-  scale_fill_manual(name="Instruction",
-                       breaks= c("Lecture","Collab"),
-                     labels=c("Traditional","Collaborative"),
-                     values=plot_col) +
-  scale_y_continuous(limits = c(-9,9),breaks = seq(-8, 8, by = 2))
-```
-
-
-```{r}
-contrast_g5_est <- pool_and_cov_diffwm(gain5,contrast_forms_mod5)
-ggplot(data=contrast_g5_est, aes(x=group, y=Q, fill=instruction)) +geom_bar(stat = "identity") + geom_errorbar(aes( ymax= Q+SE, ymin=Q-SE))+
-  facet_grid(.~race_gender)+
-  theme(legend.position = "bottom", axis.title.x=element_blank(), axis.text.x=element_blank(), axis.ticks.x=element_blank()) 
-```
-
-```{r}
-temp <- contrast_g5_est[c(2,11,12)]
-temp2 <- temp[temp$instruction=="Collab",]
-temp3 <- temp[temp$instruction=="Lecture",]
-temp4 <- left_join(temp2,temp3, by="race_gender")
-temp4$ratio_self <- temp4$Q.x/temp4$Q.y
-ggplot(data=temp4, aes(x=race_gender, y=ratio_self)) +geom_bar(stat = "identity")  
-```
-
-```{r}
-temp <- contrast_g5_est[c(1,2,11,12)] 
-temp$ratio_wml <- temp$Q/15.32
-ggplot(data=temp, aes(x=group, y=ratio_wml, fill=instruction)) +geom_bar(stat = "identity") + 
-  facet_grid(.~race_gender)+
-  theme(legend.position = "bottom", axis.title.x=element_blank(), axis.text.x=element_blank(), axis.ticks.x=element_blank()) 
-```
-
-
-```{r}
-temp <- contrast_g5_est[c(1,2,11,12)]
-temp2 <- temp[temp$instruction=="Collab",]
-temp2$ratio_wm_same <- temp2$Q/21.993
-temp3 <- temp[temp$instruction=="Lecture",]
-temp3$ratio_wm_same <- temp3$Q/15.931
-temp4 <- bind_rows(temp2,temp3)
-ggplot(data=temp4, aes(x=group, y=ratio_wm_same, fill=instruction)) +geom_bar(stat = "identity") + 
-  facet_grid(.~race_gender)+
-  theme(legend.position = "bottom", axis.title.x=element_blank(), axis.text.x=element_blank(), axis.ticks.x=element_blank()) 
-```
-
-
-I want to run it to make the ratios with error bars against self in lecture
-```{r}
-WML = c(1,0,0,0, 0,0,0,0)
-WMC = c(1,0,1,0, 0,0,0,0)
-contrast_self_mod4 <- rbind('White Male Lecture'=WML, 'White Male Collab'=WMC)
-diff_wm_g4_est <- pool_and_cov_diffwm(gain4,difference_forms_wm_4)
-sxp3 <- summary(glht(gain4[[1]], linfct=contrast_self_mod4)) #specifically for post3
-  covp3 <- vcov(glht(gain4[[1]], linfct=contrast_self_mod4))
-thing <-data.frame(imp=i, 
-             group=rownames(sxp3$linfct),
-             d = sxp3$test$coefficients, 
-             var.d = (sxp3$test$sigma)^2,
-             cov = covp3)
-```
 
 #Assumption checking
 
 ```{r}
 	for (i in 1:10) {
-  D1 <- lmer(mod6,data=MIdata[[i]])
+  D1 <- lmer(mod9,data=MIdata[[i]])
   print(plot(D1, xlab="Fitted Value", ylab="Residual Variance"))
 }
  
 for (i in 1:10) {
-  D1 <- lmer(mod6,data=MIdata[[i]])
+  D1 <- lmer(mod9,data=MIdata[[i]])
 #visual homogeneity of variance
 MIdata[[i]]$Model.F.Res <- residuals(D1) #extracts the residuals and places them in a new column in our original data table
 MIdata[[i]]$Abs.Model.F.Res <-abs(MIdata[[1]]$Model.F.Res) #creates a new column with the absolute value of the residuals
 print(boxplot(MIdata[[i]]$Model.F.Res ~ MIdata[[i]]$course_id, xlab = "Course", ylab = "Residuals" ))
 }
 for (i in 1:10) {
-  D1 <- lmer(mod6,data=MIdata[[i]])
+  D1 <- lmer(mod9,data=MIdata[[i]])
 #Assumption of Normality or residuals: want points to be near the line
 print(qqmath(D1))
 }
@@ -627,7 +437,7 @@ res_corr <- data_frame(it =NA,
                        with_cent_pre = NA)
  for (i in 1:10) {
 res_corr[i,1] <- i
-D1 <- lmer(mod6,data=MIdata[[i]])
+D1 <- lmer(mod9,data=MIdata[[i]])
 temp <- cor.test(resid(D1), MIdata[[i]]$pre_score)
 res_corr[i,2] <-  temp$p.value 
 temp <-  cor.test(resid(D1), MIdata[[i]]$stud_pre_cent)
@@ -640,7 +450,7 @@ lev_p <- data_frame(it =NA,
                        p_values = NA)
  for (i in 1:10) {
 lev_p[i,1] <-i
-D1 <- lmer(mod6,data=MIdata[[i]])
+D1 <- lmer(mod9,data=MIdata[[i]])
 MIdata[[i]]$Model.F.Res<- residuals(D1) #extracts the residuals and places them in a new column in our original data table
 MIdata[[i]]$Abs.Model.F.Res <-abs(MIdata[[i]]$Model.F.Res) #creates a new column with the absolute value of the residuals
 Levene.Model.F <- lm(Model.F.Res ~ course_id, data=MIdata[[i]]) #ANOVA of the residuals
