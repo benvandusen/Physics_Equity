@@ -114,7 +114,7 @@ gain2 <- with(MIdata,{lmer(gain~1 + stud_pre_cent + (1|course_id))})
 gain3 <- with(MIdata,{lmer(gain~1 + stud_pre_cent + retake + (1|course_id))})
 #gain4 <- with(MIdata,{lmer(gain~1 + stud_pre_cent + retake + pre_mean_class + (1|course_id))})
 #gain5 <- with(MIdata,{lmer(gain~1 + stud_pre_cent + retake + FMCE + (1|course_id))})
-gain6 <- with(MIdata,{lmer(gain~1 + stud_pre_cent + retake + lecture + (1|course_id))})
+gain6 <- with(MIdata,{lmer(gain~1 + stud_pre_cent + retake + gend_URM + (1|course_id))})
 #gain6.1 <- with(MIdata,{lmer(gain~1 + stud_pre_cent + retake + gend_URM + race_URM + (1|course_id))})
 #gain7 <- with(MIdata,{lmer(gain~1 + stud_pre_cent + retake + lecture + gend_URM*race_URM + (1|course_id))})
 
