@@ -637,11 +637,11 @@ contrast_g9_est$instruction <- factor(contrast_g9_est$instruction, levels = c("L
 
 ggplot(data=contrast_g9_est, aes(x=group, y=Q)) +geom_bar(stat = "identity") + geom_errorbar(aes( ymax= Q+1.96*SE, ymin=Q-1.96*SE))+
   theme(legend.position = "bottom", axis.title.y=element_blank(), panel.grid.major = element_blank(), panel.grid.minor = element_blank(),panel.background = element_blank(), axis.line = element_line(colour = "black"),text = element_text(size=16, color = "black")) +
-  ylab("Gain (Percentage Points)") +
+  ylab("Gain Relative to White Males (Percentage Points)") +
   scale_fill_manual(name="Instruction",
                      breaks= c("Lecture","Collab"),
                      labels=c("Traditional","Collaborative"),
-                     values=plot_col) +
+                     values=plot_col)+
   coord_flip()
 
 
