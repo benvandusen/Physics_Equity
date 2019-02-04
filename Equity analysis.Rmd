@@ -81,6 +81,31 @@ desc$gend_URM <- ifelse(desc$gend_URM==1, "Female","Male")
 kable(desc, digits=1)
 ```
 
+#Descriptive statistics by lecture
+```{r}
+#variables: M, group by
+
+desc2 <- foreach(i=1:10, .combine=rbind) %do% {
+temp <- MIdata[[i]]
+temp$race <- ifelse(temp$black_no_int ==1, "Black",ifelse(temp$hispanic_no_int ==1, "Hispanic",ifelse(temp$asian_no_int ==1, "Asian",ifelse(temp$pacisland_no_int ==1, "Island",ifelse(temp$race_other_no_int ==1, "Other","White")))))
+desc <- temp  %>% summarise(N = length(pre_score),
+                                                                 pre_mean = mean(pre_score),
+                                                                 pre_sd = sd(pre_score),
+                                                                 post_mean = mean(post_score),
+                                                                 post_sd = sd(post_score),
+                                                                 gain_mean = mean (post_score-pre_score),
+                                                                 gain_sd = sd(post_score-pre_score)
+                                                                 )
+
+
+return <- desc
+}
+desc <- desc2 %>% summarise_all(funs(mean))
+#desc$lecture <- ifelse(desc$lecture ==1, "Lecture","Collaborative")
+#desc$gend_URM <- ifelse(desc$gend_URM==1, "Female","Male")
+kable(desc, digits=1)
+```
+
 #Descriptive statistics by lecture, race and gender
 ```{r}
 #variables: M, group by
@@ -104,6 +129,9 @@ desc <- desc2 %>% group_by(race, lecture, gend_URM) %>% summarise_all(funs(mean)
 desc$lecture <- ifelse(desc$lecture ==1, "Lecture","Collaborative")
 desc$gend_URM <- ifelse(desc$gend_URM==1, "Female","Male")
 kable(desc, digits=1)
+sum(temp$hispanic_no_int)
+length(temp[temp$his])
+
 ```
 
 
@@ -237,7 +265,11 @@ contrast_forms_mod8 <- rbind('White Male'=WML,
                           'Island Female'=PFL)
 
 contrast_g8_est <- pool_and_cov_diffwm(gain8,contrast_forms_mod8)
-ggplot(data=contrast_g9_est, aes(x=race, y=Q, fill=gender)) +geom_bar(stat = "identity", position= "dodge") + geom_errorbar(aes( ymax= Q+SE, ymin=Q-SE), position="dodge")+
+unique(contrast_g8_est$race)
+
+contrast_g8_est$race <- factor(contrast_g8_est$race, levels = c("Black", "Hispanic", "Island", "Other", "Asian",    "White"))
+
+ggplot(data=contrast_g8_est, aes(x=race, y=Q, fill=gender)) +geom_bar(stat = "identity", position= "dodge") + geom_errorbar(aes( ymax= Q+SE, ymin=Q-SE), position="dodge")+
   theme(legend.position = "bottom", axis.title.x=element_blank(), axis.text.x=element_text(angle=90), axis.ticks.x=element_blank(),panel.grid.major = element_blank(), panel.grid.minor = element_blank(),panel.background = element_blank(), axis.line = element_line(colour = "black"),text = element_text(size=16, color = "black")) +
   ylab("Gain (Percentage Points)") 
 #facet_grid(.~race_gender, scales = "free", space = "free")+
@@ -249,8 +281,8 @@ ggplot(data=contrast_g8_est, aes(x=race, y=Q, fill=gender)) + geom_bar(stat = "i
   scale_fill_manual(name="Gender",
                      breaks= c("Female","Male"),
                      values=cbbpalette) 
-#ggsave("~/Documents/LA Postdoc stuff copy/RData/LASSO/Denver-Chico_collaboration/Physics_Equity/instruction.png", plot= last_plot(), dpi=300, width = 7.3, height = 3.25, units = "in", device = "png")
-kable(contrast_g9_est[c(1,2,6,7)], digits = 2)
+ggsave("~/Documents/LA Postdoc stuff copy/RData/LASSO/Denver-Chico_collaboration/Physics_Equity/mod8.png", plot= last_plot(), dpi=300, width = 7.3, height = 3.25, units = "in", device = "png")
+kable(contrast_g8_est[c(1,2,6,7)], digits = 2)
 ```
 
 
@@ -313,13 +345,7 @@ ggplot(data=contrast_g9_est, aes(x=race_gender, y=Q, fill=instruction)) +geom_ba
 #facet_grid(.~race_gender, scales = "free", space = "free")+
 #collab_plot <-  
 #levels(contrast_g6_est$instruction) <- c("Lecture", "Collaborative")
-ggplot(data=contrast_g9_est, aes(x=race, y=Q, fill=gender)) +geom_bar(stat = "identity", position = "dodge") + geom_errorbar(aes( ymax= Q+SE, ymin=Q-SE), position="dodge")+
-  facet_grid(.~instruction, scales = "free", space = "free")+
-  theme(legend.position = "right",  axis.text.x=element_text(angle=90) , axis.title.x = element_blank(), axis.ticks.x=element_blank(),panel.grid.major = element_blank(), panel.grid.minor = element_blank(),panel.background = element_blank(), axis.line = element_line(colour = "black"),text = element_text(size=16, color = "black")) +
-  ylab("Gain (Percentage Points)") +
-  scale_fill_manual(name="Gender",
-                     breaks= c("Female","Male"),
-                     values=cbbpalette) 
+#ggplot(data=contrast_g9_est, aes(x=race, y=Q, fill=gender)) +geom_bar(stat = "identity", position = "dodge") + geom_errorbar(aes( ymax= Q+SE, ymin=Q-SE), position="dodge")+  facet_grid(.~instruction, scales = "free", space = "free")+  theme(legend.position = "right",  axis.text.x=element_text(angle=90) , axis.title.x = element_blank(), axis.ticks.x=element_blank(),panel.grid.major = element_blank(), panel.grid.minor = element_blank(),panel.background = element_blank(), axis.line = element_line(colour = "black"),text = element_text(size=16, color = "black")) +  ylab("Gain (Percentage Points)") +  scale_fill_manual(name="Gender",                     breaks= c("Female","Male"), values=cbbpalette) 
 #ggsave("~/Documents/LA Postdoc stuff copy/RData/LASSO/Denver-Chico_collaboration/Physics_Equity/instruction.png", plot= last_plot(), dpi=300, width = 7.3, height = 3.25, units = "in", device = "png")
 kable(contrast_g9_est[c(1,2,6,7)], digits = 2)
 ```
@@ -372,9 +398,9 @@ contrast_forms_mod10 <- rbind('White Male Lecture'=WML, 'White Male Collab'=WMC,
                           'Island Male Lecture'=PML, 'Island Male Collab'=PMC, 
                           'Island Female Lecture'=PFL,'Island Female Collab'=PFC)
 
-contrast_g10_est <- pool_and_cov_diffwm(gain9,contrast_forms_mod9)
+contrast_g10_est <- pool_and_cov_diffwm(gain10,contrast_forms_mod10)
 contrast_g10_est$instruction <- factor(contrast_g9_est$instruction, levels = c("Lecture","Collab"))
-ggplot(data=contrast_g9_est, aes(x=race_gender, y=Q, fill=instruction)) +geom_bar(stat = "identity", position= "dodge") + geom_errorbar(aes( ymax= Q+SE, ymin=Q-SE), position="dodge")+
+ggplot(data=contrast_g10_est, aes(x=race_gender, y=Q, fill=instruction)) +geom_bar(stat = "identity", position= "dodge") + geom_errorbar(aes( ymax= Q+SE, ymin=Q-SE), position="dodge")+
   theme(legend.position = "bottom", axis.title.x=element_blank(), axis.text.x=element_text(angle=90), axis.ticks.x=element_blank(),panel.grid.major = element_blank(), panel.grid.minor = element_blank(),panel.background = element_blank(), axis.line = element_line(colour = "black"),text = element_text(size=16, color = "black")) +
   ylab("Gain (Percentage Points)") +
   scale_fill_manual(name="Instruction",
@@ -577,20 +603,22 @@ contrast_g8_est <- pool_and_cov_diffwm(gain8,difference_forms_mod8)
 
 contrast_g8_est$instruction <- factor(contrast_g8_est$instruction, levels = c("Lecture","Collab"))
 
+unique(contrast_g8_est$race_gender)
 
-ggplot(data=contrast_g8_est, aes(x=group, y=Q)) +geom_bar(stat = "identity") + geom_errorbar(aes( ymax= Q+1.96*SE, ymin=Q-1.96*SE))+
+contrast_g8_est$group <- factor(contrast_g8_est$group, levels = c("White Female", "Asian Male", "Asian Female", "Hispanic Male", "Other Male", "Other Female", "Island Female", "Island Male",     "Black Female", "Hispanic Female", "Black Male"))
+
+ggplot(data=contrast_g8_est, aes(x=group, y=Q, fill=gender)) +geom_bar(stat = "identity") + geom_errorbar(aes( ymax= Q+1.96*SE, ymin=Q-1.96*SE))+
+  scale_fill_manual(name="Gender",
+                     values=cbbpalette) +
   theme(legend.position = "bottom", axis.title.y=element_blank(), panel.grid.major = element_blank(), panel.grid.minor = element_blank(),panel.background = element_blank(), axis.line = element_line(colour = "black"),text = element_text(size=16, color = "black")) +
   ylab("Gain (Percentage Points)") +
-  scale_fill_manual(name="Instruction",
-                     breaks= c("Lecture","Collab"),
-                     labels=c("Traditional","Collaborative"),
-                     values=plot_col) +
-  coord_flip()
-
-
+  scale_y_continuous(limits = c(-11,2), breaks = c(2,0,-2,-4,-6,-8,-10)) +
+  coord_flip() 
+  
+ggsave("~/Documents/LA Postdoc stuff copy/RData/LASSO/Denver-Chico_collaboration/Physics_Equity/compare to WM.png", plot= last_plot(), dpi=300, width = 7.3, height = 3.25, units = "in", device = "png")
 
   
-  facet_grid(.~race_gender, scales = "free", space = "free")
+ 
 
 kable(contrast_g8_est[c(1,2,6,7)], digits = 2)
 ```
@@ -799,8 +827,8 @@ x=model, y= formula matrix
 #pool_and_cov <- function(x,y){ #I'm just not going ot make this as a function for now since I am only going to run it once and it might be really tricky with differing sizes and positions for the variables
 #This pulls out all of the relevant data from the anaylysis of the MId data.
   get.est <- foreach(i=1:10, .combine=rbind) %do% {
-  sxp3 <- summary(glht(gain8[[i]], linfct=contrast_forms_mod8)) #specifically for post3
-  covp3 <- vcov(glht(gain8[[i]], linfct=contrast_forms_mod8))
+  sxp3 <- summary(glht(gain9[[i]], linfct=contrast_forms_mod9)) #specifically for post3
+  covp3 <- vcov(glht(gain9[[i]], linfct=contrast_forms_mod9))
   data.frame(imp=i, 
              group=rownames(sxp3$linfct),
              d = sxp3$test$coefficients, 
@@ -846,24 +874,41 @@ cov_pooled <- get.est %>% group_by(group) %>% summarise(cov.Asian.Female.Collab 
                                                    cov.White.Male.Collab = mean(cov.White.Male.Collab),
                                                    cov.White.Male.Lecture = mean(cov.White.Male.Lecture))
 p3est <- left_join(p3est, cov_pooled, by = "group")
-rats <- foreach(i=1:10, .combine=rbind) %do% {
+rats <- foreach(i=1:12, .combine=rbind) %do% {
   names <- p3est$race_gender[2*i]
   ratio <- p3est$Q[2*i-1]/p3est$Q[2*i]
-  se <-   sqrt( (p3est$Q[2*i-1]/p3est$Q[2*i])^2 *  ((p3est$T[2*i])/(p3est$Q[2*i]^2)  +  (p3est$T[2*i-1])/(p3est$Q[2*i-1]^2)  -2*(p3est[2*i,(11+2*i)]/((p3est$Q[2*i-1])*(p3est$Q[2*i])) )))
+  #se <-   sqrt( (p3est$Q[2*i-1]/p3est$Q[2*i])^2 *  ((p3est$T[2*i])/(p3est$Q[2*i]^2)  +  (p3est$T[2*i-1])/(p3est$Q[2*i-1]^2)  -2*(p3est[2*i,(11+2*i)]/((p3est$Q[2*i-1])*(p3est$Q[2*i])) )))
   data.frame(group=names,
              ratio = ratio,
              se=se[[1]])
 }
+
+t1 <- p3est[p3est$instruction == "Collab",]
+t2 <- p3est[p3est$instruction == "Lecture",]
+t3 <- left_join(t1[c(2,12)],t2[c(2,12)], by="race_gender" )
+t3$rats <- t3$Q.x/t3$Q.y -1
+
 #the se[[1]] is necessary due to a name problem. for whatever reasion the se function returns an object with a name.
 ```
 
 ```{r}
+ggplot(t3, aes(y=rats, x=race_gender)) +geom_bar(stat="identity", fill='#fc8d62') +
+  theme(legend.position = "bottom", axis.title.x=element_blank(),panel.grid.major = element_blank(), panel.grid.minor = element_blank(),panel.background = element_blank(), axis.line = element_line(colour = "black"),text = element_text(size=16, color = "black"),axis.text.x = element_text(angle = 90)) +
+  ylab("Ratio with Self in Lecture") 
+  ylim(c(0.8,2.4))
+
+
+
 ggplot(rats, aes(y=ratio, x=group)) +geom_bar(stat="identity", fill='#fc8d62') +
   geom_errorbar(aes( ymax= ratio+1.96*se, ymin=ratio-1.96*se, width=0.5)) +
   theme(legend.position = "bottom", axis.title.x=element_blank(),panel.grid.major = element_blank(), panel.grid.minor = element_blank(),panel.background = element_blank(), axis.line = element_line(colour = "black"),text = element_text(size=16, color = "black"),axis.text.x = element_text(angle = 90)) +
   ylab("Ratio with Self in Lecture") 
   ylim(c(0.8,2.4))
-ggplot(data=contrast_g6_est, aes(x=instruction, y=Q, fill=instruction)) +geom_bar(stat = "identity", fill='#fc8d62') + geom_errorbar(aes( ymax= Q+1.96*SE, ymin=Q-1.96*SE))+
+
+  
+  
+  
+  ggplot(data=contrast_g6_est, aes(x=instruction, y=Q, fill=instruction)) +geom_bar(stat = "identity", fill='#fc8d62') + geom_errorbar(aes( ymax= Q+1.96*SE, ymin=Q-1.96*SE))+
   facet_grid(.~race_gender, scales = "free", space = "free")+
    +
   ylab("Gain (Percentage Points)") +
