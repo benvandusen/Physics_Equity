@@ -1682,4 +1682,11 @@ boxplot(MIdata[[1]]$Model.F.Res ~ MIdata[[1]]$course_id)
 qqmath(D1)
 ```
 
-
+```{r echo=FALSE}
+pre1 <- with(MIdata,{lmer(pre_score~1 + gend_URM*(asian_no_int + black_no_int + hispanic_no_int + race_other_no_int  + pacisland_no_int) + (1|course_id))})
+pre2 <- with(MIdata,{lmer(pre_score~1 + gend_URM*(asian_no_int + black_no_int + hispanic_no_int + race_other_no_int  + pacisland_no_int) + lecture + (1|course_id))})
+pre3 <- with(MIdata,{lmer(pre_score~1 + gend_URM*(asian_no_int + black_no_int + hispanic_no_int + race_other_no_int  + pacisland_no_int)*lecture + (1|course_id))})
+testEstimates(pre1, var.comp=TRUE)
+testEstimates(pre2, var.comp=TRUE)
+testEstimates(pre3, var.comp=TRUE)
+```
