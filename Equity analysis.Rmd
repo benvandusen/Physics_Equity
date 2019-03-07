@@ -158,13 +158,15 @@ gain9 <- with(MIdata,{lmer(gain~1 + stud_pre_cent + retake + gend_URM*(asian_no_
 gain11 <- with(MIdata,{lmer(gain~1 + lecture*(asian_no_int + black_no_int + hispanic_no_int + race_other_no_int  + pacisland_no_int)*gend_URM + stud_pre_cent + retake + (1|course_id))})
 gain11.2 <- with(MIdata,{lmer(gain~1 + lecture*race_URM*gend_URM + stud_pre_cent + retake + (1|course_id))})
 #gain11.1 <- with(MIdata,{lmer(gain~1 + stud_pre_cent + retake + gend_URM + race_URM*lecture + (1|course_id))})
-gain12 <- with(MIdata,{lmer(gain~1 + stud_pre_cent + retake + gend_URM*(asian_no_int + black_no_int + hispanic_no_int + race_other_no_int  + pacisland_no_int) + lecture + (1 + stud_pre_cent + gend_URM + asian_no_int + black_no_int + hispanic_no_int + race_other_no_int + pacisland_no_int |course_id))})
+#gain12 <- with(MIdata,{lmer(gain~1 + stud_pre_cent + retake + gend_URM*(asian_no_int + black_no_int + hispanic_no_int + race_other_no_int  + pacisland_no_int) + lecture + (1 + stud_pre_cent + gend_URM + asian_no_int + black_no_int + hispanic_no_int + race_other_no_int + pacisland_no_int |course_id))})
 
 mod9 <- gain~1 + stud_pre_cent + retake + gend_URM*(asian_no_int + black_no_int + hispanic_no_int + race_other_no_int  + pacisland_no_int) + lecture + (1|course_id)
 
-pre1 <- with(MIdata,{lmer(pre_score~1 + gend_URM*(asian_no_int + black_no_int + hispanic_no_int + race_other_no_int  + pacisland_no_int) + (1|course_id))})
-pre2 <- with(MIdata,{lmer(pre_score~1 + gend_URM*(asian_no_int + black_no_int + hispanic_no_int + race_other_no_int  + pacisland_no_int) + lecture + (1|course_id))})
-pre3 <- with(MIdata,{lmer(pre_score~1 + gend_URM*(asian_no_int + black_no_int + hispanic_no_int + race_other_no_int  + pacisland_no_int)*lecture + (1|course_id))})
+pre1 <- with(MIdata,{lmer(pre_score~1 + (1|course_id))})
+pre2 <- with(MIdata,{lmer(pre_score~1 + retake + (1|course_id))})
+pre3 <- with(MIdata,{lmer(pre_score~1 + gend_URM + (1|course_id))})
+pre4 <- with(MIdata,{lmer(pre_score~1 + gend_URM*(asian_no_int + black_no_int + hispanic_no_int + race_other_no_int  + pacisland_no_int) + (1|course_id))})
+pre5 <- with(MIdata,{lmer(pre_score~1 + gend_URM*(asian_no_int + black_no_int + hispanic_no_int + race_other_no_int  + pacisland_no_int) + (1 + gend_URM + asian_no_int + black_no_int + hispanic_no_int + race_other_no_int + pacisland_no_int|course_id))})
 ```
 
 ```{r echo=FALSE}
@@ -185,11 +187,13 @@ testEstimates(gain9, var.comp=TRUE)
 #testEstimates(gain10, var.comp=TRUE)
 testEstimates(gain11, var.comp=TRUE)
 testEstimates(gain11.2, var.comp=TRUE)
-testEstimates(gain12, var.comp=TRUE)
+#testEstimates(gain12, var.comp=TRUE)
 
 testEstimates(pre1, var.comp=TRUE)
 testEstimates(pre2, var.comp=TRUE)
 testEstimates(pre3, var.comp=TRUE)
+testEstimates(pre4, var.comp=TRUE)
+testEstimates(pre5, var.comp=TRUE)
 ```
 
 This makes a table for the model development. Two sections need to be modified. The models and the equation column.
@@ -238,6 +242,65 @@ p3est$instruction <- word(p3est$group, 3)
 p3est$race_gender <- paste(p3est$race,p3est$gender, sep= " ")
 return <- p3est}
 ```
+
+Pre1
+```{r}
+mod_pre_1 <- pre_score~1 + gend_URM*(asian_no_int + black_no_int + hispanic_no_int + race_other_no_int  + pacisland_no_int) + (1|course_id)
+
+#     c(I, F,A,B, H,O,P, a,b, h,o,p)
+WML = c(1, 0,0,0, 0,0,0, 0,0, 0,0,0)
+WFL = c(1, 1,0,0, 0,0,0, 0,0, 0,0,0)
+
+AML = c(1, 0,1,0, 0,0,0, 0,0, 0,0,0)
+AFL = c(1, 1,1,0, 0,0,0, 1,0, 0,0,0)
+
+BML = c(1, 0,0,1, 0,0,0, 0,0, 0,0,0)
+BFL = c(1, 1,0,1, 0,0,0, 0,1, 0,0,0)
+
+HML = c(1, 0,0,0, 1,0,0, 0,0, 0,0,0)
+HFL = c(1, 1,0,0, 1,0,0, 0,0, 1,0,0)
+
+OML = c(1, 0,0,0, 0,1,0, 0,0, 0,0,0)
+OFL = c(1, 1,0,0, 0,1,0, 0,0, 0,1,0)
+
+PML = c(1, 0,0,0, 0,0,1, 0,0, 0,0,0)
+PFL = c(1, 1,0,0, 0,0,1, 0,0, 0,0,1)
+
+
+contrast_forms_mod_pre_1 <- rbind('White Male'=WML,  
+                          'White Female'=WFL,
+                          'Black Male'=BML,  
+                          'Black Female'=BFL,
+                          'Asian Male'=AML, 
+                          'Asian Female'=AFL,
+                          'Hispanic Male'=HML, 
+                          'Hispanic Female'=HFL,
+                          'Other Male'=OML,  
+                          'Other Female'=OFL,
+                          'Island Male'=PML, 
+                          'Island Female'=PFL)
+
+contrast_p1_est <- pool_and_cov_diffwm(pre1,contrast_forms_mod_pre_1)
+unique(contrast_p1_est$race)
+
+contrast_p1_est$race <- factor(contrast_p1_est$race, levels = c("Black", "Hispanic", "Island", "Other", "Asian",    "White"))
+
+ggplot(data=contrast_p1_est, aes(x=race, y=Q, fill=gender)) +geom_bar(stat = "identity", position= "dodge") + geom_errorbar(aes( ymax= Q+SE, ymin=Q-SE), position="dodge")+
+  theme(legend.position = "bottom", axis.title.x=element_blank(), axis.text.x=element_text(angle=90), axis.ticks.x=element_blank(),panel.grid.major = element_blank(), panel.grid.minor = element_blank(),panel.background = element_blank(), axis.line = element_line(colour = "black"),text = element_text(size=16, color = "black")) +
+  ylab("Gain (Percentage Points)") 
+#facet_grid(.~race_gender, scales = "free", space = "free")+
+#collab_plot <-  
+#levels(contrast_g6_est$instruction) <- c("Lecture", "Collaborative")
+ggplot(data=contrast_p1_est, aes(x=race, y=Q, fill=gender)) + geom_bar(stat = "identity", position = "dodge") + geom_errorbar(aes( ymax= Q+SE, ymin=Q-SE), position="dodge")+
+  theme(legend.position = "right",  axis.text.x=element_text(angle=90) , axis.title.x = element_blank(), axis.ticks.x=element_blank(),panel.grid.major = element_blank(), panel.grid.minor = element_blank(),panel.background = element_blank(), axis.line = element_line(colour = "black"),text = element_text(size=16, color = "black")) +
+  ylab("Gain (Percentage Points)") +
+  scale_fill_manual(name="Gender",
+                     breaks= c("Female","Male"),
+                     values=cbbpalette) 
+ggsave("~/Documents/LA Postdoc stuff copy/RData/LASSO/Denver-Chico_collaboration/Physics_Equity/pre1.png", plot= last_plot(), dpi=300, width = 7.3, height = 3.25, units = "in", device = "png")
+kable(contrast_g8_est[c(1,2,6,7)], digits = 2)
+```
+
 
 gain 8
 ```{r}
