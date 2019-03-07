@@ -1753,3 +1753,11 @@ testEstimates(pre1, var.comp=TRUE)
 testEstimates(pre2, var.comp=TRUE)
 testEstimates(pre3, var.comp=TRUE)
 ```
+
+Institutions in the data
+```{r}
+institutions <- MIdata[[1]]
+institutions <- unique(institutions[c(8,17)])
+institutions <- institutions %>% group_by(Degree) %>% summarise(N = length(institution_id))
+```
+
