@@ -177,6 +177,7 @@ pre5 <- with(MIdata,{lmer(pre_score~1 + FMCE + gend_URM*(asian_no_int + black_no
 pre5.1 <- with(MIdata,{lmer(pre_score~1 + FMCE + gend_URM + (asian_no_int + black_no_int + hispanic_no_int + race_other_no_int  + pacisland_no_int) + (1|course_id))})
 pre6 <- with(MIdata,{lmer(pre_score~1 + FMCE*gend_URM + gend_URM*(asian_no_int + black_no_int + hispanic_no_int + race_other_no_int  + pacisland_no_int) + (1|course_id))})
 pre7 <- with(MIdata,{lmer(pre_score~1 + FMCE*gend_URM*(asian_no_int + black_no_int + hispanic_no_int + race_other_no_int  + pacisland_no_int) + (1|course_id))})
+pre8 <- with(MIdata,{lmer(pre_score~1 + FMCE*gend_URM + gend_URM*(asian_no_int + black_no_int + hispanic_no_int + race_other_no_int  + pacisland_no_int) + + FMCE*(asian_no_int + black_no_int + hispanic_no_int + race_other_no_int  + pacisland_no_int) + (1|course_id))})
 ```
 
 ```{r echo=FALSE}
@@ -215,6 +216,7 @@ testEstimates(pre5, var.comp=TRUE)
 testEstimates(pre5.1, var.comp=TRUE)
 testEstimates(pre6, var.comp=TRUE)
 testEstimates(pre7, var.comp=TRUE)
+testEstimates(pre8, var.comp=TRUE)
 ```
 
 This makes a table for the model development. Two sections need to be modified. The models and the equation column.
