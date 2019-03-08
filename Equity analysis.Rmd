@@ -174,10 +174,10 @@ pre3 <- with(MIdata,{lmer(pre_score~1 + FMCE + (1|course_id))})
 #pre3.1 <- with(MIdata,{lmer(pre_score~1 + FMCE + lecture + (1|course_id))})
 pre4 <- with(MIdata,{lmer(pre_score~1 + FMCE + gend_URM + (1|course_id))})
 pre5 <- with(MIdata,{lmer(pre_score~1 + FMCE + gend_URM*(asian_no_int + black_no_int + hispanic_no_int + race_other_no_int  + pacisland_no_int) + (1|course_id))})
-pre5.1 <- with(MIdata,{lmer(pre_score~1 + FMCE + gend_URM + (asian_no_int + black_no_int + hispanic_no_int + race_other_no_int  + pacisland_no_int) + (1|course_id))})
 pre6 <- with(MIdata,{lmer(pre_score~1 + FMCE*gend_URM + gend_URM*(asian_no_int + black_no_int + hispanic_no_int + race_other_no_int  + pacisland_no_int) + (1|course_id))})
-pre7 <- with(MIdata,{lmer(pre_score~1 + FMCE*gend_URM*(asian_no_int + black_no_int + hispanic_no_int + race_other_no_int  + pacisland_no_int) + (1|course_id))})
-pre8 <- with(MIdata,{lmer(pre_score~1 + FMCE*gend_URM + gend_URM*(asian_no_int + black_no_int + hispanic_no_int + race_other_no_int  + pacisland_no_int) + + FMCE*(asian_no_int + black_no_int + hispanic_no_int + race_other_no_int  + pacisland_no_int) + (1|course_id))})
+pre7 <- with(MIdata,{lmer(pre_score~1 + FMCE*gend_URM + FMCE*(asian_no_int + black_no_int + hispanic_no_int + race_other_no_int  + pacisland_no_int) + (1|course_id))})
+
+
 ```
 
 ```{r echo=FALSE}
@@ -210,13 +210,11 @@ testEstimates(gain12, var.comp=TRUE)
 testEstimates(pre1, var.comp=TRUE)
 testEstimates(pre2, var.comp=TRUE)
 testEstimates(pre3, var.comp=TRUE)
-#testEstimates(pre3.1, var.comp=TRUE)
 testEstimates(pre4, var.comp=TRUE)
 testEstimates(pre5, var.comp=TRUE)
-#testEstimates(pre5.1, var.comp=TRUE)
 testEstimates(pre6, var.comp=TRUE)
 testEstimates(pre7, var.comp=TRUE)
-testEstimates(pre8, var.comp=TRUE)
+
 ```
 
 This makes a table for the model development. Two sections need to be modified. The models and the equation column.
@@ -264,6 +262,101 @@ p3est$gender <- word(p3est$group, 2)
 p3est$instruction <- word(p3est$group, 3)
 p3est$race_gender <- paste(p3est$race,p3est$gender, sep= " ")
 return <- p3est}
+```
+
+Pre6
+```{r}
+mod_pre_6 <- pre_score~1 + FMCE*gend_URM + gend_URM*(asian_no_int + black_no_int + hispanic_no_int + race_other_no_int  + pacisland_no_int) + (1|course_id)
+#     c(I, C,F,A,B, H,O,P, c,a,b, h,o,p)
+#     c(I, F,A,B, H,O,P, a,b, h,o,p)
+WML = c(1, 0,0,0,0, 0,0,0, 0,0,0, 0,0,0)
+WFL = c(1, 0,1,0,0, 0,0,0, 0,0,0, 0,0,0)
+
+AML = c(1, 0,0,1,0, 0,0,0, 0,0,0, 0,0,0)
+AFL = c(1, 0,1,1,0, 0,0,0, 0,1,0, 0,0,0)
+
+BML = c(1, 0,0,0,1, 0,0,0, 0,0,0, 0,0,0)
+BFL = c(1, 0,1,0,1, 0,0,0, 0,0,1, 0,0,0)
+
+HML = c(1, 0,0,0,0, 1,0,0, 0,0,0, 0,0,0)
+HFL = c(1, 0,1,0,0, 1,0,0, 0,0,0, 1,0,0)
+
+OML = c(1, 0,0,0,0, 0,1,0, 0,0,0, 0,0,0)
+OFL = c(1, 0,1,0,0, 0,1,0, 0,0,0, 0,1,0)
+
+PML = c(1, 0,0,0,0, 0,0,1, 0,0,0, 0,0,0)
+PFL = c(1, 0,1,0,0, 0,0,1, 0,0,0, 0,0,1)
+#----
+WMC = c(1, 1,0,0,0, 0,0,0, 0,0,0, 0,0,0)
+WFC = c(1, 1,1,0,0, 0,0,0, 1,0,0, 0,0,0)
+
+AMC = c(1, 1,0,1,0, 0,0,0, 0,0,0, 0,0,0)
+AFC = c(1, 1,1,1,0, 0,0,0, 1,1,0, 0,0,0)
+
+BMC = c(1, 1,0,0,1, 0,0,0, 0,0,0, 0,0,0)
+BFC = c(1, 1,1,0,1, 0,0,0, 1,0,1, 0,0,0)
+
+HMC = c(1, 1,0,0,0, 1,0,0, 0,0,0, 0,0,0)
+HFC = c(1, 1,1,0,0, 1,0,0, 1,0,0, 1,0,0)
+
+OMC = c(1, 1,0,0,0, 0,1,0, 0,0,0, 0,0,0)
+OFC = c(1, 1,1,0,0, 0,1,0, 1,0,0, 0,1,0)
+
+PMC = c(1, 1,0,0,0, 0,0,1, 0,0,0, 0,0,0)
+PFC = c(1, 1,1,0,0, 0,0,1, 1,0,0, 0,0,1)
+
+
+contrast_forms_mod_pre_6 <- rbind('White Male FCI'=WML,  
+                          'White Female FCI'=WFL,
+                          'Black Male FCI'=BML,  
+                          'Black Female FCI'=BFL,
+                          'Asian Male FCI'=AML, 
+                          'Asian Female FCI'=AFL,
+                          'Hispanic Male FCI'=HML, 
+                          'Hispanic Female FCI'=HFL,
+                          'Other Male FCI'=OML,  
+                          'Other Female FCI'=OFL,
+                          'Island Male FCI'=PML, 
+                          'Island Female FCI'=PFL,
+                          'White Male FMCE'=WMC,  
+                          'White Female FMCE'=WFC,
+                          'Black Male FMCE'=BMC,  
+                          'Black Female FMCE'=BFC,
+                          'Asian Male FMCE'=AMC, 
+                          'Asian Female FMCE'=AFC,
+                          'Hispanic Male FMCE'=HMC, 
+                          'Hispanic Female FMCE'=HFC,
+                          'Other Male FMCE'=OMC,  
+                          'Other Female FMCE'=OFC,
+                          'Island Male FMCE'=PMC, 
+                          'Island Female FMCE'=PFC)
+
+contrast_p6_est <- pool_and_cov_diffwm(pre6,contrast_forms_mod_pre_6)
+unique(contrast_p6_est$race)
+
+contrast_p6_est$race <- factor(contrast_p6_est$race, levels = c("Black", "Hispanic", "Island", "Other", "Asian",    "White"))
+
+ggplot(data=contrast_p6_est, aes(x=race, y=Q, fill=gender)) +geom_bar(stat = "identity", position= "dodge") + geom_errorbar(aes( ymax= Q+SE, ymin=Q-SE), position="dodge")+
+  theme(legend.position = "bottom", axis.title.x=element_blank(), axis.text.x=element_text(angle=90), axis.ticks.x=element_blank(),panel.grid.major = element_blank(), panel.grid.minor = element_blank(),panel.background = element_blank(), axis.line = element_line(colour = "black"),text = element_text(size=16, color = "black")) +
+  ylab("Gain (Percentage Points)") +
+facet_grid(.~instruction, scales = "free", space = "free")
+#collab_plot <-  
+#levels(contrast_g6_est$instruction) <- c("Lecture", "Collaborative")
+
+
+ggplot(data=contrast_p6_est, aes(x=race, y=Q, fill=gender)) + geom_bar(stat = "identity", position = "dodge") + geom_errorbar(aes( ymax= Q+SE, ymin=Q-SE), position="dodge")+
+  theme(legend.position = "bottom",  axis.text.x=element_text(angle=90) , axis.title.x = element_blank(), axis.ticks.x=element_blank(),panel.grid.major = element_blank(), panel.grid.minor = element_blank(),panel.background = element_blank(), axis.line = element_line(colour = "black"),text = element_text(size=16, color = "black")) +
+  ylab("Pretest (%)") +
+  scale_fill_manual(name="Gender",
+                     breaks= c("Female","Male"),
+                     values=cbbpalette) +
+facet_grid(.~instruction, scales = "free", space = "free")
+ggsave("~/Documents/LA Postdoc stuff copy/RData/LASSO/Denver-Chico_collaboration/Physics_Equity/pre6.png", plot= last_plot(), dpi=300, width = 7.3, height = 4.25, units = "in", device = "png")
+FCI <- contrast_p6_est[contrast_p6_est$instruction=="FCI",]
+FMCE <- contrast_p6_est[contrast_p6_est$instruction=="FMCE",]
+
+kable(FCI[c(1,2,6,7)], digits = 1)
+kable(FMCE[c(1,2,6,7)], digits = 1)
 ```
 
 Pre1
