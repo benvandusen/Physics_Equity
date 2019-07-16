@@ -9,6 +9,8 @@ Load stuff (There are some packages that we don't need here, but I didn't clean 
 #load("~/Physics_Equity/hmifall2018_m10_better")
 #load("~/Documents/LA Postdoc stuff copy/RData/LASSO/Denver-Chico_collaboration/Physics_Equity_new/hmifall2018_m10_better")
 load("~/hmi_1_23_19")
+library("cAIC4")
+library("MuMIn")
 library(tidyr)
 library("ggplot2")
 library(gvlma)
@@ -133,7 +135,15 @@ length(temp[temp$his])
 
 ```
 
-
+dredge
+```{r}
+options(na.action = "na.fail")
+gain8 <- with(MIdata,(lmer(gain ~1 + stud_pre_cent + retake + gend_URM*(asian_no_int + black_no_int + hispanic_no_int + race_other_no_int  + pacisland_no_int)*lecture +  (1|course_id))))
+dredge <- with(MIdata,{dredge(lmer(gain ~1 + stud_pre_cent + retake + gend_URM*(asian_no_int + black_no_int + hispanic_no_int + race_other_no_int  + pacisland_no_int)*lecture +  (1|course_id)))})
+#intro_mod_dredge <- glmer(m_all, data=red_introPhys,family = binomial)
+#intro_dredge <- dredge(intro_mod_dredge)
+model.sel(dredge[[1]], rank=AIC)
+```
 
 ```{r }
 gain1 <- with(MIdata,{lmer(gain~1 + (1|course_id))})
