@@ -133,29 +133,30 @@ PML = c(1,0,0,0, 0,0,0,0,1, 1)
 PFL = c(1,0,0,1, 0,0,0,0,1, 1)
 
 
-contrast_forms_modss <- rbind('White Male'=WML,  
-                          'White Female'=WFL,
-                          'Black Male'=BML,  
-                          'Black Female'=BFL,
-                          'Asian Male'=AML, 
-                          'Asian Female'=AFL,
-                          'Hispanic Male'=HML, 
-                          'Hispanic Female'=HFL,
-                          'Other Male'=OML,  
-                          'Other Female'=OFL,
-                          'Island Male'=PML, 
-                          'Island Female'=PFL)
+contrast_forms_modss <- rbind('White Men'=WML,  
+                          'White Women'=WFL,
+                          'Black Men'=BML,  
+                          'Black Women'=BFL,
+                          'Asian Men'=AML, 
+                          'Asian Women'=AFL,
+                          'Hispanic Men'=HML, 
+                          'Hispanic Women'=HFL,
+                          'Other Men'=OML,  
+                          'Other Women'=OFL,
+                          'Island Men'=PML, 
+                          'Island Women'=PFL)
 
 contrast_ss_est <- pool_and_cov_diffwm(gain_ss,contrast_forms_modss)
 unique(contrast_ss_est$race)
 
 contrast_ss_est$race <- factor(contrast_ss_est$race, levels = c("Black", "Hispanic", "Island", "Other", "Asian",    "White"))
+contrast_ss_est$gender <- factor(contrast_ss_est$gender, levels = c("Women", "Men"))
 
 ggplot(data=contrast_ss_est, aes(x=race, y=Q, fill=gender)) + geom_bar(stat = "identity", position = "dodge") + geom_errorbar(aes( ymax= Q+SE, ymin=Q-SE), position="dodge")+
   theme(legend.position = "right",  axis.text.x=element_text(angle=90) , axis.title.x = element_blank(), axis.ticks.x=element_blank(),panel.grid.major = element_blank(), panel.grid.minor = element_blank(),panel.background = element_blank(), axis.line = element_line(colour = "black"),text = element_text(size=16, color = "black")) +
   ylab("Gain (Percentage Points)") +
   scale_fill_manual(name="Gender",
-                     breaks= c("Female","Male"),
+                     breaks= c("Women","Men"),
                      values=cbbpalette) 
 ggsave("~/Physics_Equity/mod_ss.png", plot= last_plot(), dpi=300, width = 7.3, height = 3.25, units = "in", device = "png")
 kable(contrast_ss_est[c(1,2,6,7)], digits = 2)
@@ -182,29 +183,30 @@ PML = c(1,0,0, 0,0,0, 0,0,1, 1,0,0, 0,0,0)
 PFL = c(1,0,0, 1,0,0, 0,0,1, 1,0,0, 0,0,1)
 
 
-contrast_forms_modve <- rbind('White Male'=WML,  
-                          'White Female'=WFL,
-                          'Black Male'=BML,  
-                          'Black Female'=BFL,
-                          'Asian Male'=AML, 
-                          'Asian Female'=AFL,
-                          'Hispanic Male'=HML, 
-                          'Hispanic Female'=HFL,
-                          'Other Male'=OML,  
-                          'Other Female'=OFL,
-                          'Island Male'=PML, 
-                          'Island Female'=PFL)
+contrast_forms_modve <- rbind('White Men'=WML,  
+                          'White Women'=WFL,
+                          'Black Men'=BML,  
+                          'Black Women'=BFL,
+                          'Asian Men'=AML, 
+                          'Asian Women'=AFL,
+                          'Hispanic Men'=HML, 
+                          'Hispanic Women'=HFL,
+                          'Other Men'=OML,  
+                          'Other Women'=OFL,
+                          'Island Men'=PML, 
+                          'Island Women'=PFL)
 
 contrast_ve_est <- pool_and_cov_diffwm(gain_ve,contrast_forms_modve)
 unique(contrast_ve_est$race)
 
 contrast_ve_est$race <- factor(contrast_ve_est$race, levels = c("Black", "Hispanic", "Island", "Other", "Asian",    "White"))
+contrast_ve_est$gender <- factor(contrast_ve_est$gender, levels = c("Women", "Men"))
 
 ggplot(data=contrast_ve_est, aes(x=race, y=Q, fill=gender)) + geom_bar(stat = "identity", position = "dodge") + geom_errorbar(aes( ymax= Q+SE, ymin=Q-SE), position="dodge")+
   theme(legend.position = "right",  axis.text.x=element_text(angle=90) , axis.title.x = element_blank(), axis.ticks.x=element_blank(),panel.grid.major = element_blank(), panel.grid.minor = element_blank(),panel.background = element_blank(), axis.line = element_line(colour = "black"),text = element_text(size=16, color = "black")) +
   ylab("Gain (Percentage Points)") +
   scale_fill_manual(name="Gender",
-                     breaks= c("Female","Male"),
+                     breaks= c("Women","Men"),
                      values=cbbpalette) 
 ggsave("~/Physics_Equity/mod_ve.png", plot= last_plot(), dpi=300, width = 7.3, height = 3.25, units = "in", device = "png")
 kable(contrast_ve_est[c(1,2,6,7)], digits = 2)
@@ -236,12 +238,12 @@ PFL = c(1,0,0, 1, 0,0,0,0,1, 1, 0,0,0,0,1, 1, 0,0,0,0,1,  0,0,0,0,1)
 
 
 
-contrast_forms_modic <- rbind('White Male Lecture'=WML,'White Female Lecture'=WFL,
-                              'Black Male Lecture'=BML, 'Black Female Lecture'=BFL,
-                              'Asian Male Lecture'=AML,'Asian Female Lecture'=AFL,
-                              'Hispanic Male Lecture'=HML,'Hispanic Female Lecture'=HFL,
-                              'Other Male Lecture'=OML,'Other Female Lecture'=OFL,
-                              'Island Male Lecture'=PML,'Island Female Lecture'=PFL)
+contrast_forms_modic <- rbind('White Men Lecture'=WML,'White Women Lecture'=WFL,
+                              'Black Men Lecture'=BML, 'Black Women Lecture'=BFL,
+                              'Asian Men Lecture'=AML,'Asian Women Lecture'=AFL,
+                              'Hispanic Men Lecture'=HML,'Hispanic Women Lecture'=HFL,
+                              'Other Men Lecture'=OML,'Other Women Lecture'=OFL,
+                              'Island Men Lecture'=PML,'Island Women Lecture'=PFL)
 
 contrast_forms_modic_full <- rbind('White Male Lecture'=WML, 'White Male Collab'=WMC, 
                           'White Female Lecture'=WFL,'White Female Collab'=WFC,
@@ -259,12 +261,13 @@ contrast_forms_modic_full <- rbind('White Male Lecture'=WML, 'White Male Collab'
 contrast_gic_est <- pool_and_cov_diffwm(gain_ic,contrast_forms_modic)
 #contrast_gic_est$instruction <- factor(contrast_gic_est$instruction, levels = c("Lecture","Collab"))
 contrast_gic_est$race <- factor(contrast_gic_est$race, levels = c("Black", "Hispanic", "Island", "Other", "Asian",    "White"))
+contrast_gic_est$gender <- factor(contrast_gic_est$gender, levels = c("Women", "Men"))
 
 ggplot(data=contrast_gic_est, aes(x=race, y=Q, fill=gender)) + geom_bar(stat = "identity", position = "dodge") + geom_errorbar(aes( ymax= Q+SE, ymin=Q-SE), position="dodge")+
   theme(legend.position = "right",  axis.text.x=element_text(angle=90) , axis.title.x = element_blank(), axis.ticks.x=element_blank(),panel.grid.major = element_blank(), panel.grid.minor = element_blank(),panel.background = element_blank(), axis.line = element_line(colour = "black"),text = element_text(size=16, color = "black")) +
   ylab("Gain (Percentage Points)") +
   scale_fill_manual(name="Gender",
-                     breaks= c("Female","Male"),
+                     breaks= c("Women","Men"),
                      values=cbbpalette) 
 ggsave("~/Physics_Equity/mod_ic.png", plot= last_plot(), dpi=300, width = 7.3, height = 3.25, units = "in", device = "png")
 kable(contrast_ve_est[c(1,2,6,7)], digits = 2)
@@ -292,29 +295,30 @@ PMCss = c(0,0,0,0, 0,0,0,0,0, -1)
 PFCss = c(0,0,0,0, 0,0,0,0,0, -1)
 
 
-contrast_forms_modCss <- rbind('White Male'=WMCss,  
-                          'White Female'=WFCss,
-                          'Black Male'=BMCss,  
-                          'Black Female'=BFCss,
-                          'Asian Male'=AMCss, 
-                          'Asian Female'=AFCss,
-                          'Hispanic Male'=HMCss, 
-                          'Hispanic Female'=HFCss,
-                          'Other Male'=OMCss,  
-                          'Other Female'=OFCss,
-                          'Island Male'=PMCss, 
-                          'Island Female'=PFCss)
+contrast_forms_modCss <- rbind('White Men'=WMCss,  
+                          'White Women'=WFCss,
+                          'Black Men'=BMCss,  
+                          'Black Women'=BFCss,
+                          'Asian Men'=AMCss, 
+                          'Asian Women'=AFCss,
+                          'Hispanic Men'=HMCss, 
+                          'Hispanic Women'=HFCss,
+                          'Other Men'=OMCss,  
+                          'Other Women'=OFCss,
+                          'Island Men'=PMCss, 
+                          'Island Women'=PFCss)
 
 contrast_Css_est <- pool_and_cov_diffwm(gain_ss,contrast_forms_modCss)
 unique(contrast_Css_est$race)
 
 contrast_Css_est$race <- factor(contrast_Css_est$race, levels = c("Black", "Hispanic", "Island", "Other", "Asian",    "White"))
+contrast_Css_est$gender <- factor(contrast_Css_est$gender, levels = c("Women", "Men"))
 
 ggplot(data=contrast_Css_est, aes(x=race, y=Q, fill=gender)) + geom_bar(stat = "identity", position = "dodge") + geom_errorbar(aes( ymax= Q+SE, ymin=Q-SE), position="dodge")+
   theme(legend.position = "right",  axis.text.x=element_text(angle=90) , axis.title.x = element_blank(), axis.ticks.x=element_blank(),panel.grid.major = element_blank(), panel.grid.minor = element_blank(),panel.background = element_blank(), axis.line = element_line(colour = "black"),text = element_text(size=16, color = "black")) +
   ylab("Gain (Percentage Points)") +
   scale_fill_manual(name="Gender",
-                     breaks= c("Female","Male"),
+                     breaks= c("Women","Men"),
                      values=cbbpalette) 
 ggsave("~/Physics_Equity/mod_Css.png", plot= last_plot(), dpi=300, width = 7.3, height = 3.25, units = "in", device = "png")
 kable(contrast_ss_est[c(1,2,6,7)], digits = 2)
@@ -342,29 +346,30 @@ PMCve = c(0,0,0, 0,0,0, 0,0,0, -1,0,0, 0,0,0)
 PFCve = c(0,0,0, 0,0,0, 0,0,0, -1,0,0, 0,0,0)
 
 
-contrast_forms_modCve <- rbind('White Male'=WMCve,  
-                          'White Female'=WFCve,
-                          'Black Male'=BMCve,  
-                          'Black Female'=BFCve,
-                          'Asian Male'=AMCve, 
-                          'Asian Female'=AFCve,
-                          'Hispanic Male'=HMCve, 
-                          'Hispanic Female'=HFCve,
-                          'Other Male'=OMCve,  
-                          'Other Female'=OFCve,
-                          'Island Male'=PMCve, 
-                          'Island Female'=PFCve)
+contrast_forms_modCve <- rbind('White Men'=WMCve,  
+                          'White Women'=WFCve,
+                          'Black Men'=BMCve,  
+                          'Black Women'=BFCve,
+                          'Asian Men'=AMCve, 
+                          'Asian Women'=AFCve,
+                          'Hispanic Men'=HMCve, 
+                          'Hispanic Women'=HFCve,
+                          'Other Men'=OMCve,  
+                          'Other Women'=OFCve,
+                          'Island Men'=PMCve, 
+                          'Island Women'=PFCve)
 
 contrast_Cve_est <- pool_and_cov_diffwm(gain_ve,contrast_forms_modCve)
 unique(contrast_Cve_est$race)
 
 contrast_Cve_est$race <- factor(contrast_Cve_est$race, levels = c("Black", "Hispanic", "Island", "Other", "Asian",    "White"))
+contrast_Cve_est$gender <- factor(contrast_Cve_est$gender, levels = c("Women", "Men"))
 
 ggplot(data=contrast_Cve_est, aes(x=race, y=Q, fill=gender)) + geom_bar(stat = "identity", position = "dodge") + geom_errorbar(aes( ymax= Q+SE, ymin=Q-SE), position="dodge")+
   theme(legend.position = "right",  axis.text.x=element_text(angle=90) , axis.title.x = element_blank(), axis.ticks.x=element_blank(),panel.grid.major = element_blank(), panel.grid.minor = element_blank(),panel.background = element_blank(), axis.line = element_line(colour = "black"),text = element_text(size=16, color = "black")) +
   ylab("Gain (Percentage Points)") +
   scale_fill_manual(name="Gender",
-                     breaks= c("Female","Male"),
+                     breaks= c("Women","Men"),
                      values=cbbpalette) 
 ggsave("~/Physics_Equity/mod_Cve.png", plot= last_plot(), dpi=300, width = 7.3, height = 3.25, units = "in", device = "png")
 kable(contrast_ss_est[c(1,2,6,7)], digits = 2)
@@ -392,29 +397,30 @@ PMCic = c(0,0,0, 0, 0,0,0,0,0, -1, 0,0,0,0,0, 0, 0,0,0,0,-1,  0,0,0,0,0)
 PFCic = c(0,0,0, 0, 0,0,0,0,0, -1, 0,0,0,0,0, -1, 0,0,0,0,-1,  0,0,0,0,-1)
 
 
-contrast_forms_modCic <- rbind('White Male'=WMCic,  
-                          'White Female'=WFCic,
-                          'Black Male'=BMCic,  
-                          'Black Female'=BFCic,
-                          'Asian Male'=AMCic, 
-                          'Asian Female'=AFCic,
-                          'Hispanic Male'=HMCic, 
-                          'Hispanic Female'=HFCic,
-                          'Other Male'=OMCic,  
-                          'Other Female'=OFCic,
-                          'Island Male'=PMCic, 
-                          'Island Female'=PFCic)
+contrast_forms_modCic <- rbind('White Men'=WMCic,  
+                          'White Women'=WFCic,
+                          'Black Men'=BMCic,  
+                          'Black Women'=BFCic,
+                          'Asian Men'=AMCic, 
+                          'Asian Women'=AFCic,
+                          'Hispanic Men'=HMCic, 
+                          'Hispanic Women'=HFCic,
+                          'Other Men'=OMCic,  
+                          'Other Women'=OFCic,
+                          'Island Men'=PMCic, 
+                          'Island Women'=PFCic)
 
 contrast_Cic_est <- pool_and_cov_diffwm(gain_ic,contrast_forms_modCic)
 unique(contrast_Cic_est$race)
 
 contrast_Cic_est$race <- factor(contrast_Cic_est$race, levels = c("Black", "Hispanic", "Island", "Other", "Asian",    "White"))
+contrast_Cic_est$gender <- factor(contrast_Cic_est$gender, levels = c("Women", "Men"))
 
 ggplot(data=contrast_Cic_est, aes(x=race, y=Q, fill=gender)) + geom_bar(stat = "identity", position = "dodge") + geom_errorbar(aes( ymax= Q+SE, ymin=Q-SE), position="dodge")+
   theme(legend.position = "right",  axis.text.x=element_text(angle=90) , axis.title.x = element_blank(), axis.ticks.x=element_blank(),panel.grid.major = element_blank(), panel.grid.minor = element_blank(),panel.background = element_blank(), axis.line = element_line(colour = "black"),text = element_text(size=16, color = "black")) +
   ylab("Gain (Percentage Points)") +
   scale_fill_manual(name="Gender",
-                     breaks= c("Female","Male"),
+                     breaks= c("Women","Men"),
                      values=cbbpalette) 
 ggsave("~/Physics_Equity/mod_Cic.png", plot= last_plot(), dpi=300, width = 7.3, height = 3.25, units = "in", device = "png")
 kable(contrast_ss_est[c(1,2,6,7)], digits = 2)
