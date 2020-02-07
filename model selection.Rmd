@@ -76,7 +76,7 @@ gain_full <- with(MIdata,{lmer(gain ~1 + stud_pre_cent + retake + gend_URM*(asia
 running models for model selection writing
 ```{r}
 gain_ve <- with(MIdata,{lmer(gain~1 + stud_pre_cent + retake + gend_URM*(asian_no_int + black_no_int + hispanic_no_int + race_other_no_int  + pacisland_no_int) + lecture + (1|course_id))})
-gain_ss <- with(MIdata,{lmer(gain ~1 +  (1|course_id))})
+gain_ss <- with(MIdata,{lmer(gain ~1 + stud_pre_cent + retake + gend_URM + (asian_no_int + black_no_int + hispanic_no_int + race_other_no_int  + pacisland_no_int) + lecture +  (1|course_id))})
 gain_ic <- with(MIdata,{lmer(gain ~1 + stud_pre_cent + retake + gend_URM*(asian_no_int + black_no_int + hispanic_no_int + race_other_no_int  + pacisland_no_int)*lecture +  (1|course_id))})
 
 testEstimates(gain_ve, var.comp=TRUE)
@@ -111,29 +111,29 @@ p3est$race_gender <- paste(p3est$race,p3est$gender, sep= " ")
 return <- p3est}
 ```
 
-gain 8
+graph for SS
 ```{r}
-#     c(I,0,0, F,A,B, H,O,P, ,a,b, h,o,p)
-WML = c(1,0,0, 0,0,0, 0,0,0, 0,0, 0,0,0)
-WFL = c(1,0,0, 1,0,0, 0,0,0, 0,0, 0,0,0)
+#     c(I,pre,R,F, A,B,H,O,P ,l)
+WML = c(1,0,0,0, 0,0,0,0,0, 1)
+WFL = c(1,0,0,1, 0,0,0,0,0, 1)
 
-AML = c(1,0,0, 0,1,0, 0,0,0, 0,0, 0,0,0)
-AFL = c(1,0,0, 1,1,0, 0,0,0, 1,0, 0,0,0)
+AML = c(1,0,0,0, 1,0,0,0,0, 1)
+AFL = c(1,0,0,1, 1,0,0,0,0, 1)
 
-BML = c(1,0,0, 0,0,1, 0,0,0, 0,0, 0,0,0)
-BFL = c(1,0,0, 1,0,1, 0,0,0, 0,1, 0,0,0)
+BML = c(1,0,0,0, 0,1,0,0,0, 1)
+BFL = c(1,0,0,1, 0,1,0,0,0, 1)
 
-HML = c(1,0,0, 0,0,0, 1,0,0, 0,0, 0,0,0)
-HFL = c(1,0,0, 1,0,0, 1,0,0, 0,0, 1,0,0)
+HML = c(1,0,0,0, 0,0,1,0,0, 1)
+HFL = c(1,0,0,1, 0,0,1,0,0, 1)
 
-OML = c(1,0,0, 0,0,0, 0,1,0, 0,0, 0,0,0)
-OFL = c(1,0,0, 1,0,0, 0,1,0, 0,0, 0,1,0)
+OML = c(1,0,0,0, 0,0,0,1,0, 1)
+OFL = c(1,0,0,1, 0,0,0,1,0, 1)
 
-PML = c(1,0,0, 0,0,0, 0,0,1, 0,0, 0,0,0)
-PFL = c(1,0,0, 1,0,0, 0,0,1, 0,0, 0,0,1)
+PML = c(1,0,0,0, 0,0,0,0,1, 1)
+PFL = c(1,0,0,1, 0,0,0,0,1, 1)
 
 
-contrast_forms_mod8 <- rbind('White Male'=WML,  
+contrast_forms_modss <- rbind('White Male'=WML,  
                           'White Female'=WFL,
                           'Black Male'=BML,  
                           'Black Female'=BFL,
@@ -146,202 +146,104 @@ contrast_forms_mod8 <- rbind('White Male'=WML,
                           'Island Male'=PML, 
                           'Island Female'=PFL)
 
-contrast_g8_est <- pool_and_cov_diffwm(gain8,contrast_forms_mod8)
-unique(contrast_g8_est$race)
+contrast_ss_est <- pool_and_cov_diffwm(gain_ss,contrast_forms_modss)
+unique(contrast_ss_est$race)
 
-contrast_g8_est$race <- factor(contrast_g8_est$race, levels = c("Black", "Hispanic", "Island", "Other", "Asian",    "White"))
+contrast_ss_est$race <- factor(contrast_ss_est$race, levels = c("Black", "Hispanic", "Island", "Other", "Asian",    "White"))
 
-ggplot(data=contrast_g8_est, aes(x=race, y=Q, fill=gender)) +geom_bar(stat = "identity", position= "dodge") + geom_errorbar(aes( ymax= Q+SE, ymin=Q-SE), position="dodge")+
-  theme(legend.position = "bottom", axis.title.x=element_blank(), axis.text.x=element_text(angle=90), axis.ticks.x=element_blank(),panel.grid.major = element_blank(), panel.grid.minor = element_blank(),panel.background = element_blank(), axis.line = element_line(colour = "black"),text = element_text(size=16, color = "black")) +
-  ylab("Gain (Percentage Points)") 
-#facet_grid(.~race_gender, scales = "free", space = "free")+
-#collab_plot <-  
-#levels(contrast_g6_est$instruction) <- c("Lecture", "Collaborative")
-ggplot(data=contrast_g8_est, aes(x=race, y=Q, fill=gender)) + geom_bar(stat = "identity", position = "dodge") + geom_errorbar(aes( ymax= Q+SE, ymin=Q-SE), position="dodge")+
+ggplot(data=contrast_ss_est, aes(x=race, y=Q, fill=gender)) + geom_bar(stat = "identity", position = "dodge") + geom_errorbar(aes( ymax= Q+SE, ymin=Q-SE), position="dodge")+
   theme(legend.position = "right",  axis.text.x=element_text(angle=90) , axis.title.x = element_blank(), axis.ticks.x=element_blank(),panel.grid.major = element_blank(), panel.grid.minor = element_blank(),panel.background = element_blank(), axis.line = element_line(colour = "black"),text = element_text(size=16, color = "black")) +
   ylab("Gain (Percentage Points)") +
   scale_fill_manual(name="Gender",
                      breaks= c("Female","Male"),
                      values=cbbpalette) 
-ggsave("~/Documents/LA Postdoc stuff copy/RData/LASSO/Denver-Chico_collaboration/Physics_Equity/mod8.png", plot= last_plot(), dpi=300, width = 7.3, height = 3.25, units = "in", device = "png")
-kable(contrast_g8_est[c(1,2,6,7)], digits = 2)
+ggsave("~/Physics_Equity/mod_ss.png", plot= last_plot(), dpi=300, width = 7.3, height = 3.25, units = "in", device = "png")
+kable(contrast_ss_est[c(1,2,6,7)], digits = 2)
 ```
-
-
-gain 9
+graph for VE
 ```{r}
-#     c(I,0,0, F,A,B, H,O,P, L,a,b, h,o,p)
+#     c(I,pre,reta, F,A,B, H,O,P, l,fa,fb, fh,fo,fp)
 WML = c(1,0,0, 0,0,0, 0,0,0, 1,0,0, 0,0,0)
-WMC = c(1,0,0, 0,0,0, 0,0,0, 0,0,0, 0,0,0)
 WFL = c(1,0,0, 1,0,0, 0,0,0, 1,0,0, 0,0,0)
-WFC = c(1,0,0, 1,0,0, 0,0,0, 0,0,0, 0,0,0)
 
 AML = c(1,0,0, 0,1,0, 0,0,0, 1,0,0, 0,0,0)
-AMC = c(1,0,0, 0,1,0, 0,0,0, 0,0,0, 0,0,0)
 AFL = c(1,0,0, 1,1,0, 0,0,0, 1,1,0, 0,0,0)
-AFC = c(1,0,0, 1,1,0, 0,0,0, 0,1,0, 0,0,0)
 
 BML = c(1,0,0, 0,0,1, 0,0,0, 1,0,0, 0,0,0)
-BMC = c(1,0,0, 0,0,1, 0,0,0, 0,0,0, 0,0,0)
 BFL = c(1,0,0, 1,0,1, 0,0,0, 1,0,1, 0,0,0)
-BFC = c(1,0,0, 1,0,1, 0,0,0, 0,0,1, 0,0,0)
 
 HML = c(1,0,0, 0,0,0, 1,0,0, 1,0,0, 0,0,0)
-HMC = c(1,0,0, 0,0,0, 1,0,0, 0,0,0, 0,0,0)
 HFL = c(1,0,0, 1,0,0, 1,0,0, 1,0,0, 1,0,0)
-HFC = c(1,0,0, 1,0,0, 1,0,0, 0,0,0, 1,0,0)
 
 OML = c(1,0,0, 0,0,0, 0,1,0, 1,0,0, 0,0,0)
-OMC = c(1,0,0, 0,0,0, 0,1,0, 0,0,0, 0,0,0)
 OFL = c(1,0,0, 1,0,0, 0,1,0, 1,0,0, 0,1,0)
-OFC = c(1,0,0, 1,0,0, 0,1,0, 0,0,0, 0,1,0)
 
 PML = c(1,0,0, 0,0,0, 0,0,1, 1,0,0, 0,0,0)
-PMC = c(1,0,0, 0,0,0, 0,0,1, 0,0,0, 0,0,0)
 PFL = c(1,0,0, 1,0,0, 0,0,1, 1,0,0, 0,0,1)
-PFC = c(1,0,0, 1,0,0, 0,0,1, 0,0,0, 0,0,1)
 
 
-contrast_forms_mod9 <- rbind('White Male Lecture'=WML, 'White Male Collab'=WMC, 
-                          'White Female Lecture'=WFL,'White Female Collab'=WFC,
-                          'Black Male Lecture'=BML, 'Black Male Collab'=BMC, 
-                          'Black Female Lecture'=BFL,'Black Female Collab'=BFC,
-                          'Asian Male Lecture'=AML, 'Asian Male Collab'=AMC, 
-                          'Asian Female Lecture'=AFL,'Asian Female Collab'=AFC,
-                          'Hispanic Male Lecture'=HML, 'Hispanic Male Collab'=HMC, 
-                          'Hispanic Female Lecture'=HFL,'Hispanic Female Collab'=HFC,
-                          'Other Male Lecture'=OML, 'Other Male Collab'=OMC, 
-                          'Other Female Lecture'=OFL,'Other Female Collab'=OFC,
-                          'Island Male Lecture'=PML, 'Island Male Collab'=PMC, 
-                          'Island Female Lecture'=PFL,'Island Female Collab'=PFC)
+contrast_forms_modve <- rbind('White Male'=WML,  
+                          'White Female'=WFL,
+                          'Black Male'=BML,  
+                          'Black Female'=BFL,
+                          'Asian Male'=AML, 
+                          'Asian Female'=AFL,
+                          'Hispanic Male'=HML, 
+                          'Hispanic Female'=HFL,
+                          'Other Male'=OML,  
+                          'Other Female'=OFL,
+                          'Island Male'=PML, 
+                          'Island Female'=PFL)
 
-contrast_g9_est <- pool_and_cov_diffwm(gain9,contrast_forms_mod9)
-contrast_g9_est$instruction <- factor(contrast_g9_est$instruction, levels = c("Lecture","Collab"))
-ggplot(data=contrast_g9_est, aes(x=race_gender, y=Q, fill=instruction)) +geom_bar(stat = "identity", position= "dodge") + geom_errorbar(aes( ymax= Q+SE, ymin=Q-SE), position="dodge")+
-  theme(legend.position = "bottom", axis.title.x=element_blank(), axis.text.x=element_text(angle=90), axis.ticks.x=element_blank(),panel.grid.major = element_blank(), panel.grid.minor = element_blank(),panel.background = element_blank(), axis.line = element_line(colour = "black"),text = element_text(size=16, color = "black")) +
-  ylab("Gain (Percentage Points)") +
-  scale_fill_manual(name="Instruction",
-                     breaks= c("Lecture","Collab"),
-                     labels=c("Lecture-based","Collaborative"),
-                     values=plot_col) 
-#facet_grid(.~race_gender, scales = "free", space = "free")+
-#collab_plot <-  
-#levels(contrast_g6_est$instruction) <- c("Lecture", "Collaborative")
-#ggplot(data=contrast_g9_est, aes(x=race, y=Q, fill=gender)) +geom_bar(stat = "identity", position = "dodge") + geom_errorbar(aes( ymax= Q+SE, ymin=Q-SE), position="dodge")+  facet_grid(.~instruction, scales = "free", space = "free")+  theme(legend.position = "right",  axis.text.x=element_text(angle=90) , axis.title.x = element_blank(), axis.ticks.x=element_blank(),panel.grid.major = element_blank(), panel.grid.minor = element_blank(),panel.background = element_blank(), axis.line = element_line(colour = "black"),text = element_text(size=16, color = "black")) +  ylab("Gain (Percentage Points)") +  scale_fill_manual(name="Gender",                     breaks= c("Female","Male"), values=cbbpalette) 
-#ggsave("~/Documents/LA Postdoc stuff copy/RData/LASSO/Denver-Chico_collaboration/Physics_Equity/instruction.png", plot= last_plot(), dpi=300, width = 7.3, height = 3.25, units = "in", device = "png")
-kable(contrast_g9_est[c(1,2,6,7)], digits = 2)
-```
+contrast_ve_est <- pool_and_cov_diffwm(gain_ve,contrast_forms_modve)
+unique(contrast_ve_est$race)
 
-gain 10
-```{r}
-#     c(I,0,0, A,B,H, O,P,g, l,g*l)
-WML = c(1,0,0, 0,0,0, 0,0,0, 1,0)
-WMC = c(1,0,0, 0,0,0, 0,0,0, 0,0)
-WFL = c(1,0,0, 0,0,0, 0,0,1, 1,1)
-WFC = c(1,0,0, 0,0,0, 0,0,1, 0,0)
+contrast_ve_est$race <- factor(contrast_ve_est$race, levels = c("Black", "Hispanic", "Island", "Other", "Asian",    "White"))
 
-AML = c(1,0,0, 1,0,0, 0,0,0, 1,0)
-AMC = c(1,0,0, 1,0,0, 0,0,0, 0,0)
-AFL = c(1,0,0, 1,0,0, 0,0,1, 1,1)
-AFC = c(1,0,0, 1,0,0, 0,0,1, 0,0)
-
-BML = c(1,0,0, 0,1,0, 0,0,0, 1,0)
-BMC = c(1,0,0, 0,1,0, 0,0,0, 0,0)
-BFL = c(1,0,0, 0,1,0, 0,0,1, 1,1)
-BFC = c(1,0,0, 0,1,0, 0,0,1, 0,0)
-
-HML = c(1,0,0, 0,0,1, 0,0,0, 1,0)
-HMC = c(1,0,0, 0,0,1, 0,0,0, 0,0)
-HFL = c(1,0,0, 0,0,1, 0,0,1, 1,1)
-HFC = c(1,0,0, 0,0,1, 0,0,1, 0,0)
-
-OML = c(1,0,0, 0,0,0, 1,0,0, 1,0)
-OMC = c(1,0,0, 0,0,0, 1,0,0, 0,0)
-OFL = c(1,0,0, 0,0,0, 1,0,1, 1,1)
-OFC = c(1,0,0, 0,0,0, 1,0,1, 0,0)
-
-PML = c(1,0,0, 0,0,0, 0,1,0, 1,0)
-PMC = c(1,0,0, 0,0,0, 0,1,0, 0,0)
-PFL = c(1,0,0, 0,0,0, 0,1,1, 1,1)
-PFC = c(1,0,0, 0,0,0, 0,1,1, 0,0)
-
-
-
-contrast_forms_mod10 <- rbind('White Male Lecture'=WML, 'White Male Collab'=WMC, 
-                          'White Female Lecture'=WFL,'White Female Collab'=WFC,
-                          'Black Male Lecture'=BML, 'Black Male Collab'=BMC, 
-                          'Black Female Lecture'=BFL,'Black Female Collab'=BFC,
-                          'Asian Male Lecture'=AML, 'Asian Male Collab'=AMC, 
-                          'Asian Female Lecture'=AFL,'Asian Female Collab'=AFC,
-                          'Hispanic Male Lecture'=HML, 'Hispanic Male Collab'=HMC, 
-                          'Hispanic Female Lecture'=HFL,'Hispanic Female Collab'=HFC,
-                          'Other Male Lecture'=OML, 'Other Male Collab'=OMC, 
-                          'Other Female Lecture'=OFL,'Other Female Collab'=OFC,
-                          'Island Male Lecture'=PML, 'Island Male Collab'=PMC, 
-                          'Island Female Lecture'=PFL,'Island Female Collab'=PFC)
-
-contrast_g10_est <- pool_and_cov_diffwm(gain10,contrast_forms_mod10)
-contrast_g10_est$instruction <- factor(contrast_g9_est$instruction, levels = c("Lecture","Collab"))
-ggplot(data=contrast_g10_est, aes(x=race_gender, y=Q, fill=instruction)) +geom_bar(stat = "identity", position= "dodge") + geom_errorbar(aes( ymax= Q+SE, ymin=Q-SE), position="dodge")+
-  theme(legend.position = "bottom", axis.title.x=element_blank(), axis.text.x=element_text(angle=90), axis.ticks.x=element_blank(),panel.grid.major = element_blank(), panel.grid.minor = element_blank(),panel.background = element_blank(), axis.line = element_line(colour = "black"),text = element_text(size=16, color = "black")) +
-  ylab("Gain (Percentage Points)") +
-  scale_fill_manual(name="Instruction",
-                     breaks= c("Lecture","Collab"),
-                     labels=c("Lecture-based","Collaborative"),
-                     values=plot_col) 
-#facet_grid(.~race_gender, scales = "free", space = "free")+
-#collab_plot <-  
-#levels(contrast_g6_est$instruction) <- c("Lecture", "Collaborative")
-ggplot(data=contrast_g10_est, aes(x=race, y=Q, fill=gender)) +geom_bar(stat = "identity", position = "dodge") + geom_errorbar(aes( ymax= Q+SE, ymin=Q-SE), position="dodge")+
-  facet_grid(.~instruction, scales = "free", space = "free")+
+ggplot(data=contrast_ve_est, aes(x=race, y=Q, fill=gender)) + geom_bar(stat = "identity", position = "dodge") + geom_errorbar(aes( ymax= Q+SE, ymin=Q-SE), position="dodge")+
   theme(legend.position = "right",  axis.text.x=element_text(angle=90) , axis.title.x = element_blank(), axis.ticks.x=element_blank(),panel.grid.major = element_blank(), panel.grid.minor = element_blank(),panel.background = element_blank(), axis.line = element_line(colour = "black"),text = element_text(size=16, color = "black")) +
   ylab("Gain (Percentage Points)") +
   scale_fill_manual(name="Gender",
                      breaks= c("Female","Male"),
                      values=cbbpalette) 
-#ggsave("~/Documents/LA Postdoc stuff copy/RData/LASSO/Denver-Chico_collaboration/Physics_Equity/instruction.png", plot= last_plot(), dpi=300, width = 7.3, height = 3.25, units = "in", device = "png")
-kable(contrast_g10_est[c(1,2,6,7)], digits = 2)
+ggsave("~/Physics_Equity/mod_ve.png", plot= last_plot(), dpi=300, width = 7.3, height = 3.25, units = "in", device = "png")
+kable(contrast_ve_est[c(1,2,6,7)], digits = 2)
 ```
 
 
-
-model 11
-
+graph for IC
 ```{r} 
-#(gain~1 + lecture*(asian_no_int + black_no_int + hispanic_no_int + race_other_no_int  + pacisland_no_int)*gend_URM + stud_pre_cent + retake + (1 + lecture |course_id))
-#                              [Lecture Lecture   ]race x gender| lec X gend X race
-#     c(I,L,A, B,H,O, P,F,0, 0, a,b, h,o,p,      f, A,B, H,O,P,  a,b,h, o,p)
-WML = c(1,1,0, 0,0,0, 0,0,0, 0, 0,0, 0,0,0,      0, 0,0, 0,0,0,  0,0,0, 0,0)
-WMC = c(1,0,0, 0,0,0, 0,0,0, 0, 0,0, 0,0,0,      0, 0,0, 0,0,0,  0,0,0, 0,0)
-WFL = c(1,1,0, 0,0,0, 0,1,0, 0, 0,0, 0,0,0,      1, 0,0, 0,0,0,  0,0,0, 0,0)
-WFC = c(1,0,0, 0,0,0, 0,1,0, 0, 0,0, 0,0,0,      0, 0,0, 0,0,0,  0,0,0, 0,0)
+#(gain~1 + lecture*(asian_no_int + black_no_int + hispanic_no_int + race_other_no_int  + pacisland_no_int)*gend_URM + stud_pre_cent + retake + (1 |course_id))
 
-AML = c(1,1,1, 0,0,0, 0,0,0, 0, 1,0, 0,0,0,      0, 0,0, 0,0,0,  0,0,0, 0,0)
-AMC = c(1,0,1, 0,0,0, 0,0,0, 0, 0,0, 0,0,0,      0, 0,0, 0,0,0,  0,0,0, 0,0)
-AFL = c(1,1,1, 0,0,0, 0,1,0, 0, 1,0, 0,0,0,      1, 1,0, 0,0,0,  1,0,0, 0,0)
-AFC = c(1,0,1, 0,0,0, 0,1,0, 0, 0,0, 0,0,0,      0, 1,0, 0,0,0,  0,0,0, 0,0)
+#     c(I,pre,reta, F, A,B,H,O,P, L, fa,fb,fh,fo,fp, fl, al,bl,hl,ol,pl, fal,fbl,fhl,frl,fpl)
+WML = c(1,0,0, 0, 0,0,0,0,0, 1, 0,0,0,0,0, 0, 0,0,0,0,0,  0,0,0,0,0)
+WFL = c(1,0,0, 1, 0,0,0,0,0, 1, 0,0,0,0,0, 1, 0,0,0,0,0,  0,0,0,0,0)
 
-BML = c(1,1,0, 1,0,0, 0,0,0, 0, 0,1, 0,0,0,      0, 0,0, 0,0,0,  0,0,0, 0,0)
-BMC = c(1,0,0, 1,0,0, 0,0,0, 0, 0,0, 0,0,0,      0, 0,0, 0,0,0,  0,0,0, 0,0)
-BFL = c(1,1,0, 1,0,0, 0,1,0, 0, 0,1, 0,0,0,      1, 0,1, 0,0,0,  0,1,0, 0,0)
-BFC = c(1,0,0, 1,0,0, 0,1,0, 0, 0,0, 0,0,0,      0, 0,1, 0,0,0,  0,0,0, 0,0)
+AML = c(1,0,0, 0, 1,0,0,0,0, 1, 0,0,0,0,0, 0, 1,0,0,0,0,  0,0,0,0,0)
+AFL = c(1,0,0, 1, 1,0,0,0,0, 1, 1,0,0,0,0, 1, 1,0,0,0,0,  1,0,0,0,0)
 
-HML = c(1,1,0, 0,1,0, 0,0,0, 0, 0,0, 1,0,0,      0, 0,0, 0,0,0,  0,0,0, 0,0)
-HMC = c(1,0,0, 0,1,0, 0,0,0, 0, 0,0, 0,0,0,      0, 0,0, 0,0,0,  0,0,0, 0,0)
-HFL = c(1,1,0, 0,1,0, 0,1,0, 0, 0,0, 1,0,0,      1, 0,0, 1,0,0,  0,0,1, 0,0)
-HFC = c(1,0,0, 0,1,0, 0,1,0, 0, 0,0, 0,0,0,      0, 0,0, 1,0,0,  0,0,0, 0,0)
+BML = c(1,0,0, 0, 0,1,0,0,0, 1, 0,0,0,0,0, 0, 0,1,0,0,0,  0,0,0,0,0)
+BFL = c(1,0,0, 1, 0,1,0,0,0, 1, 0,1,0,0,0, 1, 0,1,0,0,0,  0,1,0,0,0)
 
-OML = c(1,1,0, 0,0,1, 0,0,0, 0, 0,0, 0,1,0,      0, 0,0, 0,0,0,  0,0,0, 0,0)
-OMC = c(1,0,0, 0,0,1, 0,0,0, 0, 0,0, 0,0,0,      0, 0,0, 0,0,0,  0,0,0, 0,0)
-OFL = c(1,1,0, 0,0,1, 0,1,0, 0, 0,0, 0,1,0,      1, 0,0, 0,1,0,  0,0,0, 1,0)
-OFC = c(1,0,0, 0,0,1, 0,1,0, 0, 0,0, 0,0,0,      0, 0,0, 0,1,0,  0,0,0, 0,0)
+HML = c(1,0,0, 0, 0,0,1,0,0, 1, 0,0,0,0,0, 0, 0,0,1,0,0,  0,0,0,0,0)
+HFL = c(1,0,0, 1, 0,0,1,0,0, 1, 0,0,1,0,0, 1, 0,0,1,0,0,  0,0,1,0,0)
 
-PML = c(1,1,0, 0,0,0, 1,0,0, 0, 0,0, 0,0,1,      0, 0,0, 0,0,0,  0,0,0, 0,0)
-PMC = c(1,0,0, 0,0,0, 1,0,0, 0, 0,0, 0,0,0,      0, 0,0, 0,0,0,  0,0,0, 0,0)
-PFL = c(1,1,0, 0,0,0, 1,1,0, 0, 0,0, 0,0,1,      1, 0,0, 0,0,1,  0,0,0, 0,1)
-PFC = c(1,0,0, 0,0,0, 1,1,0, 0, 0,0, 0,0,0,      0, 0,0, 0,0,1,  0,0,0, 0,0)
+OML = c(1,0,0, 0, 0,0,0,1,0, 1, 0,0,0,0,0, 0, 0,0,0,1,0,  0,0,0,0,0)
+OFL = c(1,0,0, 1, 0,0,0,1,0, 1, 0,0,0,1,0, 1, 0,0,0,1,0,  0,0,0,1,0)
 
-contrast_forms_mod11 <- rbind('White Male Lecture'=WML, 'White Male Collab'=WMC, 
+PML = c(1,0,0, 0, 0,0,0,0,1, 1, 0,0,0,0,0, 0, 0,0,0,0,1,  0,0,0,0,0)
+PFL = c(1,0,0, 1, 0,0,0,0,1, 1, 0,0,0,0,1, 1, 0,0,0,0,1,  0,0,0,0,1)
+
+
+
+contrast_forms_modic <- rbind('White Male Lecture'=WML,'White Female Lecture'=WFL,
+                              'Black Male Lecture'=BML, 'Black Female Lecture'=BFL,
+                              'Asian Male Lecture'=AML,'Asian Female Lecture'=AFL,
+                              'Hispanic Male Lecture'=HML,'Hispanic Female Lecture'=HFL,
+                              'Other Male Lecture'=OML,'Other Female Lecture'=OFL,
+                              'Island Male Lecture'=PML,'Island Female Lecture'=PFL)
+
+contrast_forms_modic_full <- rbind('White Male Lecture'=WML, 'White Male Collab'=WMC, 
                           'White Female Lecture'=WFL,'White Female Collab'=WFC,
                           'Black Male Lecture'=BML, 'Black Male Collab'=BMC, 
                           'Black Female Lecture'=BFL,'Black Female Collab'=BFC,
@@ -354,246 +256,166 @@ contrast_forms_mod11 <- rbind('White Male Lecture'=WML, 'White Male Collab'=WMC,
                           'Island Male Lecture'=PML, 'Island Male Collab'=PMC, 
                           'Island Female Lecture'=PFL,'Island Female Collab'=PFC)
 
-contrast_g11_est <- pool_and_cov_diffwm(gain11,contrast_forms_mod11)
-contrast_g11_est$instruction <- factor(contrast_g11_est$instruction, levels = c("Lecture","Collab"))
+contrast_gic_est <- pool_and_cov_diffwm(gain_ic,contrast_forms_modic)
+#contrast_gic_est$instruction <- factor(contrast_gic_est$instruction, levels = c("Lecture","Collab"))
+contrast_gic_est$race <- factor(contrast_gic_est$race, levels = c("Black", "Hispanic", "Island", "Other", "Asian",    "White"))
 
-ggplot(data=contrast_g11_est, aes(x=race_gender, y=Q, fill=instruction)) +geom_bar(stat = "identity", position= "dodge") + geom_errorbar(aes( ymax= Q+SE, ymin=Q-SE), position="dodge")+
-  theme(legend.position = "bottom", axis.title.x=element_blank(), axis.text.x=element_text(angle=90), axis.ticks.x=element_blank(),panel.grid.major = element_blank(), panel.grid.minor = element_blank(),panel.background = element_blank(), axis.line = element_line(colour = "black"),text = element_text(size=16, color = "black")) +
-  ylab("Gain (Percentage Points)") +
-  scale_fill_manual(name="Instruction",
-                     breaks= c("Lecture","Collab"),
-                     labels=c("Lecture-based","Collaborative"),
-                     values=plot_col) 
-#facet_grid(.~race_gender, scales = "free", space = "free")+
-#collab_plot <-  
-#levels(contrast_g6_est$instruction) <- c("Lecture", "Collaborative")
-ggplot(data=contrast_g11_est, aes(x=race, y=Q, fill=gender)) +geom_bar(stat = "identity", position = "dodge") + geom_errorbar(aes( ymax= Q+SE, ymin=Q-SE), position="dodge")+
-  facet_grid(.~instruction, scales = "free", space = "free")+
+ggplot(data=contrast_gic_est, aes(x=race, y=Q, fill=gender)) + geom_bar(stat = "identity", position = "dodge") + geom_errorbar(aes( ymax= Q+SE, ymin=Q-SE), position="dodge")+
   theme(legend.position = "right",  axis.text.x=element_text(angle=90) , axis.title.x = element_blank(), axis.ticks.x=element_blank(),panel.grid.major = element_blank(), panel.grid.minor = element_blank(),panel.background = element_blank(), axis.line = element_line(colour = "black"),text = element_text(size=16, color = "black")) +
   ylab("Gain (Percentage Points)") +
   scale_fill_manual(name="Gender",
                      breaks= c("Female","Male"),
                      values=cbbpalette) 
-#ggsave("~/Documents/LA Postdoc stuff copy/RData/LASSO/Denver-Chico_collaboration/Physics_Equity/instruction.png", plot= last_plot(), dpi=300, width = 7.3, height = 3.25, units = "in", device = "png")
-kable(contrast_g9_est[c(1,2,6,7)], digits = 2)
-#model11
+ggsave("~/Physics_Equity/mod_ic.png", plot= last_plot(), dpi=300, width = 7.3, height = 3.25, units = "in", device = "png")
+kable(contrast_ve_est[c(1,2,6,7)], digits = 2)
 ```
 
-
-
-These are the differences with white males in that learning environment for Mod 8 where lecture isn't included
+Graph of shift to collab SS
 ```{r}
-#     c(I,0,0, F,A,B, H,O,P, ,a,b, h,o,p)
-WFL = c(0,0,0, 1,0,0, 0,0,0, 0,0, 0,0,0)
+#     c(I,pre,R,F, A,B,H,O,P ,l)
+WMCss = c(0,0,0,0, 0,0,0,0,0, -1)
+WFCss = c(0,0,0,0, 0,0,0,0,0, -1)
 
-AML = c(0,0,0, 0,1,0, 0,0,0, 0,0, 0,0,0)
-AFL = c(0,0,0, 1,1,0, 0,0,0, 1,0, 0,0,0)
+AMCss = c(0,0,0,0, 0,0,0,0,0, -1)
+AFCss = c(0,0,0,0, 0,0,0,0,0, -1)
 
-BML = c(0,0,0, 0,0,1, 0,0,0, 0,0, 0,0,0)
-BFL = c(0,0,0, 1,0,1, 0,0,0, 0,1, 0,0,0)
+BMCss = c(0,0,0,0, 0,0,0,0,0, -1)
+BFCss = c(0,0,0,0, 0,0,0,0,0, -1)
 
-HML = c(0,0,0, 0,0,0, 1,0,0, 0,0, 0,0,0)
-HFL = c(0,0,0, 1,0,0, 1,0,0, 0,0, 1,0,0)
+HMCss = c(0,0,0,0, 0,0,0,0,0, -1)
+HFCss = c(0,0,0,0, 0,0,0,0,0, -1)
 
-OML = c(0,0,0, 0,0,0, 0,1,0, 0,0, 0,0,0)
-OFL = c(0,0,0, 1,0,0, 0,1,0, 0,0, 0,1,0)
+OMCss = c(0,0,0,0, 0,0,0,0,0, -1)
+OFCss = c(0,0,0,0, 0,0,0,0,0, -1)
 
-PML = c(0,0,0, 0,0,0, 0,0,1, 0,0, 0,0,0)
-PFL = c(0,0,0, 1,0,0, 0,0,1, 0,0, 0,0,1)
+PMCss = c(0,0,0,0, 0,0,0,0,0, -1)
+PFCss = c(0,0,0,0, 0,0,0,0,0, -1)
 
 
-difference_forms_mod8 <- rbind('White Female'=WFL,
-                          'Black Male'=BML,  
-                          'Black Female'=BFL,
-                          'Asian Male'=AML, 
-                          'Asian Female'=AFL,
-                          'Hispanic Male'=HML, 
-                          'Hispanic Female'=HFL,
-                          'Other Male'=OML,  
-                          'Other Female'=OFL,
-                          'Island Male'=PML, 
-                          'Island Female'=PFL)
+contrast_forms_modCss <- rbind('White Male'=WMCss,  
+                          'White Female'=WFCss,
+                          'Black Male'=BMCss,  
+                          'Black Female'=BFCss,
+                          'Asian Male'=AMCss, 
+                          'Asian Female'=AFCss,
+                          'Hispanic Male'=HMCss, 
+                          'Hispanic Female'=HFCss,
+                          'Other Male'=OMCss,  
+                          'Other Female'=OFCss,
+                          'Island Male'=PMCss, 
+                          'Island Female'=PFCss)
 
-```
+contrast_Css_est <- pool_and_cov_diffwm(gain_ss,contrast_forms_modCss)
+unique(contrast_Css_est$race)
 
-```{r}
-contrast_g8_est <- pool_and_cov_diffwm(gain8,difference_forms_mod8)
+contrast_Css_est$race <- factor(contrast_Css_est$race, levels = c("Black", "Hispanic", "Island", "Other", "Asian",    "White"))
 
-contrast_g8_est$instruction <- factor(contrast_g8_est$instruction, levels = c("Lecture","Collab"))
-
-unique(contrast_g8_est$race_gender)
-
-contrast_g8_est$group <- factor(contrast_g8_est$group, levels = c("White Female", "Asian Male", "Asian Female", "Hispanic Male", "Other Male", "Other Female", "Island Female", "Island Male",     "Black Female", "Hispanic Female", "Black Male"))
-
-ggplot(data=contrast_g8_est, aes(x=group, y=Q, fill=gender)) +geom_bar(stat = "identity") + geom_errorbar(aes( ymax= Q+1.96*SE, ymin=Q-1.96*SE))+
+ggplot(data=contrast_Css_est, aes(x=race, y=Q, fill=gender)) + geom_bar(stat = "identity", position = "dodge") + geom_errorbar(aes( ymax= Q+SE, ymin=Q-SE), position="dodge")+
+  theme(legend.position = "right",  axis.text.x=element_text(angle=90) , axis.title.x = element_blank(), axis.ticks.x=element_blank(),panel.grid.major = element_blank(), panel.grid.minor = element_blank(),panel.background = element_blank(), axis.line = element_line(colour = "black"),text = element_text(size=16, color = "black")) +
+  ylab("Gain (Percentage Points)") +
   scale_fill_manual(name="Gender",
-                     values=cbbpalette) +
-  theme(legend.position = "bottom", axis.title.y=element_blank(), panel.grid.major = element_blank(), panel.grid.minor = element_blank(),panel.background = element_blank(), axis.line = element_line(colour = "black"),text = element_text(size=16, color = "black")) +
-  ylab("Gain (Percentage Points)") +
-  scale_y_continuous(limits = c(-11,2), breaks = c(2,0,-2,-4,-6,-8,-10)) +
-  coord_flip() 
-  
-ggsave("~/Documents/LA Postdoc stuff copy/RData/LASSO/Denver-Chico_collaboration/Physics_Equity/compare to WM.png", plot= last_plot(), dpi=300, width = 7.3, height = 3.25, units = "in", device = "png")
-
-  
- 
-
-kable(contrast_g8_est[c(1,2,6,7)], digits = 2)
+                     breaks= c("Female","Male"),
+                     values=cbbpalette) 
+ggsave("~/Physics_Equity/mod_Css.png", plot= last_plot(), dpi=300, width = 7.3, height = 3.25, units = "in", device = "png")
+kable(contrast_ss_est[c(1,2,6,7)], digits = 2)
 ```
 
+Graph of shift to collab VE
 ```{r}
+#     c(I,pre,reta, F,A,B, H,O,P, l,fa,fb, fh,fo,fp)
+WMCve = c(0,0,0, 0,0,0, 0,0,0, -1,0,0, 0,0,0)
+WFCve = c(0,0,0, 0,0,0, 0,0,0, -1,0,0, 0,0,0)
 
-#     c(I,0,0, F,A,B, H,O,P, L,a,b, h,o,p)
-WFL = c(0,0,0, 1,0,0, 0,0,0, 0,0,0, 0,0,0)
-AML = c(0,0,0, 0,1,0, 0,0,0, 0,0,0, 0,0,0)
-AFL = c(0,0,0, 1,1,0, 0,0,0, 0,1,0, 0,0,0)
+AMCve = c(0,0,0, 0,0,0, 0,0,0, -1,0,0, 0,0,0)
+AFCve = c(0,0,0, 0,0,0, 0,0,0, -1,0,0, 0,0,0)
 
-BML = c(0,0,0, 0,0,1, 0,0,0, 0,0,0, 0,0,0)
-BFL = c(0,0,0, 1,0,1, 0,0,0, 0,0,1, 0,0,0)
+BMCve = c(0,0,0, 0,0,0, 0,0,0, -1,0,0, 0,0,0)
+BFCve = c(0,0,0, 0,0,0, 0,0,0, -1,0,0, 0,0,0)
 
-HML = c(0,0,0, 0,0,0, 1,0,0, 0,0,0, 0,0,0)
-HFL = c(0,0,0, 1,0,0, 1,0,0, 0,0,0, 1,0,0)
+HMCve = c(0,0,0, 0,0,0, 0,0,0, -1,0,0, 0,0,0)
+HFCve = c(0,0,0, 0,0,0, 0,0,0, -1,0,0, 0,0,0)
 
-OML = c(0,0,0, 0,0,0, 0,1,0, 0,0,0, 0,0,0)
-OFL = c(0,0,0, 1,0,0, 0,1,0, 0,0,0, 0,1,0)
+OMCve = c(0,0,0, 0,0,0, 0,0,0, -1,0,0, 0,0,0)
+OFCve = c(0,0,0, 0,0,0, 0,0,0, -1,0,0, 0,0,0)
 
-PML = c(0,0,0, 0,0,0, 0,0,1, 0,0,0, 0,0,0)
-PFL = c(0,0,0, 1,0,0, 0,0,1, 0,0,0, 0,0,1)
-
-
-
-difference_forms_mod9 <- rbind('White Female'=WFL,
-                          'Black Male'=BML,  
-                          'Black Female'=BFL,
-                          'Asian Male'=AML, 
-                          'Asian Female'=AFL,
-                          'Hispanic Male'=HML, 
-                          'Hispanic Female'=HFL,
-                          'Other Male'=OML,  
-                          'Other Female'=OFL,
-                          'Island Male'=PML, 
-                          'Island Female'=PFL)
-
-contrast_g9_est <- pool_and_cov_diffwm(gain9,difference_forms_mod9)
-
-contrast_g9_est$instruction <- factor(contrast_g9_est$instruction, levels = c("Lecture","Collab"))
+PMCve = c(0,0,0, 0,0,0, 0,0,0, -1,0,0, 0,0,0)
+PFCve = c(0,0,0, 0,0,0, 0,0,0, -1,0,0, 0,0,0)
 
 
-ggplot(data=contrast_g9_est, aes(x=group, y=Q)) +geom_bar(stat = "identity") + geom_errorbar(aes( ymax= Q+1.96*SE, ymin=Q-1.96*SE))+
-  theme(legend.position = "bottom", axis.title.y=element_blank(), panel.grid.major = element_blank(), panel.grid.minor = element_blank(),panel.background = element_blank(), axis.line = element_line(colour = "black"),text = element_text(size=16, color = "black")) +
-  ylab("Gain Relative to White Males (Percentage Points)") +
-  scale_fill_manual(name="Instruction",
-                     breaks= c("Lecture","Collab"),
-                     labels=c("Traditional","Collaborative"),
-                     values=plot_col)+
-  coord_flip()
+contrast_forms_modCve <- rbind('White Male'=WMCve,  
+                          'White Female'=WFCve,
+                          'Black Male'=BMCve,  
+                          'Black Female'=BFCve,
+                          'Asian Male'=AMCve, 
+                          'Asian Female'=AFCve,
+                          'Hispanic Male'=HMCve, 
+                          'Hispanic Female'=HFCve,
+                          'Other Male'=OMCve,  
+                          'Other Female'=OFCve,
+                          'Island Male'=PMCve, 
+                          'Island Female'=PFCve)
 
+contrast_Cve_est <- pool_and_cov_diffwm(gain_ve,contrast_forms_modCve)
+unique(contrast_Cve_est$race)
 
+contrast_Cve_est$race <- factor(contrast_Cve_est$race, levels = c("Black", "Hispanic", "Island", "Other", "Asian",    "White"))
 
-  
-  
-
-kable(contrast_g8_est[c(1,2,6,7)], digits = 2)
+ggplot(data=contrast_Cve_est, aes(x=race, y=Q, fill=gender)) + geom_bar(stat = "identity", position = "dodge") + geom_errorbar(aes( ymax= Q+SE, ymin=Q-SE), position="dodge")+
+  theme(legend.position = "right",  axis.text.x=element_text(angle=90) , axis.title.x = element_blank(), axis.ticks.x=element_blank(),panel.grid.major = element_blank(), panel.grid.minor = element_blank(),panel.background = element_blank(), axis.line = element_line(colour = "black"),text = element_text(size=16, color = "black")) +
+  ylab("Gain (Percentage Points)") +
+  scale_fill_manual(name="Gender",
+                     breaks= c("Female","Male"),
+                     values=cbbpalette) 
+ggsave("~/Physics_Equity/mod_Cve.png", plot= last_plot(), dpi=300, width = 7.3, height = 3.25, units = "in", device = "png")
+kable(contrast_ss_est[c(1,2,6,7)], digits = 2)
 ```
 
+Graph of shift to collab IC
 ```{r}
-#(gain~1 + lecture*(asian_no_int + black_no_int + hispanic_no_int + race_other_no_int  + pacisland_no_int)*gend_URM + stud_pre_cent + retake + (1 + lecture |course_id))
-#                              [Lecture Lecture   ]race x gender| lec X gend X race
-#     c(I,L,A, B,H,O, P,F,0, 0, a,b, h,o,p,      f, A,B, H,O,P,  a,b,h, o,p)
-WFL = c(0,0,0, 0,0,0, 0,1,0, 0, 0,0, 0,0,0,      1, 0,0, 0,0,0,  0,0,0, 0,0)
-AML = c(0,0,1, 0,0,0, 0,0,0, 0, 0,0, 0,0,0,      0, 0,0, 0,0,0,  0,0,0, 0,0)
-AFL = c(0,0,1, 0,0,0, 0,1,0, 0, 0,0, 0,0,0,      1, 1,0, 0,0,0,  0,0,0, 0,0)
-BML = c(0,0,0, 1,0,0, 0,0,0, 0, 0,0, 0,0,0,      0, 0,0, 0,0,0,  0,0,0, 0,0)
-BFL = c(0,0,0, 1,0,0, 0,1,0, 0, 0,0, 0,0,0,      1, 0,1, 0,0,0,  0,0,0, 0,0)
-HML = c(0,0,0, 0,1,0, 0,0,0, 0, 0,0, 0,0,0,      0, 0,0, 0,0,0,  0,0,0, 0,0)
-HFL = c(0,0,0, 0,1,0, 0,1,0, 0, 0,0, 0,0,0,      1, 0,0, 1,0,0,  0,0,0, 0,0)
-OML = c(0,0,0, 0,0,1, 0,0,0, 0, 0,0, 0,0,0,      0, 0,0, 0,0,0,  0,0,0, 0,0)
-OFL = c(0,0,0, 0,0,1, 0,1,0, 0, 0,0, 0,0,0,      1, 0,0, 0,1,0,  0,0,0, 0,0)
-PML = c(0,0,0, 0,0,0, 1,0,0, 0, 0,0, 0,0,0,      0, 0,0, 0,0,0,  0,0,0, 0,0)
-PFL = c(0,0,0, 0,0,0, 1,1,0, 0, 0,0, 0,0,0,      1, 0,0, 0,0,1,  0,0,0, 0,0)
+#     c(I,pre,reta, F, A,B,H,O,P, L, fa,fb,fh,fo,fp, fl, al,bl,hl,ol,pl, fal,fbl,fhl,frl,fpl)
+WMCic = c(0,0,0, 0, 0,0,0,0,0, -1, 0,0,0,0,0, 0, 0,0,0,0,0,  0,0,0,0,0)
+WFCic = c(0,0,0, 0, 0,0,0,0,0, -1, 0,0,0,0,0, -1, 0,0,0,0,0,  0,0,0,0,0)
+
+AMCic = c(0,0,0, 0, 0,0,0,0,0, -1, 0,0,0,0,0, 0, -1,0,0,0,0,  0,0,0,0,0)
+AFCic = c(0,0,0, 0, 0,0,0,0,0, -1, 0,0,0,0,0, -1, -1,0,0,0,0,  -1,0,0,0,0)
+
+BMCic = c(0,0,0, 0, 0,0,0,0,0, -1, 0,0,0,0,0, 0, 0,-1,0,0,0,  0,0,0,0,0)
+BFCic = c(0,0,0, 0, 0,0,0,0,0, -1, 0,0,0,0,0, -1, 0,-1,0,0,0,  0,-1,0,0,0)
+
+HMCic = c(0,0,0, 0, 0,0,0,0,0, -1, 0,0,0,0,0, 0, 0,0,-1,0,0,  0,0,0,0,0)
+HFCic = c(0,0,0, 0, 0,0,0,0,0, -1, 0,0,0,0,0, -1, 0,0,-1,0,0,  0,0,-1,0,0)
+
+OMCic = c(0,0,0, 0, 0,0,0,0,0, -1, 0,0,0,0,0, 0, 0,0,0,-1,0,  0,0,0,0,0)
+OFCic = c(0,0,0, 0, 0,0,0,0,0, -1, 0,0,0,0,0, -1, 0,0,0,-1,0,  0,0,0,-1,0)
+
+PMCic = c(0,0,0, 0, 0,0,0,0,0, -1, 0,0,0,0,0, 0, 0,0,0,0,-1,  0,0,0,0,0)
+PFCic = c(0,0,0, 0, 0,0,0,0,0, -1, 0,0,0,0,0, -1, 0,0,0,0,-1,  0,0,0,0,-1)
 
 
-difference_forms_mod11.1 <- rbind('White Female'=WFL,
-                          'Black Male'=BML,  
-                          'Black Female'=BFL,
-                          'Asian Male'=AML, 
-                          'Asian Female'=AFL,
-                          'Hispanic Male'=HML, 
-                          'Hispanic Female'=HFL,
-                          'Other Male'=OML,  
-                          'Other Female'=OFL,
-                          'Island Male'=PML, 
-                          'Island Female'=PFL)
+contrast_forms_modCic <- rbind('White Male'=WMCic,  
+                          'White Female'=WFCic,
+                          'Black Male'=BMCic,  
+                          'Black Female'=BFCic,
+                          'Asian Male'=AMCic, 
+                          'Asian Female'=AFCic,
+                          'Hispanic Male'=HMCic, 
+                          'Hispanic Female'=HFCic,
+                          'Other Male'=OMCic,  
+                          'Other Female'=OFCic,
+                          'Island Male'=PMCic, 
+                          'Island Female'=PFCic)
 
-contrast_g11.1_est <- pool_and_cov_diffwm(gain11,difference_forms_mod11.1)
+contrast_Cic_est <- pool_and_cov_diffwm(gain_ic,contrast_forms_modCic)
+unique(contrast_Cic_est$race)
 
-contrast_g11.1_est$instruction <- factor(contrast_g11.1_est$instruction, levels = c("Lecture","Collab"))
+contrast_Cic_est$race <- factor(contrast_Cic_est$race, levels = c("Black", "Hispanic", "Island", "Other", "Asian",    "White"))
 
-
-ggplot(data=contrast_g11.1_est, aes(x=group, y=Q)) +geom_bar(stat = "identity") + geom_errorbar(aes( ymax= Q+1.96*SE, ymin=Q-1.96*SE))+
-  theme(legend.position = "bottom", axis.title.y=element_blank(), panel.grid.major = element_blank(), panel.grid.minor = element_blank(),panel.background = element_blank(), axis.line = element_line(colour = "black"),text = element_text(size=16, color = "black")) +
+ggplot(data=contrast_Cic_est, aes(x=race, y=Q, fill=gender)) + geom_bar(stat = "identity", position = "dodge") + geom_errorbar(aes( ymax= Q+SE, ymin=Q-SE), position="dodge")+
+  theme(legend.position = "right",  axis.text.x=element_text(angle=90) , axis.title.x = element_blank(), axis.ticks.x=element_blank(),panel.grid.major = element_blank(), panel.grid.minor = element_blank(),panel.background = element_blank(), axis.line = element_line(colour = "black"),text = element_text(size=16, color = "black")) +
   ylab("Gain (Percentage Points)") +
-  scale_fill_manual(name="Instruction",
-                     breaks= c("Lecture","Collab"),
-                     labels=c("Traditional","Collaborative"),
-                     values=plot_col) +
-  coord_flip()
-
-
-
-  
-  
-
-kable(contrast_g11.1_est[c(1,2,6,7)], digits = 2)
-```
-
-```{r}
-#(gain~1 + lecture*(asian_no_int + black_no_int + hispanic_no_int + race_other_no_int  + pacisland_no_int)*gend_URM + stud_pre_cent + retake + (1 + lecture |course_id))
-#                              [Lecture Lecture   ]race x gender| lec X gend X race
-#     c(I,L,A, B,H,O, P,F,0, 0, a,b, h,o,p,      f, A,B, H,O,P,  a,b,h, o,p)
-WFL = c(0,0,0, 0,0,0, 0,1,0, 0, 0,0, 0,0,0,      1, 0,0, 0,0,0,  0,0,0, 0,0)
-AML = c(0,0,1, 0,0,0, 0,0,0, 0, 1,0, 0,0,0,      0, 0,0, 0,0,0,  0,0,0, 0,0)
-AFL = c(0,0,1, 0,0,0, 0,1,0, 0, 1,0, 0,0,0,      1, 1,0, 0,0,0,  1,0,0, 0,0)
-BML = c(0,0,0, 1,0,0, 0,0,0, 0, 0,1, 0,0,0,      0, 0,0, 0,0,0,  0,0,0, 0,0)
-BFL = c(0,0,0, 1,0,0, 0,1,0, 0, 0,1, 0,0,0,      1, 0,1, 0,0,0,  0,1,0, 0,0)
-HML = c(0,0,0, 0,1,0, 0,0,0, 0, 0,0, 1,0,0,      0, 0,0, 0,0,0,  0,0,0, 0,0)
-HFL = c(0,0,0, 0,1,0, 0,1,0, 0, 0,0, 1,0,0,      1, 0,0, 1,0,0,  0,0,1, 0,0)
-OML = c(0,0,0, 0,0,1, 0,0,0, 0, 0,0, 0,1,0,      0, 0,0, 0,0,0,  0,0,0, 0,0)
-OFL = c(0,0,0, 0,0,1, 0,1,0, 0, 0,0, 0,1,0,      1, 0,0, 0,1,0,  0,0,0, 1,0)
-PML = c(0,0,0, 0,0,0, 1,0,0, 0, 0,0, 0,0,1,      0, 0,0, 0,0,0,  0,0,0, 0,0)
-PFL = c(0,0,0, 0,0,0, 1,1,0, 0, 0,0, 0,0,1,      1, 0,0, 0,0,1,  0,0,0, 0,1)
-
-
-difference_forms_mod11.2 <- rbind('White Female'=WFL,
-                          'Black Male'=BML,  
-                          'Black Female'=BFL,
-                          'Asian Male'=AML, 
-                          'Asian Female'=AFL,
-                          'Hispanic Male'=HML, 
-                          'Hispanic Female'=HFL,
-                          'Other Male'=OML,  
-                          'Other Female'=OFL,
-                          'Island Male'=PML, 
-                          'Island Female'=PFL)
-
-contrast_g11.2_est <- pool_and_cov_diffwm(gain11,difference_forms_mod11.2)
-
-contrast_g11.2_est$instruction <- factor(contrast_g11.2_est$instruction, levels = c("Lecture","Collab"))
-
-
-ggplot(data=contrast_g11.2_est, aes(x=group, y=Q)) +geom_bar(stat = "identity") + geom_errorbar(aes( ymax= Q+1.96*SE, ymin=Q-1.96*SE))+
-  theme(legend.position = "bottom", axis.title.y=element_blank(), panel.grid.major = element_blank(), panel.grid.minor = element_blank(),panel.background = element_blank(), axis.line = element_line(colour = "black"),text = element_text(size=16, color = "black")) +
-  ylab("Gain (Percentage Points)") +
-  scale_fill_manual(name="Instruction",
-                     breaks= c("Lecture","Collab"),
-                     labels=c("Traditional","Collaborative"),
-                     values=plot_col) +
-  coord_flip()
-
-
-
-  
-  
-
-kable(contrast_g11.1_est[c(1,2,6,7)], digits = 2)
+  scale_fill_manual(name="Gender",
+                     breaks= c("Female","Male"),
+                     values=cbbpalette) 
+ggsave("~/Physics_Equity/mod_Cic.png", plot= last_plot(), dpi=300, width = 7.3, height = 3.25, units = "in", device = "png")
+kable(contrast_ss_est[c(1,2,6,7)], digits = 2)
 ```
