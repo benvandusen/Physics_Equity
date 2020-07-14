@@ -1,0 +1,411 @@
+---
+title: "Equity analysis"
+output: html_document
+---
+
+Load stuff (There are some packages that we don't need here, but I didn't clean them up. Sorry.)
+```{r message=FALSE, warning=FALSE}
+#load("~/hmi_data_1_10_19")
+#load("~/Physics_Equity/hmifall2018_m10_better")
+#load("~/Documents/LA Postdoc stuff copy/RData/LASSO/Denver-Chico_collaboration/Physics_Equity_new/hmifall2018_m10_better")
+load("~/hmi_1_23_19")
+library("cAIC4")
+library(rstan)
+library(rstanarm)
+library("MuMIn")
+library(MCMCvis)
+library(mcmcplots)
+library(bayesplot)
+library(tidyr)
+library("ggplot2")
+library(gvlma)
+library("HLMdiag")
+library("DHARMa")
+library("car") #for the Levene test which we will not discuss here
+library("Matrix")
+library(mitools)
+library(stargazer)
+library(lme4)
+library(nlme)
+library(mice)
+library(mitml)
+library(multcomp)
+library(foreach)
+library(ggplot2)
+library(stringr)
+library(dplyr)  #I load dplyr last because some of its functions (select) will be masked by plyr and it is a PITA to debug
+library(kableExtra)
+plot_col <- c('#66c2a5', '#fc8d62', '#8da0cb')
+#cbbpalette <- c('#000000','#E69F00','#56B4E9')
+cbbpalette <- c( "#009E73", "#e79f00", "#9ad0f3", "#0072B2", "#D55E00", 
+    "#CC79A7","#000000", "#F0E442") #colorblind and grayscale friendly.
+```
+
+Creating mitml and extra variables
+```{r}
+#df_full <- complete(hmi.fall.2018)
+#str(df_full)
+MIdata<-mids2mitml.list(hmi_1_23_19) #converts file type
+thing <- list()
+for (i in 1:10){
+  temp <- MIdata[[i]]
+  class_means <- temp %>% group_by(course_id) %>% summarise(pre_mean_class = mean(pre_score))
+  temp <- left_join(temp,class_means,global_means, by="course_id")
+  temp$stud_pre_cent <- temp$pre_score - temp$pre_mean_class
+  temp$gain <- temp$post_score - temp$pre_score
+  temp$coll <- ifelse(temp$lecture %in% 1,0,1)
+  temp$retake <- ifelse (temp$first_time==1,1,0)
+  temp$race_other_no_int[temp$amind_no_int %in% 1] <- 1 # combines the american indian students in to the other group there were 61 if these students
+  thing[[i]] <- temp
+  }
+MIdata <- as.mitml.list(thing)
+  
+```
+
+#Descriptive statistics by lecture and gender
+```{r}
+#variables: M, group by
+
+desc2 <- foreach(i=1:10, .combine=rbind) %do% {
+temp <- MIdata[[i]]
+temp$race <- ifelse(temp$black_no_int ==1, "Black",ifelse(temp$hispanic_no_int ==1, "Hispanic",ifelse(temp$asian_no_int ==1, "Asian",ifelse(temp$pacisland_no_int ==1, "Island",ifelse(temp$race_other_no_int ==1, "Other","White")))))
+desc <- temp %>% group_by(lecture, gend_URM) %>% summarise(N = length(pre_score),
+                                                                 pre_mean = mean(pre_score),
+                                                                 pre_sd = sd(pre_score),
+                                                                 post_mean = mean(post_score),
+                                                                 post_sd = sd(post_score),
+                                                                 gain_mean = mean (post_score-pre_score),
+                                                                 gain_sd = sd(post_score-pre_score)
+                                                                 )
+
+
+return <- desc
+}
+desc <- desc2 %>% group_by(lecture, gend_URM) %>% summarise_all(funs(mean))
+desc$lecture <- ifelse(desc$lecture ==1, "Lecture","Collaborative")
+desc$gend_URM <- ifelse(desc$gend_URM==1, "Female","Male")
+kable(desc, digits=1)
+```
+
+#Descriptive statistics by lecture
+```{r}
+#variables: M, group by
+
+desc2 <- foreach(i=1:10, .combine=rbind) %do% {
+temp <- MIdata[[i]]
+temp$race <- ifelse(temp$black_no_int ==1, "Black",ifelse(temp$hispanic_no_int ==1, "Hispanic",ifelse(temp$asian_no_int ==1, "Asian",ifelse(temp$pacisland_no_int ==1, "Island",ifelse(temp$race_other_no_int ==1, "Other","White")))))
+desc <- temp  %>% summarise(N = length(pre_score),
+                                                                 pre_mean = mean(pre_score),
+                                                                 pre_sd = sd(pre_score),
+                                                                 post_mean = mean(post_score),
+                                                                 post_sd = sd(post_score),
+                                                                 gain_mean = mean (post_score-pre_score),
+                                                                 gain_sd = sd(post_score-pre_score)
+                                                                 )
+
+
+return <- desc
+}
+desc <- desc2 %>% summarise_all(funs(mean))
+#desc$lecture <- ifelse(desc$lecture ==1, "Lecture","Collaborative")
+#desc$gend_URM <- ifelse(desc$gend_URM==1, "Female","Male")
+kable(desc, digits=1)
+```
+
+#Descriptive statistics by lecture, race and gender
+```{r}
+#variables: M, group by
+
+desc2 <- foreach(i=1:10, .combine=rbind) %do% {
+temp <- MIdata[[i]]
+temp$race <- ifelse(temp$black_no_int ==1, "Black",ifelse(temp$hispanic_no_int ==1, "Hispanic",ifelse(temp$asian_no_int ==1, "Asian",ifelse(temp$pacisland_no_int ==1, "Island",ifelse(temp$race_other_no_int ==1, "Other","White")))))
+desc <- temp %>% group_by( lecture, race, gend_URM) %>% summarise(N = length(pre_score),
+                                                                 pre_mean = mean(pre_score),
+                                                                 pre_sd = sd(pre_score),
+                                                                 post_mean = mean(post_score),
+                                                                 post_sd = sd(post_score),
+                                                                 gain_mean = mean (post_score-pre_score),
+                                                                 gain_sd = sd(post_score-pre_score)
+                                                                 )
+
+
+return <- desc
+}
+desc <- desc2 %>% group_by(race, lecture, gend_URM) %>% summarise_all(funs(mean))
+desc$lecture <- ifelse(desc$lecture ==1, "Lecture","Collaborative")
+desc$gend_URM <- ifelse(desc$gend_URM==1, "Female","Male")
+kable(desc, digits=1)
+sum(temp$hispanic_no_int)
+length(temp[temp$his])
+
+```
+
+dredge
+```{r}
+options(na.action = "na.fail")
+#gain8 <- with(MIdata,(lmer(gain ~1 + stud_pre_cent + retake + gend_URM*(asian_no_int + black_no_int + hispanic_no_int + race_other_no_int  + pacisland_no_int)*lecture +  (1|course_id))))
+dredge <- with(MIdata,{dredge(lmer(gain ~1 + stud_pre_cent + retake + gend_URM*(asian_no_int + black_no_int + hispanic_no_int + race_other_no_int  + pacisland_no_int) +  (1|course_id)))})
+#intro_mod_dredge <- glmer(m_all, data=red_introPhys,family = binomial)
+#intro_dredge <- dredge(intro_mod_dredge)
+model.sel(dredge[[1]], rank=AIC)
+#best model is (gain ~1 + stud_pre_cent + retake + gend_URM*(asian_no_int + black_no_int + hispanic_no_int + race_other_no_int  + pacisland_no_int)*lecture + (1|course_id))
+```
+
+Run physics model
+```{r}
+gain_phys <- with(MIdata,{lmer(gain ~1 + stud_pre_cent + retake + gend_URM*(asian_no_int + black_no_int + hispanic_no_int + race_other_no_int  + pacisland_no_int) +  (1|course_id))})
+
+pre_phys <- with(MIdata,{lmer(pre_score~1 + FMCE + gend_URM*(asian_no_int + black_no_int + hispanic_no_int + race_other_no_int  + pacisland_no_int) + (1|course_id))})
+```
+
+Physics model outcomes
+```{r}
+testEstimates(gain_phys, var.comp=TRUE)
+testEstimates(pre_phys, var.comp=TRUE)
+```
+
+The next three blocks make the figures for the estimates for model 9
+```{r}
+pool_and_cov_diffwm <- function(x,y){
+  get.est <- foreach(i=1:10, .combine=rbind) %do% {
+  sxp3 <- summary(glht(x[[i]], linfct=y)) #specifically for post3
+  covp3 <- vcov(glht(x[[i]], linfct=y))
+  data.frame(imp=i, 
+             group=rownames(sxp3$linfct),
+             d = sxp3$test$coefficients, 
+             var.d = (sxp3$test$sigma)^2,
+             cov = covp3)
+}
+p3est <- get.est %>% group_by(group) %>% 
+                  summarise(Q = mean(d), 
+                            U = mean(var.d), 
+                            B = var(d), 
+                            T = U + ((1+1/max(imp))*B), 
+                            LCL = Q - 1.96*sqrt(T), 
+                            UCL = Q + 1.96*sqrt(T),
+                            SE = sqrt(T)) 
+p3est$race <- word(p3est$group, 1)
+p3est$gender <- word(p3est$group, 2)
+p3est$instruction <- word(p3est$group, 3)
+p3est$race_gender <- paste(p3est$race,p3est$gender, sep= " ")
+return <- p3est}
+```
+
+pre_phys figure
+```{r}
+mod_pre_phys <- pre_score~1 + FMCE + gend_URM*(asian_no_int + black_no_int + hispanic_no_int + race_other_no_int  + pacisland_no_int) + (1|course_id)
+
+
+#     c(I,FMCE, F,A,B, H,O,P, a,b,h ,o,p)
+WMM = c(1,1, 0,0,0, 0,0,0, 0,0,0, 0,0)
+WFM = c(1,1, 1,0,0, 0,0,0, 0,0,0, 0,0)
+
+AMM = c(1,1, 0,1,0, 0,0,0, 0,0,0, 0,0)
+AFM = c(1,1, 1,1,0, 0,0,0, 1,0,0, 0,0)
+
+BMM = c(1,1, 0,0,1, 0,0,0, 0,0,0, 0,0)
+BFM = c(1,1, 1,0,1, 0,0,0, 0,1,0, 0,0)
+
+HMM = c(1,1, 0,0,0, 1,0,0, 0,0,0, 0,0)
+HFM = c(1,1, 1,0,0, 1,0,0, 0,0,1, 0,0)
+
+OMM = c(1,1, 0,0,0, 0,1,0, 0,0,0, 0,0)
+OFM = c(1,1, 1,0,0, 0,1,0, 0,0,0, 1,0)
+
+PMM = c(1,1, 0,0,0, 0,0,1, 0,0,0, 0,0)
+PFM = c(1,1, 1,0,0, 0,0,1, 0,0,0, 0,1)
+#----
+WMC = c(1,0, 0,0,0, 0,0,0, 0,0,0, 0,0)
+WFC = c(1,0, 1,0,0, 0,0,0, 0,0,0, 0,0)
+
+AMC = c(1,0, 0,1,0, 0,0,0, 0,0,0, 0,0)
+AFC = c(1,0, 1,1,0, 0,0,0, 1,0,0, 0,0)
+
+BMC = c(1,0, 0,0,1, 0,0,0, 0,0,0, 0,0)
+BFC = c(1,0, 1,0,1, 0,0,0, 0,1,0, 0,0)
+
+HMC = c(1,0, 0,0,0, 1,0,0, 0,0,0, 0,0)
+HFC = c(1,0, 1,0,0, 1,0,0, 0,0,1, 0,0)
+
+OMC = c(1,0, 0,0,0, 0,1,0, 0,0,0, 0,0)
+OFC = c(1,0, 1,0,0, 0,1,0, 0,0,0, 1,0)
+
+PMC = c(1,0, 0,0,0, 0,0,1, 0,0,0, 0,0)
+PFC = c(1,0, 1,0,0, 0,0,1, 0,0,0, 0,1)
+
+
+contrast_forms_mod_pre_6 <- rbind('White Male FMCE'=WMM,  
+                          'White Female FMCE'=WFM,
+                          'Black Male FMCE'=BMM,  
+                          'Black Female FMCE'=BFM,
+                          'Asian Male FMCE'=AMM, 
+                          'Asian Female FMCE'=AFM,
+                          'Hispanic Male FMCE'=HMM, 
+                          'Hispanic Female FMCE'=HFM,
+                          'Other Male FMCE'=OMM,  
+                          'Other Female FMCE'=OFM,
+                          'Island Male FMCE'=PMM, 
+                          'Island Female FMCE'=PFM,
+                          'White Male FCI'=WMC,  
+                          'White Female FCI'=WFC,
+                          'Black Male FCI'=BMC,  
+                          'Black Female FCI'=BFC,
+                          'Asian Male FCI'=AMC, 
+                          'Asian Female FCI'=AFC,
+                          'Hispanic Male FCI'=HMC, 
+                          'Hispanic Female FCI'=HFC,
+                          'Other Male FCI'=OMC,  
+                          'Other Female FCI'=OFC,
+                          'Island Male FCI'=PMC, 
+                          'Island Female FCI'=PFC)
+
+contrast_p6_est <- pool_and_cov_diffwm(pre_phys,contrast_forms_mod_pre_6)
+unique(contrast_p6_est$race)
+
+contrast_p6_est$race <- factor(contrast_p6_est$race, levels = c("Black", "Hispanic", "Island", "Other", "Asian",    "White"))
+
+ggplot(data=contrast_p6_est, aes(x=race, y=Q, fill=gender)) +geom_bar(stat = "identity", position= "dodge") + geom_errorbar(aes( ymax= Q+SE, ymin=Q-SE), position="dodge")+
+  theme(legend.position = "bottom", axis.title.x=element_blank(), axis.text.x=element_text(angle=90), axis.ticks.x=element_blank(),panel.grid.major = element_blank(), panel.grid.minor = element_blank(),panel.background = element_blank(), axis.line = element_line(colour = "black"),text = element_text(size=16, color = "black")) +
+  ylab("Gain (Percentage Points)") +
+facet_grid(.~instruction, scales = "free", space = "free")
+#collab_plot <-  
+#levels(contrast_g6_est$instruction) <- c("Lecture", "Collaborative")
+
+
+ggplot(data=contrast_p6_est, aes(x=race, y=Q, fill=gender)) + geom_bar(stat = "identity", position = "dodge") + geom_errorbar(aes( ymax= Q+SE, ymin=Q-SE), position="dodge")+
+  theme(legend.position = "bottom",  axis.text.x=element_text(angle=90) , axis.title.x = element_blank(), axis.ticks.x=element_blank(),panel.grid.major = element_blank(), panel.grid.minor = element_blank(),panel.background = element_blank(), axis.line = element_line(colour = "black"),text = element_text(size=16, color = "black")) +
+  ylab("Pretest (%)") +
+  scale_fill_manual(name="Gender",
+                     breaks= c("Female","Male"),
+                     values=cbbpalette) +
+facet_grid(.~instruction, scales = "free", space = "free")
+ggsave("~/Documents/LA Postdoc stuff copy/RData/LASSO/Denver-Chico_collaboration/Physics_Equity/pre_phys.png", plot= last_plot(), dpi=300, width = 7.3, height = 4.25, units = "in", device = "png")
+FCI <- contrast_p6_est[contrast_p6_est$instruction=="FCI",]
+FMCE <- contrast_p6_est[contrast_p6_est$instruction=="FMCE",]
+
+kable(FCI[c(1,2,6,7)], digits = 1)
+kable(FMCE[c(1,2,6,7)], digits = 1)
+```
+
+
+
+gain_phys graph
+```{r}
+
+#     c(I,0,0, F,A,B, H,O,P, a,b, h,o,p)
+WML = c(1,0,0, 0,0,0, 0,0,0, 0,0, 0,0,0)
+WFL = c(1,0,0, 1,0,0, 0,0,0, 0,0, 0,0,0)
+
+AML = c(1,0,0, 0,1,0, 0,0,0, 0,0, 0,0,0)
+AFL = c(1,0,0, 1,1,0, 0,0,0, 1,0, 0,0,0)
+
+BML = c(1,0,0, 0,0,1, 0,0,0, 0,0, 0,0,0)
+BFL = c(1,0,0, 1,0,1, 0,0,0, 0,1, 0,0,0)
+
+HML = c(1,0,0, 0,0,0, 1,0,0, 0,0, 0,0,0)
+HFL = c(1,0,0, 1,0,0, 1,0,0, 0,0, 1,0,0)
+
+OML = c(1,0,0, 0,0,0, 0,1,0, 0,0, 0,0,0)
+OFL = c(1,0,0, 1,0,0, 0,1,0, 0,0, 0,1,0)
+
+PML = c(1,0,0, 0,0,0, 0,0,1, 0,0, 0,0,0)
+PFL = c(1,0,0, 1,0,0, 0,0,1, 0,0, 0,0,1)
+
+
+contrast_forms_mod8 <- rbind('White Male'=WML,  
+                          'White Female'=WFL,
+                          'Black Male'=BML,  
+                          'Black Female'=BFL,
+                          'Asian Male'=AML, 
+                          'Asian Female'=AFL,
+                          'Hispanic Male'=HML, 
+                          'Hispanic Female'=HFL,
+                          'Other Male'=OML,  
+                          'Other Female'=OFL,
+                          'Island Male'=PML, 
+                          'Island Female'=PFL)
+
+contrast_g8_est <- pool_and_cov_diffwm(gain_phys,contrast_forms_mod8)
+unique(contrast_g8_est$race)
+
+contrast_g8_est$race <- factor(contrast_g8_est$race, levels = c("Black", "Hispanic", "Island", "Other", "Asian",    "White"))
+
+ggplot(data=contrast_g8_est, aes(x=race, y=Q, fill=gender)) +geom_bar(stat = "identity", position= "dodge") + geom_errorbar(aes( ymax= Q+SE, ymin=Q-SE), position="dodge")+
+  theme(legend.position = "bottom", axis.title.x=element_blank(), axis.text.x=element_text(angle=90), axis.ticks.x=element_blank(),panel.grid.major = element_blank(), panel.grid.minor = element_blank(),panel.background = element_blank(), axis.line = element_line(colour = "black"),text = element_text(size=16, color = "black")) +
+  ylab("Gain (Percentage Points)") 
+#facet_grid(.~race_gender, scales = "free", space = "free")+
+#collab_plot <-  
+#levels(contrast_g6_est$instruction) <- c("Lecture", "Collaborative")
+ggplot(data=contrast_g8_est, aes(x=race, y=Q, fill=gender)) + geom_bar(stat = "identity", position = "dodge") + geom_errorbar(aes( ymax= Q+SE, ymin=Q-SE), position="dodge")+
+  theme(legend.position = "right",  axis.text.x=element_text(angle=90) , axis.title.x = element_blank(), axis.ticks.x=element_blank(),panel.grid.major = element_blank(), panel.grid.minor = element_blank(),panel.background = element_blank(), axis.line = element_line(colour = "black"),text = element_text(size=16, color = "black")) +
+  ylab("Gain (Percentage Points)") +
+  scale_fill_manual(name="Gender",
+                     breaks= c("Female","Male"),
+                     values=cbbpalette) 
+ggsave("~/Documents/LA Postdoc stuff copy/RData/LASSO/Denver-Chico_collaboration/Physics_Equity/gain_phys.png", plot= last_plot(), dpi=300, width = 7.3, height = 3.25, units = "in", device = "png")
+kable(contrast_g8_est[c(1,2,6,7)], digits = 2)
+```
+
+This produces the estimates for gain8
+
+
+This function pools the results across the MI for each of the groups and calculates their covariance with white males
+x=model, y= formula matrix
+```{r}
+pool_and_cov_1 <- function(x,y){
+  get.est <- foreach(i=1:10, .combine=rbind) %do% {
+  sxp3 <- summary(glht(x[[i]], linfct=y)) #specifically for post3
+  covp3 <- vcov(glht(x[[i]], linfct=y))
+  data.frame(imp=i, 
+             group=rownames(sxp3$linfct),
+             d = sxp3$test$coefficients, 
+             var.d = (sxp3$test$sigma)^2,
+             cov = covp3)
+}
+p3est <- get.est %>% group_by(group) %>% 
+                  summarise(Q = mean(d), 
+                            U = mean(var.d), 
+                            B = var(d), 
+                            T = U + ((1+1/max(imp))*B), 
+                            LCL = Q - 1.96*sqrt(T), 
+                            UCL = Q + 1.96*sqrt(T),
+                            SE = sqrt(T),
+                            cvwm = mean(cov.White.Male.Lecture)) 
+p3est$race <- word(p3est$group, 1)
+p3est$gender <- word(p3est$group, 2)
+p3est$instruction <- word(p3est$group, 3)
+p3est$race_gender <- paste(p3est$race,p3est$gender, sep= " ")
+return <- p3est}
+```
+
+
+
+
+```{r}
+pool_and_cov_diffwm <- function(x,y){
+  get.est <- foreach(i=1:10, .combine=rbind) %do% {
+  sxp3 <- summary(glht(x[[i]], linfct=y)) #specifically for post3
+  covp3 <- vcov(glht(x[[i]], linfct=y))
+  data.frame(imp=i, 
+             group=rownames(sxp3$linfct),
+             d = sxp3$test$coefficients, 
+             var.d = (sxp3$test$sigma)^2,
+             cov = covp3)
+}
+
+
+p3est <- get.est %>% group_by(group) %>% 
+                  summarise(Q = mean(d), 
+                            U = mean(var.d), 
+                            B = var(d), 
+                            T = U + ((1+1/max(imp))*B), 
+                            LCL = Q - 1.96*sqrt(T), 
+                            UCL = Q + 1.96*sqrt(T),
+                            SE = sqrt(T)) 
+p3est$race <- word(p3est$group, 1)
+p3est$gender <- word(p3est$group, 2)
+p3est$instruction <- word(p3est$group, 3)
+p3est$race_gender <- paste(p3est$race,p3est$gender, sep= " ")
+
+return <- p3est}
+```

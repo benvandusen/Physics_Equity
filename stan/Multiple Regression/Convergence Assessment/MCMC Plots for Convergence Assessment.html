@@ -1,0 +1,631 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+  <html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+<title>MCMC Plots: draws.to.analyze</title>
+<link rel="stylesheet" type="text/css" href="file:////Library/Frameworks/R.framework/Versions/4.0/Resources/library/mcmcplots/MCMCoutput.css" />
+</head>
+<body>
+<div id="outer">
+<h1>MCMC Plots: draws.to.analyze</h1><div id="toc">
+
+<h2>Table of Contents</h2><ul id="toc_items">
+<li class="toc_item"><a href="#(Intercept)">(Intercept)</a></li>
+<li class="toc_item"><a href="#stud_pre_cent">stud_pre_cent</a></li>
+<li class="toc_item"><a href="#retake">retake</a></li>
+<li class="toc_item"><a href="#gend_URM">gend_URM</a></li>
+<li class="toc_item"><a href="#asian_no_int">asian_no_int</a></li>
+<li class="toc_item"><a href="#black_no_int">black_no_int</a></li>
+<li class="toc_item"><a href="#hispanic_no_int">hispanic_no_int</a></li>
+<li class="toc_item"><a href="#race_other_no_int">race_other_no_int</a></li>
+<li class="toc_item"><a href="#pacisland_no_int">pacisland_no_int</a></li>
+<li class="toc_item"><a href="#gend_URM:asian_no_int">gend_URM:asian_no_int</a></li>
+<li class="toc_item"><a href="#gend_URM:black_no_int">gend_URM:black_no_int</a></li>
+<li class="toc_item"><a href="#gend_URM:hispanic_no_int">gend_URM:hispanic_no_int</a></li>
+<li class="toc_item"><a href="#gend_URM:race_other_no_int">gend_URM:race_other_no_int</a></li>
+<li class="toc_item"><a href="#gend_URM:pacisland_no_int">gend_URM:pacisland_no_int</a></li>
+<li class="toc_item"><a href="#b[(Intercept) course_id:17]">b[(Intercept) course_id:17]</a></li>
+<li class="toc_item"><a href="#b[(Intercept) course_id:18]">b[(Intercept) course_id:18]</a></li>
+<li class="toc_item"><a href="#b[(Intercept) course_id:57]">b[(Intercept) course_id:57]</a></li>
+<li class="toc_item"><a href="#b[(Intercept) course_id:58]">b[(Intercept) course_id:58]</a></li>
+<li class="toc_item"><a href="#b[(Intercept) course_id:59]">b[(Intercept) course_id:59]</a></li>
+<li class="toc_item"><a href="#b[(Intercept) course_id:60]">b[(Intercept) course_id:60]</a></li>
+<li class="toc_item"><a href="#b[(Intercept) course_id:77]">b[(Intercept) course_id:77]</a></li>
+<li class="toc_item"><a href="#b[(Intercept) course_id:129]">b[(Intercept) course_id:129]</a></li>
+<li class="toc_item"><a href="#b[(Intercept) course_id:130]">b[(Intercept) course_id:130]</a></li>
+<li class="toc_item"><a href="#b[(Intercept) course_id:132]">b[(Intercept) course_id:132]</a></li>
+<li class="toc_item"><a href="#b[(Intercept) course_id:133]">b[(Intercept) course_id:133]</a></li>
+<li class="toc_item"><a href="#b[(Intercept) course_id:135]">b[(Intercept) course_id:135]</a></li>
+<li class="toc_item"><a href="#b[(Intercept) course_id:136]">b[(Intercept) course_id:136]</a></li>
+<li class="toc_item"><a href="#b[(Intercept) course_id:138]">b[(Intercept) course_id:138]</a></li>
+<li class="toc_item"><a href="#b[(Intercept) course_id:139]">b[(Intercept) course_id:139]</a></li>
+<li class="toc_item"><a href="#b[(Intercept) course_id:141]">b[(Intercept) course_id:141]</a></li>
+<li class="toc_item"><a href="#b[(Intercept) course_id:143]">b[(Intercept) course_id:143]</a></li>
+<li class="toc_item"><a href="#b[(Intercept) course_id:145]">b[(Intercept) course_id:145]</a></li>
+<li class="toc_item"><a href="#b[(Intercept) course_id:150]">b[(Intercept) course_id:150]</a></li>
+<li class="toc_item"><a href="#b[(Intercept) course_id:152]">b[(Intercept) course_id:152]</a></li>
+<li class="toc_item"><a href="#b[(Intercept) course_id:153]">b[(Intercept) course_id:153]</a></li>
+<li class="toc_item"><a href="#b[(Intercept) course_id:154]">b[(Intercept) course_id:154]</a></li>
+<li class="toc_item"><a href="#b[(Intercept) course_id:155]">b[(Intercept) course_id:155]</a></li>
+<li class="toc_item"><a href="#b[(Intercept) course_id:157]">b[(Intercept) course_id:157]</a></li>
+<li class="toc_item"><a href="#b[(Intercept) course_id:159]">b[(Intercept) course_id:159]</a></li>
+<li class="toc_item"><a href="#b[(Intercept) course_id:161]">b[(Intercept) course_id:161]</a></li>
+<li class="toc_item"><a href="#b[(Intercept) course_id:162]">b[(Intercept) course_id:162]</a></li>
+<li class="toc_item"><a href="#b[(Intercept) course_id:163]">b[(Intercept) course_id:163]</a></li>
+<li class="toc_item"><a href="#b[(Intercept) course_id:164]">b[(Intercept) course_id:164]</a></li>
+<li class="toc_item"><a href="#b[(Intercept) course_id:188]">b[(Intercept) course_id:188]</a></li>
+<li class="toc_item"><a href="#b[(Intercept) course_id:190]">b[(Intercept) course_id:190]</a></li>
+<li class="toc_item"><a href="#b[(Intercept) course_id:191]">b[(Intercept) course_id:191]</a></li>
+<li class="toc_item"><a href="#b[(Intercept) course_id:202]">b[(Intercept) course_id:202]</a></li>
+<li class="toc_item"><a href="#b[(Intercept) course_id:203]">b[(Intercept) course_id:203]</a></li>
+<li class="toc_item"><a href="#b[(Intercept) course_id:233]">b[(Intercept) course_id:233]</a></li>
+<li class="toc_item"><a href="#b[(Intercept) course_id:240]">b[(Intercept) course_id:240]</a></li>
+<li class="toc_item"><a href="#b[(Intercept) course_id:244]">b[(Intercept) course_id:244]</a></li>
+<li class="toc_item"><a href="#b[(Intercept) course_id:245]">b[(Intercept) course_id:245]</a></li>
+<li class="toc_item"><a href="#b[(Intercept) course_id:246]">b[(Intercept) course_id:246]</a></li>
+<li class="toc_item"><a href="#b[(Intercept) course_id:248]">b[(Intercept) course_id:248]</a></li>
+<li class="toc_item"><a href="#b[(Intercept) course_id:251]">b[(Intercept) course_id:251]</a></li>
+<li class="toc_item"><a href="#b[(Intercept) course_id:257]">b[(Intercept) course_id:257]</a></li>
+<li class="toc_item"><a href="#b[(Intercept) course_id:258]">b[(Intercept) course_id:258]</a></li>
+<li class="toc_item"><a href="#b[(Intercept) course_id:260]">b[(Intercept) course_id:260]</a></li>
+<li class="toc_item"><a href="#b[(Intercept) course_id:265]">b[(Intercept) course_id:265]</a></li>
+<li class="toc_item"><a href="#b[(Intercept) course_id:266]">b[(Intercept) course_id:266]</a></li>
+<li class="toc_item"><a href="#b[(Intercept) course_id:267]">b[(Intercept) course_id:267]</a></li>
+<li class="toc_item"><a href="#b[(Intercept) course_id:268]">b[(Intercept) course_id:268]</a></li>
+<li class="toc_item"><a href="#b[(Intercept) course_id:277]">b[(Intercept) course_id:277]</a></li>
+<li class="toc_item"><a href="#b[(Intercept) course_id:278]">b[(Intercept) course_id:278]</a></li>
+<li class="toc_item"><a href="#b[(Intercept) course_id:282]">b[(Intercept) course_id:282]</a></li>
+<li class="toc_item"><a href="#b[(Intercept) course_id:305]">b[(Intercept) course_id:305]</a></li>
+<li class="toc_item"><a href="#b[(Intercept) course_id:313]">b[(Intercept) course_id:313]</a></li>
+<li class="toc_item"><a href="#b[(Intercept) course_id:316]">b[(Intercept) course_id:316]</a></li>
+<li class="toc_item"><a href="#b[(Intercept) course_id:333]">b[(Intercept) course_id:333]</a></li>
+<li class="toc_item"><a href="#b[(Intercept) course_id:366]">b[(Intercept) course_id:366]</a></li>
+<li class="toc_item"><a href="#b[(Intercept) course_id:375]">b[(Intercept) course_id:375]</a></li>
+<li class="toc_item"><a href="#b[(Intercept) course_id:388]">b[(Intercept) course_id:388]</a></li>
+<li class="toc_item"><a href="#b[(Intercept) course_id:389]">b[(Intercept) course_id:389]</a></li>
+<li class="toc_item"><a href="#b[(Intercept) course_id:402]">b[(Intercept) course_id:402]</a></li>
+<li class="toc_item"><a href="#b[(Intercept) course_id:406]">b[(Intercept) course_id:406]</a></li>
+<li class="toc_item"><a href="#b[(Intercept) course_id:407]">b[(Intercept) course_id:407]</a></li>
+<li class="toc_item"><a href="#b[(Intercept) course_id:408]">b[(Intercept) course_id:408]</a></li>
+<li class="toc_item"><a href="#b[(Intercept) course_id:409]">b[(Intercept) course_id:409]</a></li>
+<li class="toc_item"><a href="#b[(Intercept) course_id:414]">b[(Intercept) course_id:414]</a></li>
+<li class="toc_item"><a href="#b[(Intercept) course_id:415]">b[(Intercept) course_id:415]</a></li>
+<li class="toc_item"><a href="#b[(Intercept) course_id:419]">b[(Intercept) course_id:419]</a></li>
+<li class="toc_item"><a href="#b[(Intercept) course_id:424]">b[(Intercept) course_id:424]</a></li>
+<li class="toc_item"><a href="#b[(Intercept) course_id:429]">b[(Intercept) course_id:429]</a></li>
+<li class="toc_item"><a href="#b[(Intercept) course_id:430]">b[(Intercept) course_id:430]</a></li>
+<li class="toc_item"><a href="#b[(Intercept) course_id:431]">b[(Intercept) course_id:431]</a></li>
+<li class="toc_item"><a href="#b[(Intercept) course_id:432]">b[(Intercept) course_id:432]</a></li>
+<li class="toc_item"><a href="#b[(Intercept) course_id:433]">b[(Intercept) course_id:433]</a></li>
+<li class="toc_item"><a href="#b[(Intercept) course_id:434]">b[(Intercept) course_id:434]</a></li>
+<li class="toc_item"><a href="#b[(Intercept) course_id:435]">b[(Intercept) course_id:435]</a></li>
+<li class="toc_item"><a href="#b[(Intercept) course_id:436]">b[(Intercept) course_id:436]</a></li>
+<li class="toc_item"><a href="#b[(Intercept) course_id:442]">b[(Intercept) course_id:442]</a></li>
+<li class="toc_item"><a href="#b[(Intercept) course_id:445]">b[(Intercept) course_id:445]</a></li>
+<li class="toc_item"><a href="#b[(Intercept) course_id:457]">b[(Intercept) course_id:457]</a></li>
+<li class="toc_item"><a href="#b[(Intercept) course_id:458]">b[(Intercept) course_id:458]</a></li>
+<li class="toc_item"><a href="#b[(Intercept) course_id:463]">b[(Intercept) course_id:463]</a></li>
+<li class="toc_item"><a href="#b[(Intercept) course_id:467]">b[(Intercept) course_id:467]</a></li>
+<li class="toc_item"><a href="#b[(Intercept) course_id:471]">b[(Intercept) course_id:471]</a></li>
+<li class="toc_item"><a href="#b[(Intercept) course_id:476]">b[(Intercept) course_id:476]</a></li>
+<li class="toc_item"><a href="#b[(Intercept) course_id:477]">b[(Intercept) course_id:477]</a></li>
+<li class="toc_item"><a href="#b[(Intercept) course_id:510]">b[(Intercept) course_id:510]</a></li>
+<li class="toc_item"><a href="#b[(Intercept) course_id:511]">b[(Intercept) course_id:511]</a></li>
+<li class="toc_item"><a href="#b[(Intercept) course_id:519]">b[(Intercept) course_id:519]</a></li>
+<li class="toc_item"><a href="#b[(Intercept) course_id:527]">b[(Intercept) course_id:527]</a></li>
+<li class="toc_item"><a href="#b[(Intercept) course_id:528]">b[(Intercept) course_id:528]</a></li>
+<li class="toc_item"><a href="#b[(Intercept) course_id:532]">b[(Intercept) course_id:532]</a></li>
+<li class="toc_item"><a href="#b[(Intercept) course_id:536]">b[(Intercept) course_id:536]</a></li>
+<li class="toc_item"><a href="#b[(Intercept) course_id:537]">b[(Intercept) course_id:537]</a></li>
+<li class="toc_item"><a href="#b[(Intercept) course_id:554]">b[(Intercept) course_id:554]</a></li>
+<li class="toc_item"><a href="#b[(Intercept) course_id:573]">b[(Intercept) course_id:573]</a></li>
+<li class="toc_item"><a href="#b[(Intercept) course_id:576]">b[(Intercept) course_id:576]</a></li>
+<li class="toc_item"><a href="#b[(Intercept) course_id:602]">b[(Intercept) course_id:602]</a></li>
+<li class="toc_item"><a href="#b[(Intercept) course_id:603]">b[(Intercept) course_id:603]</a></li>
+<li class="toc_item"><a href="#b[(Intercept) course_id:604]">b[(Intercept) course_id:604]</a></li>
+<li class="toc_item"><a href="#b[(Intercept) course_id:605]">b[(Intercept) course_id:605]</a></li>
+<li class="toc_item"><a href="#b[(Intercept) course_id:631]">b[(Intercept) course_id:631]</a></li>
+<li class="toc_item"><a href="#b[(Intercept) course_id:635]">b[(Intercept) course_id:635]</a></li>
+<li class="toc_item"><a href="#b[(Intercept) course_id:641]">b[(Intercept) course_id:641]</a></li>
+<li class="toc_item"><a href="#b[(Intercept) course_id:642]">b[(Intercept) course_id:642]</a></li>
+<li class="toc_item"><a href="#b[(Intercept) course_id:643]">b[(Intercept) course_id:643]</a></li>
+<li class="toc_item"><a href="#b[(Intercept) course_id:648]">b[(Intercept) course_id:648]</a></li>
+<li class="toc_item"><a href="#b[(Intercept) course_id:653]">b[(Intercept) course_id:653]</a></li>
+<li class="toc_item"><a href="#b[(Intercept) course_id:660]">b[(Intercept) course_id:660]</a></li>
+<li class="toc_item"><a href="#b[(Intercept) course_id:663]">b[(Intercept) course_id:663]</a></li>
+<li class="toc_item"><a href="#b[(Intercept) course_id:671]">b[(Intercept) course_id:671]</a></li>
+<li class="toc_item"><a href="#b[(Intercept) course_id:672]">b[(Intercept) course_id:672]</a></li>
+<li class="toc_item"><a href="#b[(Intercept) course_id:693]">b[(Intercept) course_id:693]</a></li>
+<li class="toc_item"><a href="#b[(Intercept) course_id:700]">b[(Intercept) course_id:700]</a></li>
+<li class="toc_item"><a href="#b[(Intercept) course_id:703]">b[(Intercept) course_id:703]</a></li>
+<li class="toc_item"><a href="#b[(Intercept) course_id:706]">b[(Intercept) course_id:706]</a></li>
+<li class="toc_item"><a href="#b[(Intercept) course_id:708]">b[(Intercept) course_id:708]</a></li>
+<li class="toc_item"><a href="#b[(Intercept) course_id:709]">b[(Intercept) course_id:709]</a></li>
+<li class="toc_item"><a href="#b[(Intercept) course_id:713]">b[(Intercept) course_id:713]</a></li>
+<li class="toc_item"><a href="#b[(Intercept) course_id:720]">b[(Intercept) course_id:720]</a></li>
+<li class="toc_item"><a href="#b[(Intercept) course_id:721]">b[(Intercept) course_id:721]</a></li>
+<li class="toc_item"><a href="#b[(Intercept) course_id:722]">b[(Intercept) course_id:722]</a></li>
+<li class="toc_item"><a href="#b[(Intercept) course_id:725]">b[(Intercept) course_id:725]</a></li>
+<li class="toc_item"><a href="#b[(Intercept) course_id:728]">b[(Intercept) course_id:728]</a></li>
+<li class="toc_item"><a href="#b[(Intercept) course_id:732]">b[(Intercept) course_id:732]</a></li>
+<li class="toc_item"><a href="#b[(Intercept) course_id:735]">b[(Intercept) course_id:735]</a></li>
+<li class="toc_item"><a href="#b[(Intercept) course_id:742]">b[(Intercept) course_id:742]</a></li>
+<li class="toc_item"><a href="#b[(Intercept) course_id:764]">b[(Intercept) course_id:764]</a></li>
+<li class="toc_item"><a href="#b[(Intercept) course_id:765]">b[(Intercept) course_id:765]</a></li>
+<li class="toc_item"><a href="#b[(Intercept) course_id:775]">b[(Intercept) course_id:775]</a></li>
+<li class="toc_item"><a href="#b[(Intercept) course_id:792]">b[(Intercept) course_id:792]</a></li>
+<li class="toc_item"><a href="#b[(Intercept) course_id:814]">b[(Intercept) course_id:814]</a></li>
+<li class="toc_item"><a href="#b[(Intercept) course_id:820]">b[(Intercept) course_id:820]</a></li>
+<li class="toc_item"><a href="#b[(Intercept) course_id:823]">b[(Intercept) course_id:823]</a></li>
+<li class="toc_item"><a href="#b[(Intercept) course_id:824]">b[(Intercept) course_id:824]</a></li>
+<li class="toc_item"><a href="#b[(Intercept) course_id:825]">b[(Intercept) course_id:825]</a></li>
+<li class="toc_item"><a href="#b[(Intercept) course_id:829]">b[(Intercept) course_id:829]</a></li>
+<li class="toc_item"><a href="#b[(Intercept) course_id:841]">b[(Intercept) course_id:841]</a></li>
+<li class="toc_item"><a href="#b[(Intercept) course_id:842]">b[(Intercept) course_id:842]</a></li>
+<li class="toc_item"><a href="#b[(Intercept) course_id:849]">b[(Intercept) course_id:849]</a></li>
+<li class="toc_item"><a href="#b[(Intercept) course_id:853]">b[(Intercept) course_id:853]</a></li>
+<li class="toc_item"><a href="#b[(Intercept) course_id:855]">b[(Intercept) course_id:855]</a></li>
+<li class="toc_item"><a href="#b[(Intercept) course_id:858]">b[(Intercept) course_id:858]</a></li>
+<li class="toc_item"><a href="#b[(Intercept) course_id:870]">b[(Intercept) course_id:870]</a></li>
+<li class="toc_item"><a href="#b[(Intercept) course_id:871]">b[(Intercept) course_id:871]</a></li>
+<li class="toc_item"><a href="#b[(Intercept) course_id:874]">b[(Intercept) course_id:874]</a></li>
+<li class="toc_item"><a href="#b[(Intercept) course_id:879]">b[(Intercept) course_id:879]</a></li>
+<li class="toc_item"><a href="#b[(Intercept) course_id:889]">b[(Intercept) course_id:889]</a></li>
+<li class="toc_item"><a href="#b[(Intercept) course_id:897]">b[(Intercept) course_id:897]</a></li>
+<li class="toc_item"><a href="#b[(Intercept) course_id:901]">b[(Intercept) course_id:901]</a></li>
+<li class="toc_item"><a href="#b[(Intercept) course_id:906]">b[(Intercept) course_id:906]</a></li>
+<li class="toc_item"><a href="#b[(Intercept) course_id:969]">b[(Intercept) course_id:969]</a></li>
+<li class="toc_item"><a href="#b[(Intercept) course_id:978]">b[(Intercept) course_id:978]</a></li>
+<li class="toc_item"><a href="#b[(Intercept) course_id:998]">b[(Intercept) course_id:998]</a></li>
+<li class="toc_item"><a href="#b[(Intercept) course_id:1000]">b[(Intercept) course_id:1000]</a></li>
+<li class="toc_item"><a href="#b[(Intercept) course_id:1004]">b[(Intercept) course_id:1004]</a></li>
+<li class="toc_item"><a href="#b[(Intercept) course_id:1013]">b[(Intercept) course_id:1013]</a></li>
+<li class="toc_item"><a href="#b[(Intercept) course_id:1029]">b[(Intercept) course_id:1029]</a></li>
+<li class="toc_item"><a href="#b[(Intercept) course_id:1030]">b[(Intercept) course_id:1030]</a></li>
+<li class="toc_item"><a href="#b[(Intercept) course_id:1065]">b[(Intercept) course_id:1065]</a></li>
+<li class="toc_item"><a href="#b[(Intercept) course_id:1089]">b[(Intercept) course_id:1089]</a></li>
+<li class="toc_item"><a href="#b[(Intercept) course_id:1106]">b[(Intercept) course_id:1106]</a></li>
+<li class="toc_item"><a href="#b[(Intercept) course_id:1112]">b[(Intercept) course_id:1112]</a></li>
+<li class="toc_item"><a href="#b[(Intercept) course_id:1113]">b[(Intercept) course_id:1113]</a></li>
+<li class="toc_item"><a href="#b[(Intercept) course_id:1116]">b[(Intercept) course_id:1116]</a></li>
+<li class="toc_item"><a href="#b[(Intercept) course_id:1123]">b[(Intercept) course_id:1123]</a></li>
+<li class="toc_item"><a href="#b[(Intercept) course_id:1130]">b[(Intercept) course_id:1130]</a></li>
+<li class="toc_item"><a href="#b[(Intercept) course_id:1136]">b[(Intercept) course_id:1136]</a></li>
+<li class="toc_item"><a href="#b[(Intercept) course_id:1137]">b[(Intercept) course_id:1137]</a></li>
+<li class="toc_item"><a href="#b[(Intercept) course_id:1138]">b[(Intercept) course_id:1138]</a></li>
+<li class="toc_item"><a href="#b[(Intercept) course_id:1142]">b[(Intercept) course_id:1142]</a></li>
+<li class="toc_item"><a href="#b[(Intercept) course_id:1143]">b[(Intercept) course_id:1143]</a></li>
+<li class="toc_item"><a href="#b[(Intercept) course_id:1144]">b[(Intercept) course_id:1144]</a></li>
+<li class="toc_item"><a href="#b[(Intercept) course_id:1145]">b[(Intercept) course_id:1145]</a></li>
+<li class="toc_item"><a href="#b[(Intercept) course_id:1152]">b[(Intercept) course_id:1152]</a></li>
+<li class="toc_item"><a href="#b[(Intercept) course_id:1153]">b[(Intercept) course_id:1153]</a></li>
+<li class="toc_item"><a href="#b[(Intercept) course_id:1157]">b[(Intercept) course_id:1157]</a></li>
+<li class="toc_item"><a href="#b[(Intercept) course_id:1158]">b[(Intercept) course_id:1158]</a></li>
+<li class="toc_item"><a href="#b[(Intercept) course_id:1160]">b[(Intercept) course_id:1160]</a></li>
+<li class="toc_item"><a href="#b[(Intercept) course_id:1172]">b[(Intercept) course_id:1172]</a></li>
+<li class="toc_item"><a href="#b[(Intercept) course_id:1173]">b[(Intercept) course_id:1173]</a></li>
+<li class="toc_item"><a href="#b[(Intercept) course_id:1178]">b[(Intercept) course_id:1178]</a></li>
+<li class="toc_item"><a href="#b[(Intercept) course_id:1199]">b[(Intercept) course_id:1199]</a></li>
+<li class="toc_item"><a href="#b[(Intercept) course_id:1211]">b[(Intercept) course_id:1211]</a></li>
+<li class="toc_item"><a href="#b[(Intercept) course_id:1212]">b[(Intercept) course_id:1212]</a></li>
+<li class="toc_item"><a href="#b[(Intercept) course_id:1219]">b[(Intercept) course_id:1219]</a></li>
+<li class="toc_item"><a href="#b[(Intercept) course_id:1220]">b[(Intercept) course_id:1220]</a></li>
+<li class="toc_item"><a href="#b[(Intercept) course_id:1221]">b[(Intercept) course_id:1221]</a></li>
+<li class="toc_item"><a href="#b[(Intercept) course_id:_NEW_course_id]">b[(Intercept) course_id:_NEW_course_id]</a></li>
+<li class="toc_item"><a href="#sigma">sigma</a></li>
+<li class="toc_item"><a href="#Sigma[course_id:(Intercept),(Intercept)]">Sigma[course_id:(Intercept),(Intercept)]</a></li>
+</ul></div>
+<div class="main">
+<h2><a name="(Intercept)">Plots for (Intercept)</a></h2>
+<img class="mcmcplot" src="(Intercept).png" width="640" height="480" /> 
+<h2><a name="stud_pre_cent">Plots for stud_pre_cent</a></h2>
+<img class="mcmcplot" src="stud_pre_cent.png" width="640" height="480" /> 
+<h2><a name="retake">Plots for retake</a></h2>
+<img class="mcmcplot" src="retake.png" width="640" height="480" /> 
+<h2><a name="gend_URM">Plots for gend_URM</a></h2>
+<img class="mcmcplot" src="gend_URM.png" width="640" height="480" /> 
+<h2><a name="asian_no_int">Plots for asian_no_int</a></h2>
+<img class="mcmcplot" src="asian_no_int.png" width="640" height="480" /> 
+<h2><a name="black_no_int">Plots for black_no_int</a></h2>
+<img class="mcmcplot" src="black_no_int.png" width="640" height="480" /> 
+<h2><a name="hispanic_no_int">Plots for hispanic_no_int</a></h2>
+<img class="mcmcplot" src="hispanic_no_int.png" width="640" height="480" /> 
+<h2><a name="race_other_no_int">Plots for race_other_no_int</a></h2>
+<img class="mcmcplot" src="race_other_no_int.png" width="640" height="480" /> 
+<h2><a name="pacisland_no_int">Plots for pacisland_no_int</a></h2>
+<img class="mcmcplot" src="pacisland_no_int.png" width="640" height="480" /> 
+<h2><a name="gend_URM:asian_no_int">Plots for gend_URM:asian_no_int</a></h2>
+<img class="mcmcplot" src="gend_URM:asian_no_int.png" width="640" height="480" /> 
+<h2><a name="gend_URM:black_no_int">Plots for gend_URM:black_no_int</a></h2>
+<img class="mcmcplot" src="gend_URM:black_no_int.png" width="640" height="480" /> 
+<h2><a name="gend_URM:hispanic_no_int">Plots for gend_URM:hispanic_no_int</a></h2>
+<img class="mcmcplot" src="gend_URM:hispanic_no_int.png" width="640" height="480" /> 
+<h2><a name="gend_URM:race_other_no_int">Plots for gend_URM:race_other_no_int</a></h2>
+<img class="mcmcplot" src="gend_URM:race_other_no_int.png" width="640" height="480" /> 
+<h2><a name="gend_URM:pacisland_no_int">Plots for gend_URM:pacisland_no_int</a></h2>
+<img class="mcmcplot" src="gend_URM:pacisland_no_int.png" width="640" height="480" /> 
+<h2><a name="b[(Intercept) course_id:17]">Plots for b[(Intercept) course_id:17]</a></h2>
+<img class="mcmcplot" src="b[(Intercept) course_id:17].png" width="640" height="480" /> 
+<h2><a name="b[(Intercept) course_id:18]">Plots for b[(Intercept) course_id:18]</a></h2>
+<img class="mcmcplot" src="b[(Intercept) course_id:18].png" width="640" height="480" /> 
+<h2><a name="b[(Intercept) course_id:57]">Plots for b[(Intercept) course_id:57]</a></h2>
+<img class="mcmcplot" src="b[(Intercept) course_id:57].png" width="640" height="480" /> 
+<h2><a name="b[(Intercept) course_id:58]">Plots for b[(Intercept) course_id:58]</a></h2>
+<img class="mcmcplot" src="b[(Intercept) course_id:58].png" width="640" height="480" /> 
+<h2><a name="b[(Intercept) course_id:59]">Plots for b[(Intercept) course_id:59]</a></h2>
+<img class="mcmcplot" src="b[(Intercept) course_id:59].png" width="640" height="480" /> 
+<h2><a name="b[(Intercept) course_id:60]">Plots for b[(Intercept) course_id:60]</a></h2>
+<img class="mcmcplot" src="b[(Intercept) course_id:60].png" width="640" height="480" /> 
+<h2><a name="b[(Intercept) course_id:77]">Plots for b[(Intercept) course_id:77]</a></h2>
+<img class="mcmcplot" src="b[(Intercept) course_id:77].png" width="640" height="480" /> 
+<h2><a name="b[(Intercept) course_id:129]">Plots for b[(Intercept) course_id:129]</a></h2>
+<img class="mcmcplot" src="b[(Intercept) course_id:129].png" width="640" height="480" /> 
+<h2><a name="b[(Intercept) course_id:130]">Plots for b[(Intercept) course_id:130]</a></h2>
+<img class="mcmcplot" src="b[(Intercept) course_id:130].png" width="640" height="480" /> 
+<h2><a name="b[(Intercept) course_id:132]">Plots for b[(Intercept) course_id:132]</a></h2>
+<img class="mcmcplot" src="b[(Intercept) course_id:132].png" width="640" height="480" /> 
+<h2><a name="b[(Intercept) course_id:133]">Plots for b[(Intercept) course_id:133]</a></h2>
+<img class="mcmcplot" src="b[(Intercept) course_id:133].png" width="640" height="480" /> 
+<h2><a name="b[(Intercept) course_id:135]">Plots for b[(Intercept) course_id:135]</a></h2>
+<img class="mcmcplot" src="b[(Intercept) course_id:135].png" width="640" height="480" /> 
+<h2><a name="b[(Intercept) course_id:136]">Plots for b[(Intercept) course_id:136]</a></h2>
+<img class="mcmcplot" src="b[(Intercept) course_id:136].png" width="640" height="480" /> 
+<h2><a name="b[(Intercept) course_id:138]">Plots for b[(Intercept) course_id:138]</a></h2>
+<img class="mcmcplot" src="b[(Intercept) course_id:138].png" width="640" height="480" /> 
+<h2><a name="b[(Intercept) course_id:139]">Plots for b[(Intercept) course_id:139]</a></h2>
+<img class="mcmcplot" src="b[(Intercept) course_id:139].png" width="640" height="480" /> 
+<h2><a name="b[(Intercept) course_id:141]">Plots for b[(Intercept) course_id:141]</a></h2>
+<img class="mcmcplot" src="b[(Intercept) course_id:141].png" width="640" height="480" /> 
+<h2><a name="b[(Intercept) course_id:143]">Plots for b[(Intercept) course_id:143]</a></h2>
+<img class="mcmcplot" src="b[(Intercept) course_id:143].png" width="640" height="480" /> 
+<h2><a name="b[(Intercept) course_id:145]">Plots for b[(Intercept) course_id:145]</a></h2>
+<img class="mcmcplot" src="b[(Intercept) course_id:145].png" width="640" height="480" /> 
+<h2><a name="b[(Intercept) course_id:150]">Plots for b[(Intercept) course_id:150]</a></h2>
+<img class="mcmcplot" src="b[(Intercept) course_id:150].png" width="640" height="480" /> 
+<h2><a name="b[(Intercept) course_id:152]">Plots for b[(Intercept) course_id:152]</a></h2>
+<img class="mcmcplot" src="b[(Intercept) course_id:152].png" width="640" height="480" /> 
+<h2><a name="b[(Intercept) course_id:153]">Plots for b[(Intercept) course_id:153]</a></h2>
+<img class="mcmcplot" src="b[(Intercept) course_id:153].png" width="640" height="480" /> 
+<h2><a name="b[(Intercept) course_id:154]">Plots for b[(Intercept) course_id:154]</a></h2>
+<img class="mcmcplot" src="b[(Intercept) course_id:154].png" width="640" height="480" /> 
+<h2><a name="b[(Intercept) course_id:155]">Plots for b[(Intercept) course_id:155]</a></h2>
+<img class="mcmcplot" src="b[(Intercept) course_id:155].png" width="640" height="480" /> 
+<h2><a name="b[(Intercept) course_id:157]">Plots for b[(Intercept) course_id:157]</a></h2>
+<img class="mcmcplot" src="b[(Intercept) course_id:157].png" width="640" height="480" /> 
+<h2><a name="b[(Intercept) course_id:159]">Plots for b[(Intercept) course_id:159]</a></h2>
+<img class="mcmcplot" src="b[(Intercept) course_id:159].png" width="640" height="480" /> 
+<h2><a name="b[(Intercept) course_id:161]">Plots for b[(Intercept) course_id:161]</a></h2>
+<img class="mcmcplot" src="b[(Intercept) course_id:161].png" width="640" height="480" /> 
+<h2><a name="b[(Intercept) course_id:162]">Plots for b[(Intercept) course_id:162]</a></h2>
+<img class="mcmcplot" src="b[(Intercept) course_id:162].png" width="640" height="480" /> 
+<h2><a name="b[(Intercept) course_id:163]">Plots for b[(Intercept) course_id:163]</a></h2>
+<img class="mcmcplot" src="b[(Intercept) course_id:163].png" width="640" height="480" /> 
+<h2><a name="b[(Intercept) course_id:164]">Plots for b[(Intercept) course_id:164]</a></h2>
+<img class="mcmcplot" src="b[(Intercept) course_id:164].png" width="640" height="480" /> 
+<h2><a name="b[(Intercept) course_id:188]">Plots for b[(Intercept) course_id:188]</a></h2>
+<img class="mcmcplot" src="b[(Intercept) course_id:188].png" width="640" height="480" /> 
+<h2><a name="b[(Intercept) course_id:190]">Plots for b[(Intercept) course_id:190]</a></h2>
+<img class="mcmcplot" src="b[(Intercept) course_id:190].png" width="640" height="480" /> 
+<h2><a name="b[(Intercept) course_id:191]">Plots for b[(Intercept) course_id:191]</a></h2>
+<img class="mcmcplot" src="b[(Intercept) course_id:191].png" width="640" height="480" /> 
+<h2><a name="b[(Intercept) course_id:202]">Plots for b[(Intercept) course_id:202]</a></h2>
+<img class="mcmcplot" src="b[(Intercept) course_id:202].png" width="640" height="480" /> 
+<h2><a name="b[(Intercept) course_id:203]">Plots for b[(Intercept) course_id:203]</a></h2>
+<img class="mcmcplot" src="b[(Intercept) course_id:203].png" width="640" height="480" /> 
+<h2><a name="b[(Intercept) course_id:233]">Plots for b[(Intercept) course_id:233]</a></h2>
+<img class="mcmcplot" src="b[(Intercept) course_id:233].png" width="640" height="480" /> 
+<h2><a name="b[(Intercept) course_id:240]">Plots for b[(Intercept) course_id:240]</a></h2>
+<img class="mcmcplot" src="b[(Intercept) course_id:240].png" width="640" height="480" /> 
+<h2><a name="b[(Intercept) course_id:244]">Plots for b[(Intercept) course_id:244]</a></h2>
+<img class="mcmcplot" src="b[(Intercept) course_id:244].png" width="640" height="480" /> 
+<h2><a name="b[(Intercept) course_id:245]">Plots for b[(Intercept) course_id:245]</a></h2>
+<img class="mcmcplot" src="b[(Intercept) course_id:245].png" width="640" height="480" /> 
+<h2><a name="b[(Intercept) course_id:246]">Plots for b[(Intercept) course_id:246]</a></h2>
+<img class="mcmcplot" src="b[(Intercept) course_id:246].png" width="640" height="480" /> 
+<h2><a name="b[(Intercept) course_id:248]">Plots for b[(Intercept) course_id:248]</a></h2>
+<img class="mcmcplot" src="b[(Intercept) course_id:248].png" width="640" height="480" /> 
+<h2><a name="b[(Intercept) course_id:251]">Plots for b[(Intercept) course_id:251]</a></h2>
+<img class="mcmcplot" src="b[(Intercept) course_id:251].png" width="640" height="480" /> 
+<h2><a name="b[(Intercept) course_id:257]">Plots for b[(Intercept) course_id:257]</a></h2>
+<img class="mcmcplot" src="b[(Intercept) course_id:257].png" width="640" height="480" /> 
+<h2><a name="b[(Intercept) course_id:258]">Plots for b[(Intercept) course_id:258]</a></h2>
+<img class="mcmcplot" src="b[(Intercept) course_id:258].png" width="640" height="480" /> 
+<h2><a name="b[(Intercept) course_id:260]">Plots for b[(Intercept) course_id:260]</a></h2>
+<img class="mcmcplot" src="b[(Intercept) course_id:260].png" width="640" height="480" /> 
+<h2><a name="b[(Intercept) course_id:265]">Plots for b[(Intercept) course_id:265]</a></h2>
+<img class="mcmcplot" src="b[(Intercept) course_id:265].png" width="640" height="480" /> 
+<h2><a name="b[(Intercept) course_id:266]">Plots for b[(Intercept) course_id:266]</a></h2>
+<img class="mcmcplot" src="b[(Intercept) course_id:266].png" width="640" height="480" /> 
+<h2><a name="b[(Intercept) course_id:267]">Plots for b[(Intercept) course_id:267]</a></h2>
+<img class="mcmcplot" src="b[(Intercept) course_id:267].png" width="640" height="480" /> 
+<h2><a name="b[(Intercept) course_id:268]">Plots for b[(Intercept) course_id:268]</a></h2>
+<img class="mcmcplot" src="b[(Intercept) course_id:268].png" width="640" height="480" /> 
+<h2><a name="b[(Intercept) course_id:277]">Plots for b[(Intercept) course_id:277]</a></h2>
+<img class="mcmcplot" src="b[(Intercept) course_id:277].png" width="640" height="480" /> 
+<h2><a name="b[(Intercept) course_id:278]">Plots for b[(Intercept) course_id:278]</a></h2>
+<img class="mcmcplot" src="b[(Intercept) course_id:278].png" width="640" height="480" /> 
+<h2><a name="b[(Intercept) course_id:282]">Plots for b[(Intercept) course_id:282]</a></h2>
+<img class="mcmcplot" src="b[(Intercept) course_id:282].png" width="640" height="480" /> 
+<h2><a name="b[(Intercept) course_id:305]">Plots for b[(Intercept) course_id:305]</a></h2>
+<img class="mcmcplot" src="b[(Intercept) course_id:305].png" width="640" height="480" /> 
+<h2><a name="b[(Intercept) course_id:313]">Plots for b[(Intercept) course_id:313]</a></h2>
+<img class="mcmcplot" src="b[(Intercept) course_id:313].png" width="640" height="480" /> 
+<h2><a name="b[(Intercept) course_id:316]">Plots for b[(Intercept) course_id:316]</a></h2>
+<img class="mcmcplot" src="b[(Intercept) course_id:316].png" width="640" height="480" /> 
+<h2><a name="b[(Intercept) course_id:333]">Plots for b[(Intercept) course_id:333]</a></h2>
+<img class="mcmcplot" src="b[(Intercept) course_id:333].png" width="640" height="480" /> 
+<h2><a name="b[(Intercept) course_id:366]">Plots for b[(Intercept) course_id:366]</a></h2>
+<img class="mcmcplot" src="b[(Intercept) course_id:366].png" width="640" height="480" /> 
+<h2><a name="b[(Intercept) course_id:375]">Plots for b[(Intercept) course_id:375]</a></h2>
+<img class="mcmcplot" src="b[(Intercept) course_id:375].png" width="640" height="480" /> 
+<h2><a name="b[(Intercept) course_id:388]">Plots for b[(Intercept) course_id:388]</a></h2>
+<img class="mcmcplot" src="b[(Intercept) course_id:388].png" width="640" height="480" /> 
+<h2><a name="b[(Intercept) course_id:389]">Plots for b[(Intercept) course_id:389]</a></h2>
+<img class="mcmcplot" src="b[(Intercept) course_id:389].png" width="640" height="480" /> 
+<h2><a name="b[(Intercept) course_id:402]">Plots for b[(Intercept) course_id:402]</a></h2>
+<img class="mcmcplot" src="b[(Intercept) course_id:402].png" width="640" height="480" /> 
+<h2><a name="b[(Intercept) course_id:406]">Plots for b[(Intercept) course_id:406]</a></h2>
+<img class="mcmcplot" src="b[(Intercept) course_id:406].png" width="640" height="480" /> 
+<h2><a name="b[(Intercept) course_id:407]">Plots for b[(Intercept) course_id:407]</a></h2>
+<img class="mcmcplot" src="b[(Intercept) course_id:407].png" width="640" height="480" /> 
+<h2><a name="b[(Intercept) course_id:408]">Plots for b[(Intercept) course_id:408]</a></h2>
+<img class="mcmcplot" src="b[(Intercept) course_id:408].png" width="640" height="480" /> 
+<h2><a name="b[(Intercept) course_id:409]">Plots for b[(Intercept) course_id:409]</a></h2>
+<img class="mcmcplot" src="b[(Intercept) course_id:409].png" width="640" height="480" /> 
+<h2><a name="b[(Intercept) course_id:414]">Plots for b[(Intercept) course_id:414]</a></h2>
+<img class="mcmcplot" src="b[(Intercept) course_id:414].png" width="640" height="480" /> 
+<h2><a name="b[(Intercept) course_id:415]">Plots for b[(Intercept) course_id:415]</a></h2>
+<img class="mcmcplot" src="b[(Intercept) course_id:415].png" width="640" height="480" /> 
+<h2><a name="b[(Intercept) course_id:419]">Plots for b[(Intercept) course_id:419]</a></h2>
+<img class="mcmcplot" src="b[(Intercept) course_id:419].png" width="640" height="480" /> 
+<h2><a name="b[(Intercept) course_id:424]">Plots for b[(Intercept) course_id:424]</a></h2>
+<img class="mcmcplot" src="b[(Intercept) course_id:424].png" width="640" height="480" /> 
+<h2><a name="b[(Intercept) course_id:429]">Plots for b[(Intercept) course_id:429]</a></h2>
+<img class="mcmcplot" src="b[(Intercept) course_id:429].png" width="640" height="480" /> 
+<h2><a name="b[(Intercept) course_id:430]">Plots for b[(Intercept) course_id:430]</a></h2>
+<img class="mcmcplot" src="b[(Intercept) course_id:430].png" width="640" height="480" /> 
+<h2><a name="b[(Intercept) course_id:431]">Plots for b[(Intercept) course_id:431]</a></h2>
+<img class="mcmcplot" src="b[(Intercept) course_id:431].png" width="640" height="480" /> 
+<h2><a name="b[(Intercept) course_id:432]">Plots for b[(Intercept) course_id:432]</a></h2>
+<img class="mcmcplot" src="b[(Intercept) course_id:432].png" width="640" height="480" /> 
+<h2><a name="b[(Intercept) course_id:433]">Plots for b[(Intercept) course_id:433]</a></h2>
+<img class="mcmcplot" src="b[(Intercept) course_id:433].png" width="640" height="480" /> 
+<h2><a name="b[(Intercept) course_id:434]">Plots for b[(Intercept) course_id:434]</a></h2>
+<img class="mcmcplot" src="b[(Intercept) course_id:434].png" width="640" height="480" /> 
+<h2><a name="b[(Intercept) course_id:435]">Plots for b[(Intercept) course_id:435]</a></h2>
+<img class="mcmcplot" src="b[(Intercept) course_id:435].png" width="640" height="480" /> 
+<h2><a name="b[(Intercept) course_id:436]">Plots for b[(Intercept) course_id:436]</a></h2>
+<img class="mcmcplot" src="b[(Intercept) course_id:436].png" width="640" height="480" /> 
+<h2><a name="b[(Intercept) course_id:442]">Plots for b[(Intercept) course_id:442]</a></h2>
+<img class="mcmcplot" src="b[(Intercept) course_id:442].png" width="640" height="480" /> 
+<h2><a name="b[(Intercept) course_id:445]">Plots for b[(Intercept) course_id:445]</a></h2>
+<img class="mcmcplot" src="b[(Intercept) course_id:445].png" width="640" height="480" /> 
+<h2><a name="b[(Intercept) course_id:457]">Plots for b[(Intercept) course_id:457]</a></h2>
+<img class="mcmcplot" src="b[(Intercept) course_id:457].png" width="640" height="480" /> 
+<h2><a name="b[(Intercept) course_id:458]">Plots for b[(Intercept) course_id:458]</a></h2>
+<img class="mcmcplot" src="b[(Intercept) course_id:458].png" width="640" height="480" /> 
+<h2><a name="b[(Intercept) course_id:463]">Plots for b[(Intercept) course_id:463]</a></h2>
+<img class="mcmcplot" src="b[(Intercept) course_id:463].png" width="640" height="480" /> 
+<h2><a name="b[(Intercept) course_id:467]">Plots for b[(Intercept) course_id:467]</a></h2>
+<img class="mcmcplot" src="b[(Intercept) course_id:467].png" width="640" height="480" /> 
+<h2><a name="b[(Intercept) course_id:471]">Plots for b[(Intercept) course_id:471]</a></h2>
+<img class="mcmcplot" src="b[(Intercept) course_id:471].png" width="640" height="480" /> 
+<h2><a name="b[(Intercept) course_id:476]">Plots for b[(Intercept) course_id:476]</a></h2>
+<img class="mcmcplot" src="b[(Intercept) course_id:476].png" width="640" height="480" /> 
+<h2><a name="b[(Intercept) course_id:477]">Plots for b[(Intercept) course_id:477]</a></h2>
+<img class="mcmcplot" src="b[(Intercept) course_id:477].png" width="640" height="480" /> 
+<h2><a name="b[(Intercept) course_id:510]">Plots for b[(Intercept) course_id:510]</a></h2>
+<img class="mcmcplot" src="b[(Intercept) course_id:510].png" width="640" height="480" /> 
+<h2><a name="b[(Intercept) course_id:511]">Plots for b[(Intercept) course_id:511]</a></h2>
+<img class="mcmcplot" src="b[(Intercept) course_id:511].png" width="640" height="480" /> 
+<h2><a name="b[(Intercept) course_id:519]">Plots for b[(Intercept) course_id:519]</a></h2>
+<img class="mcmcplot" src="b[(Intercept) course_id:519].png" width="640" height="480" /> 
+<h2><a name="b[(Intercept) course_id:527]">Plots for b[(Intercept) course_id:527]</a></h2>
+<img class="mcmcplot" src="b[(Intercept) course_id:527].png" width="640" height="480" /> 
+<h2><a name="b[(Intercept) course_id:528]">Plots for b[(Intercept) course_id:528]</a></h2>
+<img class="mcmcplot" src="b[(Intercept) course_id:528].png" width="640" height="480" /> 
+<h2><a name="b[(Intercept) course_id:532]">Plots for b[(Intercept) course_id:532]</a></h2>
+<img class="mcmcplot" src="b[(Intercept) course_id:532].png" width="640" height="480" /> 
+<h2><a name="b[(Intercept) course_id:536]">Plots for b[(Intercept) course_id:536]</a></h2>
+<img class="mcmcplot" src="b[(Intercept) course_id:536].png" width="640" height="480" /> 
+<h2><a name="b[(Intercept) course_id:537]">Plots for b[(Intercept) course_id:537]</a></h2>
+<img class="mcmcplot" src="b[(Intercept) course_id:537].png" width="640" height="480" /> 
+<h2><a name="b[(Intercept) course_id:554]">Plots for b[(Intercept) course_id:554]</a></h2>
+<img class="mcmcplot" src="b[(Intercept) course_id:554].png" width="640" height="480" /> 
+<h2><a name="b[(Intercept) course_id:573]">Plots for b[(Intercept) course_id:573]</a></h2>
+<img class="mcmcplot" src="b[(Intercept) course_id:573].png" width="640" height="480" /> 
+<h2><a name="b[(Intercept) course_id:576]">Plots for b[(Intercept) course_id:576]</a></h2>
+<img class="mcmcplot" src="b[(Intercept) course_id:576].png" width="640" height="480" /> 
+<h2><a name="b[(Intercept) course_id:602]">Plots for b[(Intercept) course_id:602]</a></h2>
+<img class="mcmcplot" src="b[(Intercept) course_id:602].png" width="640" height="480" /> 
+<h2><a name="b[(Intercept) course_id:603]">Plots for b[(Intercept) course_id:603]</a></h2>
+<img class="mcmcplot" src="b[(Intercept) course_id:603].png" width="640" height="480" /> 
+<h2><a name="b[(Intercept) course_id:604]">Plots for b[(Intercept) course_id:604]</a></h2>
+<img class="mcmcplot" src="b[(Intercept) course_id:604].png" width="640" height="480" /> 
+<h2><a name="b[(Intercept) course_id:605]">Plots for b[(Intercept) course_id:605]</a></h2>
+<img class="mcmcplot" src="b[(Intercept) course_id:605].png" width="640" height="480" /> 
+<h2><a name="b[(Intercept) course_id:631]">Plots for b[(Intercept) course_id:631]</a></h2>
+<img class="mcmcplot" src="b[(Intercept) course_id:631].png" width="640" height="480" /> 
+<h2><a name="b[(Intercept) course_id:635]">Plots for b[(Intercept) course_id:635]</a></h2>
+<img class="mcmcplot" src="b[(Intercept) course_id:635].png" width="640" height="480" /> 
+<h2><a name="b[(Intercept) course_id:641]">Plots for b[(Intercept) course_id:641]</a></h2>
+<img class="mcmcplot" src="b[(Intercept) course_id:641].png" width="640" height="480" /> 
+<h2><a name="b[(Intercept) course_id:642]">Plots for b[(Intercept) course_id:642]</a></h2>
+<img class="mcmcplot" src="b[(Intercept) course_id:642].png" width="640" height="480" /> 
+<h2><a name="b[(Intercept) course_id:643]">Plots for b[(Intercept) course_id:643]</a></h2>
+<img class="mcmcplot" src="b[(Intercept) course_id:643].png" width="640" height="480" /> 
+<h2><a name="b[(Intercept) course_id:648]">Plots for b[(Intercept) course_id:648]</a></h2>
+<img class="mcmcplot" src="b[(Intercept) course_id:648].png" width="640" height="480" /> 
+<h2><a name="b[(Intercept) course_id:653]">Plots for b[(Intercept) course_id:653]</a></h2>
+<img class="mcmcplot" src="b[(Intercept) course_id:653].png" width="640" height="480" /> 
+<h2><a name="b[(Intercept) course_id:660]">Plots for b[(Intercept) course_id:660]</a></h2>
+<img class="mcmcplot" src="b[(Intercept) course_id:660].png" width="640" height="480" /> 
+<h2><a name="b[(Intercept) course_id:663]">Plots for b[(Intercept) course_id:663]</a></h2>
+<img class="mcmcplot" src="b[(Intercept) course_id:663].png" width="640" height="480" /> 
+<h2><a name="b[(Intercept) course_id:671]">Plots for b[(Intercept) course_id:671]</a></h2>
+<img class="mcmcplot" src="b[(Intercept) course_id:671].png" width="640" height="480" /> 
+<h2><a name="b[(Intercept) course_id:672]">Plots for b[(Intercept) course_id:672]</a></h2>
+<img class="mcmcplot" src="b[(Intercept) course_id:672].png" width="640" height="480" /> 
+<h2><a name="b[(Intercept) course_id:693]">Plots for b[(Intercept) course_id:693]</a></h2>
+<img class="mcmcplot" src="b[(Intercept) course_id:693].png" width="640" height="480" /> 
+<h2><a name="b[(Intercept) course_id:700]">Plots for b[(Intercept) course_id:700]</a></h2>
+<img class="mcmcplot" src="b[(Intercept) course_id:700].png" width="640" height="480" /> 
+<h2><a name="b[(Intercept) course_id:703]">Plots for b[(Intercept) course_id:703]</a></h2>
+<img class="mcmcplot" src="b[(Intercept) course_id:703].png" width="640" height="480" /> 
+<h2><a name="b[(Intercept) course_id:706]">Plots for b[(Intercept) course_id:706]</a></h2>
+<img class="mcmcplot" src="b[(Intercept) course_id:706].png" width="640" height="480" /> 
+<h2><a name="b[(Intercept) course_id:708]">Plots for b[(Intercept) course_id:708]</a></h2>
+<img class="mcmcplot" src="b[(Intercept) course_id:708].png" width="640" height="480" /> 
+<h2><a name="b[(Intercept) course_id:709]">Plots for b[(Intercept) course_id:709]</a></h2>
+<img class="mcmcplot" src="b[(Intercept) course_id:709].png" width="640" height="480" /> 
+<h2><a name="b[(Intercept) course_id:713]">Plots for b[(Intercept) course_id:713]</a></h2>
+<img class="mcmcplot" src="b[(Intercept) course_id:713].png" width="640" height="480" /> 
+<h2><a name="b[(Intercept) course_id:720]">Plots for b[(Intercept) course_id:720]</a></h2>
+<img class="mcmcplot" src="b[(Intercept) course_id:720].png" width="640" height="480" /> 
+<h2><a name="b[(Intercept) course_id:721]">Plots for b[(Intercept) course_id:721]</a></h2>
+<img class="mcmcplot" src="b[(Intercept) course_id:721].png" width="640" height="480" /> 
+<h2><a name="b[(Intercept) course_id:722]">Plots for b[(Intercept) course_id:722]</a></h2>
+<img class="mcmcplot" src="b[(Intercept) course_id:722].png" width="640" height="480" /> 
+<h2><a name="b[(Intercept) course_id:725]">Plots for b[(Intercept) course_id:725]</a></h2>
+<img class="mcmcplot" src="b[(Intercept) course_id:725].png" width="640" height="480" /> 
+<h2><a name="b[(Intercept) course_id:728]">Plots for b[(Intercept) course_id:728]</a></h2>
+<img class="mcmcplot" src="b[(Intercept) course_id:728].png" width="640" height="480" /> 
+<h2><a name="b[(Intercept) course_id:732]">Plots for b[(Intercept) course_id:732]</a></h2>
+<img class="mcmcplot" src="b[(Intercept) course_id:732].png" width="640" height="480" /> 
+<h2><a name="b[(Intercept) course_id:735]">Plots for b[(Intercept) course_id:735]</a></h2>
+<img class="mcmcplot" src="b[(Intercept) course_id:735].png" width="640" height="480" /> 
+<h2><a name="b[(Intercept) course_id:742]">Plots for b[(Intercept) course_id:742]</a></h2>
+<img class="mcmcplot" src="b[(Intercept) course_id:742].png" width="640" height="480" /> 
+<h2><a name="b[(Intercept) course_id:764]">Plots for b[(Intercept) course_id:764]</a></h2>
+<img class="mcmcplot" src="b[(Intercept) course_id:764].png" width="640" height="480" /> 
+<h2><a name="b[(Intercept) course_id:765]">Plots for b[(Intercept) course_id:765]</a></h2>
+<img class="mcmcplot" src="b[(Intercept) course_id:765].png" width="640" height="480" /> 
+<h2><a name="b[(Intercept) course_id:775]">Plots for b[(Intercept) course_id:775]</a></h2>
+<img class="mcmcplot" src="b[(Intercept) course_id:775].png" width="640" height="480" /> 
+<h2><a name="b[(Intercept) course_id:792]">Plots for b[(Intercept) course_id:792]</a></h2>
+<img class="mcmcplot" src="b[(Intercept) course_id:792].png" width="640" height="480" /> 
+<h2><a name="b[(Intercept) course_id:814]">Plots for b[(Intercept) course_id:814]</a></h2>
+<img class="mcmcplot" src="b[(Intercept) course_id:814].png" width="640" height="480" /> 
+<h2><a name="b[(Intercept) course_id:820]">Plots for b[(Intercept) course_id:820]</a></h2>
+<img class="mcmcplot" src="b[(Intercept) course_id:820].png" width="640" height="480" /> 
+<h2><a name="b[(Intercept) course_id:823]">Plots for b[(Intercept) course_id:823]</a></h2>
+<img class="mcmcplot" src="b[(Intercept) course_id:823].png" width="640" height="480" /> 
+<h2><a name="b[(Intercept) course_id:824]">Plots for b[(Intercept) course_id:824]</a></h2>
+<img class="mcmcplot" src="b[(Intercept) course_id:824].png" width="640" height="480" /> 
+<h2><a name="b[(Intercept) course_id:825]">Plots for b[(Intercept) course_id:825]</a></h2>
+<img class="mcmcplot" src="b[(Intercept) course_id:825].png" width="640" height="480" /> 
+<h2><a name="b[(Intercept) course_id:829]">Plots for b[(Intercept) course_id:829]</a></h2>
+<img class="mcmcplot" src="b[(Intercept) course_id:829].png" width="640" height="480" /> 
+<h2><a name="b[(Intercept) course_id:841]">Plots for b[(Intercept) course_id:841]</a></h2>
+<img class="mcmcplot" src="b[(Intercept) course_id:841].png" width="640" height="480" /> 
+<h2><a name="b[(Intercept) course_id:842]">Plots for b[(Intercept) course_id:842]</a></h2>
+<img class="mcmcplot" src="b[(Intercept) course_id:842].png" width="640" height="480" /> 
+<h2><a name="b[(Intercept) course_id:849]">Plots for b[(Intercept) course_id:849]</a></h2>
+<img class="mcmcplot" src="b[(Intercept) course_id:849].png" width="640" height="480" /> 
+<h2><a name="b[(Intercept) course_id:853]">Plots for b[(Intercept) course_id:853]</a></h2>
+<img class="mcmcplot" src="b[(Intercept) course_id:853].png" width="640" height="480" /> 
+<h2><a name="b[(Intercept) course_id:855]">Plots for b[(Intercept) course_id:855]</a></h2>
+<img class="mcmcplot" src="b[(Intercept) course_id:855].png" width="640" height="480" /> 
+<h2><a name="b[(Intercept) course_id:858]">Plots for b[(Intercept) course_id:858]</a></h2>
+<img class="mcmcplot" src="b[(Intercept) course_id:858].png" width="640" height="480" /> 
+<h2><a name="b[(Intercept) course_id:870]">Plots for b[(Intercept) course_id:870]</a></h2>
+<img class="mcmcplot" src="b[(Intercept) course_id:870].png" width="640" height="480" /> 
+<h2><a name="b[(Intercept) course_id:871]">Plots for b[(Intercept) course_id:871]</a></h2>
+<img class="mcmcplot" src="b[(Intercept) course_id:871].png" width="640" height="480" /> 
+<h2><a name="b[(Intercept) course_id:874]">Plots for b[(Intercept) course_id:874]</a></h2>
+<img class="mcmcplot" src="b[(Intercept) course_id:874].png" width="640" height="480" /> 
+<h2><a name="b[(Intercept) course_id:879]">Plots for b[(Intercept) course_id:879]</a></h2>
+<img class="mcmcplot" src="b[(Intercept) course_id:879].png" width="640" height="480" /> 
+<h2><a name="b[(Intercept) course_id:889]">Plots for b[(Intercept) course_id:889]</a></h2>
+<img class="mcmcplot" src="b[(Intercept) course_id:889].png" width="640" height="480" /> 
+<h2><a name="b[(Intercept) course_id:897]">Plots for b[(Intercept) course_id:897]</a></h2>
+<img class="mcmcplot" src="b[(Intercept) course_id:897].png" width="640" height="480" /> 
+<h2><a name="b[(Intercept) course_id:901]">Plots for b[(Intercept) course_id:901]</a></h2>
+<img class="mcmcplot" src="b[(Intercept) course_id:901].png" width="640" height="480" /> 
+<h2><a name="b[(Intercept) course_id:906]">Plots for b[(Intercept) course_id:906]</a></h2>
+<img class="mcmcplot" src="b[(Intercept) course_id:906].png" width="640" height="480" /> 
+<h2><a name="b[(Intercept) course_id:969]">Plots for b[(Intercept) course_id:969]</a></h2>
+<img class="mcmcplot" src="b[(Intercept) course_id:969].png" width="640" height="480" /> 
+<h2><a name="b[(Intercept) course_id:978]">Plots for b[(Intercept) course_id:978]</a></h2>
+<img class="mcmcplot" src="b[(Intercept) course_id:978].png" width="640" height="480" /> 
+<h2><a name="b[(Intercept) course_id:998]">Plots for b[(Intercept) course_id:998]</a></h2>
+<img class="mcmcplot" src="b[(Intercept) course_id:998].png" width="640" height="480" /> 
+<h2><a name="b[(Intercept) course_id:1000]">Plots for b[(Intercept) course_id:1000]</a></h2>
+<img class="mcmcplot" src="b[(Intercept) course_id:1000].png" width="640" height="480" /> 
+<h2><a name="b[(Intercept) course_id:1004]">Plots for b[(Intercept) course_id:1004]</a></h2>
+<img class="mcmcplot" src="b[(Intercept) course_id:1004].png" width="640" height="480" /> 
+<h2><a name="b[(Intercept) course_id:1013]">Plots for b[(Intercept) course_id:1013]</a></h2>
+<img class="mcmcplot" src="b[(Intercept) course_id:1013].png" width="640" height="480" /> 
+<h2><a name="b[(Intercept) course_id:1029]">Plots for b[(Intercept) course_id:1029]</a></h2>
+<img class="mcmcplot" src="b[(Intercept) course_id:1029].png" width="640" height="480" /> 
+<h2><a name="b[(Intercept) course_id:1030]">Plots for b[(Intercept) course_id:1030]</a></h2>
+<img class="mcmcplot" src="b[(Intercept) course_id:1030].png" width="640" height="480" /> 
+<h2><a name="b[(Intercept) course_id:1065]">Plots for b[(Intercept) course_id:1065]</a></h2>
+<img class="mcmcplot" src="b[(Intercept) course_id:1065].png" width="640" height="480" /> 
+<h2><a name="b[(Intercept) course_id:1089]">Plots for b[(Intercept) course_id:1089]</a></h2>
+<img class="mcmcplot" src="b[(Intercept) course_id:1089].png" width="640" height="480" /> 
+<h2><a name="b[(Intercept) course_id:1106]">Plots for b[(Intercept) course_id:1106]</a></h2>
+<img class="mcmcplot" src="b[(Intercept) course_id:1106].png" width="640" height="480" /> 
+<h2><a name="b[(Intercept) course_id:1112]">Plots for b[(Intercept) course_id:1112]</a></h2>
+<img class="mcmcplot" src="b[(Intercept) course_id:1112].png" width="640" height="480" /> 
+<h2><a name="b[(Intercept) course_id:1113]">Plots for b[(Intercept) course_id:1113]</a></h2>
+<img class="mcmcplot" src="b[(Intercept) course_id:1113].png" width="640" height="480" /> 
+<h2><a name="b[(Intercept) course_id:1116]">Plots for b[(Intercept) course_id:1116]</a></h2>
+<img class="mcmcplot" src="b[(Intercept) course_id:1116].png" width="640" height="480" /> 
+<h2><a name="b[(Intercept) course_id:1123]">Plots for b[(Intercept) course_id:1123]</a></h2>
+<img class="mcmcplot" src="b[(Intercept) course_id:1123].png" width="640" height="480" /> 
+<h2><a name="b[(Intercept) course_id:1130]">Plots for b[(Intercept) course_id:1130]</a></h2>
+<img class="mcmcplot" src="b[(Intercept) course_id:1130].png" width="640" height="480" /> 
+<h2><a name="b[(Intercept) course_id:1136]">Plots for b[(Intercept) course_id:1136]</a></h2>
+<img class="mcmcplot" src="b[(Intercept) course_id:1136].png" width="640" height="480" /> 
+<h2><a name="b[(Intercept) course_id:1137]">Plots for b[(Intercept) course_id:1137]</a></h2>
+<img class="mcmcplot" src="b[(Intercept) course_id:1137].png" width="640" height="480" /> 
+<h2><a name="b[(Intercept) course_id:1138]">Plots for b[(Intercept) course_id:1138]</a></h2>
+<img class="mcmcplot" src="b[(Intercept) course_id:1138].png" width="640" height="480" /> 
+<h2><a name="b[(Intercept) course_id:1142]">Plots for b[(Intercept) course_id:1142]</a></h2>
+<img class="mcmcplot" src="b[(Intercept) course_id:1142].png" width="640" height="480" /> 
+<h2><a name="b[(Intercept) course_id:1143]">Plots for b[(Intercept) course_id:1143]</a></h2>
+<img class="mcmcplot" src="b[(Intercept) course_id:1143].png" width="640" height="480" /> 
+<h2><a name="b[(Intercept) course_id:1144]">Plots for b[(Intercept) course_id:1144]</a></h2>
+<img class="mcmcplot" src="b[(Intercept) course_id:1144].png" width="640" height="480" /> 
+<h2><a name="b[(Intercept) course_id:1145]">Plots for b[(Intercept) course_id:1145]</a></h2>
+<img class="mcmcplot" src="b[(Intercept) course_id:1145].png" width="640" height="480" /> 
+<h2><a name="b[(Intercept) course_id:1152]">Plots for b[(Intercept) course_id:1152]</a></h2>
+<img class="mcmcplot" src="b[(Intercept) course_id:1152].png" width="640" height="480" /> 
+<h2><a name="b[(Intercept) course_id:1153]">Plots for b[(Intercept) course_id:1153]</a></h2>
+<img class="mcmcplot" src="b[(Intercept) course_id:1153].png" width="640" height="480" /> 
+<h2><a name="b[(Intercept) course_id:1157]">Plots for b[(Intercept) course_id:1157]</a></h2>
+<img class="mcmcplot" src="b[(Intercept) course_id:1157].png" width="640" height="480" /> 
+<h2><a name="b[(Intercept) course_id:1158]">Plots for b[(Intercept) course_id:1158]</a></h2>
+<img class="mcmcplot" src="b[(Intercept) course_id:1158].png" width="640" height="480" /> 
+<h2><a name="b[(Intercept) course_id:1160]">Plots for b[(Intercept) course_id:1160]</a></h2>
+<img class="mcmcplot" src="b[(Intercept) course_id:1160].png" width="640" height="480" /> 
+<h2><a name="b[(Intercept) course_id:1172]">Plots for b[(Intercept) course_id:1172]</a></h2>
+<img class="mcmcplot" src="b[(Intercept) course_id:1172].png" width="640" height="480" /> 
+<h2><a name="b[(Intercept) course_id:1173]">Plots for b[(Intercept) course_id:1173]</a></h2>
+<img class="mcmcplot" src="b[(Intercept) course_id:1173].png" width="640" height="480" /> 
+<h2><a name="b[(Intercept) course_id:1178]">Plots for b[(Intercept) course_id:1178]</a></h2>
+<img class="mcmcplot" src="b[(Intercept) course_id:1178].png" width="640" height="480" /> 
+<h2><a name="b[(Intercept) course_id:1199]">Plots for b[(Intercept) course_id:1199]</a></h2>
+<img class="mcmcplot" src="b[(Intercept) course_id:1199].png" width="640" height="480" /> 
+<h2><a name="b[(Intercept) course_id:1211]">Plots for b[(Intercept) course_id:1211]</a></h2>
+<img class="mcmcplot" src="b[(Intercept) course_id:1211].png" width="640" height="480" /> 
+<h2><a name="b[(Intercept) course_id:1212]">Plots for b[(Intercept) course_id:1212]</a></h2>
+<img class="mcmcplot" src="b[(Intercept) course_id:1212].png" width="640" height="480" /> 
+<h2><a name="b[(Intercept) course_id:1219]">Plots for b[(Intercept) course_id:1219]</a></h2>
+<img class="mcmcplot" src="b[(Intercept) course_id:1219].png" width="640" height="480" /> 
+<h2><a name="b[(Intercept) course_id:1220]">Plots for b[(Intercept) course_id:1220]</a></h2>
+<img class="mcmcplot" src="b[(Intercept) course_id:1220].png" width="640" height="480" /> 
+<h2><a name="b[(Intercept) course_id:1221]">Plots for b[(Intercept) course_id:1221]</a></h2>
+<img class="mcmcplot" src="b[(Intercept) course_id:1221].png" width="640" height="480" /> 
+<h2><a name="b[(Intercept) course_id:_NEW_course_id]">Plots for b[(Intercept) course_id:_NEW_course_id]</a></h2>
+<img class="mcmcplot" src="b[(Intercept) course_id:_NEW_course_id].png" width="640" height="480" /> 
+<h2><a name="sigma">Plots for sigma</a></h2>
+<img class="mcmcplot" src="sigma.png" width="640" height="480" /> 
+<h2><a name="Sigma[course_id:(Intercept),(Intercept)]">Plots for Sigma[course_id:(Intercept),(Intercept)]</a></h2>
+<img class="mcmcplot" src="Sigma[course_id:(Intercept),(Intercept)].png" width="640" height="480" /> 
+
+</div>
+</div>
+</body></html>
