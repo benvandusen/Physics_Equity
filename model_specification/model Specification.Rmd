@@ -66,17 +66,21 @@ dredge <- with(MIdata,{dredge(lmer(gain ~1 + stud_pre_cent + retake + gend_URM*(
 #intro_dredge <- dredge(intro_mod_dredge)
 model.sel(dredge[[1]], rank=AIC)
 #best model is (gain ~1 + stud_pre_cent + retake + gend_URM*(asian_no_int + black_no_int + hispanic_no_int + race_other_no_int  + pacisland_no_int)*lecture +  (1|course_id))
+save(dredge, file="dredge")
 ```
 
 Stat significance model selection
 ```{r}
 gain_full <- with(MIdata,{lmer(gain ~1 + stud_pre_cent + retake + gend_URM*(asian_no_int + black_no_int + hispanic_no_int + race_other_no_int  + pacisland_no_int)*lecture +  (1|course_id))})
+testEstimates(gain_full, var.comp=TRUE)
 ```
 
 running models for model selection writing
 ```{r}
-gain_ve <- with(MIdata,{lmer(gain~1 + stud_pre_cent + retake + gend_URM*(asian_no_int + black_no_int + hispanic_no_int + race_other_no_int  + pacisland_no_int) + lecture + (1|course_id))})
 gain_ss <- with(MIdata,{lmer(gain ~1 + stud_pre_cent + retake + gend_URM + (asian_no_int + black_no_int + hispanic_no_int + race_other_no_int  + pacisland_no_int) + lecture +  (1|course_id))})
+
+gain_ve <- with(MIdata,{lmer(gain~1 + stud_pre_cent + retake + gend_URM*(asian_no_int + black_no_int + hispanic_no_int + race_other_no_int  + pacisland_no_int) + lecture + (1|course_id))})
+
 gain_ic <- with(MIdata,{lmer(gain ~1 + stud_pre_cent + retake + gend_URM*(asian_no_int + black_no_int + hispanic_no_int + race_other_no_int  + pacisland_no_int)*lecture +  (1|course_id))})
 
 testEstimates(gain_ve, var.comp=TRUE)
@@ -84,7 +88,7 @@ testEstimates(gain_ss, var.comp=TRUE)
 testEstimates(gain_ic, var.comp=TRUE)
 ```
 
-The next two blocks make the figures for the estimates for model 9
+The next two blocks make the figures 
 ```{r}
 pool_and_cov_diffwm <- function(x,y){
   get.est <- foreach(i=1:10, .combine=rbind) %do% {
@@ -140,16 +144,13 @@ contrast_forms_modss <- rbind('White Men'=WML,
                           'Asian Men'=AML, 
                           'Asian Women'=AFL,
                           'Hispanic Men'=HML, 
-                          'Hispanic Women'=HFL,
-                          'Other Men'=OML,  
-                          'Other Women'=OFL,
-                          'Island Men'=PML, 
-                          'Island Women'=PFL)
+                          'Hispanic Women'=HFL
+                      )
 
 contrast_ss_est <- pool_and_cov_diffwm(gain_ss,contrast_forms_modss)
 unique(contrast_ss_est$race)
 
-contrast_ss_est$race <- factor(contrast_ss_est$race, levels = c("Black", "Hispanic", "Island", "Other", "Asian",    "White"))
+contrast_ss_est$race <- factor(contrast_ss_est$race, levels = c("Black", "Hispanic", "Asian",    "White"))
 contrast_ss_est$gender <- factor(contrast_ss_est$gender, levels = c("Women", "Men"))
 
 ggplot(data=contrast_ss_est, aes(x=race, y=Q, fill=gender)) + geom_bar(stat = "identity", position = "dodge") + geom_errorbar(aes( ymax= Q+SE, ymin=Q-SE), position="dodge")+
@@ -158,7 +159,7 @@ ggplot(data=contrast_ss_est, aes(x=race, y=Q, fill=gender)) + geom_bar(stat = "i
   scale_fill_manual(name="Gender",
                      breaks= c("Women","Men"),
                      values=cbbpalette) 
-ggsave("~/Physics_Equity/mod_ss.png", plot= last_plot(), dpi=300, width = 7.3, height = 3.25, units = "in", device = "png")
+ggsave("~/Physics_Equity/model_specification/Figures/mod_ss.png", plot= last_plot(), dpi=300, width = 7.3, height = 3.25, units = "in", device = "png")
 kable(contrast_ss_est[c(1,2,6,7)], digits = 2)
 ```
 graph for VE
@@ -190,11 +191,8 @@ contrast_forms_modve <- rbind('White Men'=WML,
                           'Asian Men'=AML, 
                           'Asian Women'=AFL,
                           'Hispanic Men'=HML, 
-                          'Hispanic Women'=HFL,
-                          'Other Men'=OML,  
-                          'Other Women'=OFL,
-                          'Island Men'=PML, 
-                          'Island Women'=PFL)
+                          'Hispanic Women'=HFL
+                          )
 
 contrast_ve_est <- pool_and_cov_diffwm(gain_ve,contrast_forms_modve)
 unique(contrast_ve_est$race)
@@ -208,7 +206,7 @@ ggplot(data=contrast_ve_est, aes(x=race, y=Q, fill=gender)) + geom_bar(stat = "i
   scale_fill_manual(name="Gender",
                      breaks= c("Women","Men"),
                      values=cbbpalette) 
-ggsave("~/Physics_Equity/mod_ve.png", plot= last_plot(), dpi=300, width = 7.3, height = 3.25, units = "in", device = "png")
+ggsave("~/Physics_Equity/model_specification/Figures/mod_ve.png", plot= last_plot(), dpi=300, width = 7.3, height = 3.25, units = "in", device = "png")
 kable(contrast_ve_est[c(1,2,6,7)], digits = 2)
 ```
 
@@ -241,9 +239,8 @@ PFL = c(1,0,0, 1, 0,0,0,0,1, 1, 0,0,0,0,1, 1, 0,0,0,0,1,  0,0,0,0,1)
 contrast_forms_modic <- rbind('White Men Lecture'=WML,'White Women Lecture'=WFL,
                               'Black Men Lecture'=BML, 'Black Women Lecture'=BFL,
                               'Asian Men Lecture'=AML,'Asian Women Lecture'=AFL,
-                              'Hispanic Men Lecture'=HML,'Hispanic Women Lecture'=HFL,
-                              'Other Men Lecture'=OML,'Other Women Lecture'=OFL,
-                              'Island Men Lecture'=PML,'Island Women Lecture'=PFL)
+                              'Hispanic Men Lecture'=HML,'Hispanic Women Lecture'=HFL
+                             )
 
 contrast_forms_modic_full <- rbind('White Male Lecture'=WML, 'White Male Collab'=WMC, 
                           'White Female Lecture'=WFL,'White Female Collab'=WFC,
@@ -252,11 +249,8 @@ contrast_forms_modic_full <- rbind('White Male Lecture'=WML, 'White Male Collab'
                           'Asian Male Lecture'=AML, 'Asian Male Collab'=AMC, 
                           'Asian Female Lecture'=AFL,'Asian Female Collab'=AFC,
                           'Hispanic Male Lecture'=HML, 'Hispanic Male Collab'=HMC, 
-                          'Hispanic Female Lecture'=HFL,'Hispanic Female Collab'=HFC,
-                          'Other Male Lecture'=OML, 'Other Male Collab'=OMC, 
-                          'Other Female Lecture'=OFL,'Other Female Collab'=OFC,
-                          'Island Male Lecture'=PML, 'Island Male Collab'=PMC, 
-                          'Island Female Lecture'=PFL,'Island Female Collab'=PFC)
+                          'Hispanic Female Lecture'=HFL,'Hispanic Female Collab'=HFC
+                          )
 
 contrast_gic_est <- pool_and_cov_diffwm(gain_ic,contrast_forms_modic)
 #contrast_gic_est$instruction <- factor(contrast_gic_est$instruction, levels = c("Lecture","Collab"))
@@ -269,7 +263,7 @@ ggplot(data=contrast_gic_est, aes(x=race, y=Q, fill=gender)) + geom_bar(stat = "
   scale_fill_manual(name="Gender",
                      breaks= c("Women","Men"),
                      values=cbbpalette) 
-ggsave("~/Physics_Equity/mod_ic.png", plot= last_plot(), dpi=300, width = 7.3, height = 3.25, units = "in", device = "png")
+ggsave("~/Physics_Equity/model_specification/Figures/mod_ic.png", plot= last_plot(), dpi=300, width = 7.3, height = 3.25, units = "in", device = "png")
 kable(contrast_ve_est[c(1,2,6,7)], digits = 2)
 ```
 
