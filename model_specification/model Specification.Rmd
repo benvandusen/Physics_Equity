@@ -88,6 +88,19 @@ testEstimates(gain_ss, var.comp=TRUE)
 testEstimates(gain_ic, var.comp=TRUE)
 ```
 
+3-level models models selection 
+```{r}
+gain_ss <- with(MIdata,{lmer(gain ~1 + stud_pre_cent + retake + gend_URM + (asian_no_int + black_no_int + hispanic_no_int + race_other_no_int  + pacisland_no_int) + lecture +  (1|course_id))})
+
+gain_ve <- with(MIdata,{lmer(gain~1 + stud_pre_cent + retake + gend_URM*(asian_no_int + black_no_int + hispanic_no_int + race_other_no_int  + pacisland_no_int) + lecture + (1|course_id))})
+
+gain_ic <- with(MIdata,{lmer(gain ~1 + stud_pre_cent + retake + gend_URM*(asian_no_int + black_no_int + hispanic_no_int + race_other_no_int  + pacisland_no_int)*lecture +  (1|course_id))})
+
+testEstimates(gain_ve, var.comp=TRUE)
+testEstimates(gain_ss, var.comp=TRUE)
+testEstimates(gain_ic, var.comp=TRUE)
+```
+
 The next two blocks make the figures 
 ```{r}
 pool_and_cov_diffwm <- function(x,y){
@@ -242,15 +255,15 @@ contrast_forms_modic <- rbind('White Men Lecture'=WML,'White Women Lecture'=WFL,
                               'Hispanic Men Lecture'=HML,'Hispanic Women Lecture'=HFL
                              )
 
-contrast_forms_modic_full <- rbind('White Male Lecture'=WML, 'White Male Collab'=WMC, 
-                          'White Female Lecture'=WFL,'White Female Collab'=WFC,
-                          'Black Male Lecture'=BML, 'Black Male Collab'=BMC, 
-                          'Black Female Lecture'=BFL,'Black Female Collab'=BFC,
-                          'Asian Male Lecture'=AML, 'Asian Male Collab'=AMC, 
-                          'Asian Female Lecture'=AFL,'Asian Female Collab'=AFC,
-                          'Hispanic Male Lecture'=HML, 'Hispanic Male Collab'=HMC, 
-                          'Hispanic Female Lecture'=HFL,'Hispanic Female Collab'=HFC
-                          )
+#contrast_forms_modic_full <- rbind('White Male Lecture'=WML, 'White Male Collab'=WMC, 
+#                          'White Female Lecture'=WFL,'White Female Collab'=WFC,
+###                          'Black Male Lecture'=BML, 'Black Male Collab'=BMC, 
+#                          'Black Female Lecture'=BFL,'Black Female Collab'=BFC,
+#                          'Asian Male Lecture'=AML, 'Asian Male Collab'=AMC, 
+#                          'Asian Female Lecture'=AFL,'Asian Female Collab'=AFC,
+#                          'Hispanic Male Lecture'=HML, 'Hispanic Male Collab'=HMC, 
+#                          'Hispanic Female Lecture'=HFL,'Hispanic Female Collab'=HFC
+#                          )
 
 contrast_gic_est <- pool_and_cov_diffwm(gain_ic,contrast_forms_modic)
 #contrast_gic_est$instruction <- factor(contrast_gic_est$instruction, levels = c("Lecture","Collab"))
@@ -296,11 +309,8 @@ contrast_forms_modCss <- rbind('White Men'=WMCss,
                           'Asian Men'=AMCss, 
                           'Asian Women'=AFCss,
                           'Hispanic Men'=HMCss, 
-                          'Hispanic Women'=HFCss,
-                          'Other Men'=OMCss,  
-                          'Other Women'=OFCss,
-                          'Island Men'=PMCss, 
-                          'Island Women'=PFCss)
+                          'Hispanic Women'=HFCss
+                          )
 
 contrast_Css_est <- pool_and_cov_diffwm(gain_ss,contrast_forms_modCss)
 unique(contrast_Css_est$race)
@@ -314,7 +324,7 @@ ggplot(data=contrast_Css_est, aes(x=race, y=Q, fill=gender)) + geom_bar(stat = "
   scale_fill_manual(name="Gender",
                      breaks= c("Women","Men"),
                      values=cbbpalette) 
-ggsave("~/Physics_Equity/mod_Css.png", plot= last_plot(), dpi=300, width = 7.3, height = 3.25, units = "in", device = "png")
+ggsave("~/Physics_Equity/model_specification/Figuresmod_Css.png", plot= last_plot(), dpi=300, width = 7.3, height = 3.25, units = "in", device = "png")
 kable(contrast_ss_est[c(1,2,6,7)], digits = 2)
 ```
 
@@ -347,11 +357,8 @@ contrast_forms_modCve <- rbind('White Men'=WMCve,
                           'Asian Men'=AMCve, 
                           'Asian Women'=AFCve,
                           'Hispanic Men'=HMCve, 
-                          'Hispanic Women'=HFCve,
-                          'Other Men'=OMCve,  
-                          'Other Women'=OFCve,
-                          'Island Men'=PMCve, 
-                          'Island Women'=PFCve)
+                          'Hispanic Women'=HFCve
+                        )
 
 contrast_Cve_est <- pool_and_cov_diffwm(gain_ve,contrast_forms_modCve)
 unique(contrast_Cve_est$race)
@@ -365,7 +372,7 @@ ggplot(data=contrast_Cve_est, aes(x=race, y=Q, fill=gender)) + geom_bar(stat = "
   scale_fill_manual(name="Gender",
                      breaks= c("Women","Men"),
                      values=cbbpalette) 
-ggsave("~/Physics_Equity/mod_Cve.png", plot= last_plot(), dpi=300, width = 7.3, height = 3.25, units = "in", device = "png")
+ggsave("~/Physics_Equity/model_specification/Figures/mod_Cve.png", plot= last_plot(), dpi=300, width = 7.3, height = 3.25, units = "in", device = "png")
 kable(contrast_ss_est[c(1,2,6,7)], digits = 2)
 ```
 
@@ -398,11 +405,8 @@ contrast_forms_modCic <- rbind('White Men'=WMCic,
                           'Asian Men'=AMCic, 
                           'Asian Women'=AFCic,
                           'Hispanic Men'=HMCic, 
-                          'Hispanic Women'=HFCic,
-                          'Other Men'=OMCic,  
-                          'Other Women'=OFCic,
-                          'Island Men'=PMCic, 
-                          'Island Women'=PFCic)
+                          'Hispanic Women'=HFCic
+                          )
 
 contrast_Cic_est <- pool_and_cov_diffwm(gain_ic,contrast_forms_modCic)
 unique(contrast_Cic_est$race)
@@ -416,6 +420,6 @@ ggplot(data=contrast_Cic_est, aes(x=race, y=Q, fill=gender)) + geom_bar(stat = "
   scale_fill_manual(name="Gender",
                      breaks= c("Women","Men"),
                      values=cbbpalette) 
-ggsave("~/Physics_Equity/mod_Cic.png", plot= last_plot(), dpi=300, width = 7.3, height = 3.25, units = "in", device = "png")
+ggsave("~/Physics_Equity/model_specification/Figures/mod_Cic.png", plot= last_plot(), dpi=300, width = 7.3, height = 3.25, units = "in", device = "png")
 kable(contrast_ss_est[c(1,2,6,7)], digits = 2)
 ```
