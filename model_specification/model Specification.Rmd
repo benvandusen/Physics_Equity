@@ -57,14 +57,72 @@ MIdata <- as.mitml.list(thing)
   
 ```
 
-dredge
+Create time series data set
+```{r message=FALSE, warning=FALSE}
+MIdata3<-mids2mitml.list(hmi_1_23_19) #converts file type
+
+for (i in 1:10){
+  temp <- MIdata3[[i]]
+  class_means <- temp %>% group_by(course_id) %>% summarise(pre_mean_class = mean(pre_score))
+  temp <- left_join(temp,class_means,global_means, by="course_id")
+  temp$stud_pre_cent <- temp$pre_score - temp$pre_mean_class
+  temp$gain <- temp$post_score - temp$pre_score
+  temp$coll <- ifelse(temp$lecture %in% 1,0,1)
+  temp$retake <- ifelse (temp$first_time==1,1,0)
+  temp$race_other_no_int[temp$amind_no_int %in% 1] <- 1 # combines the american indian students in to the other group there were 61 if these students
+    temp$score <- temp$pre_score
+  temp$test <- 0
+  temp$student <- seq.int(nrow(temp))
+  temp <- subset(temp,select=-c(pre_score,post_score))
+  thing[[i]] <- temp
+  }
+temp_pre3 <- as.mitml.list(thing)
+
+thing <- list()
+for (i in 1:10){
+  temp <- MIdata3[[i]]
+  class_means <- temp %>% group_by(course_id) %>% summarise(pre_mean_class = mean(pre_score))
+  temp <- left_join(temp,class_means,global_means, by="course_id")
+  temp$stud_pre_cent <- temp$pre_score - temp$pre_mean_class
+  temp$gain <- temp$post_score - temp$pre_score
+  temp$coll <- ifelse(temp$lecture %in% 1,0,1)
+  temp$retake <- ifelse (temp$first_time==1,1,0)
+  temp$race_other_no_int[temp$amind_no_int %in% 1] <- 1 # combines the american indian students in to the other group there were 61 if these students
+    temp$score <- temp$post_score
+  temp$test <- 1
+  temp$student <- seq.int(nrow(temp))
+  temp <- subset(temp,select=-c(pre_score,post_score))
+  thing[[i]] <- temp
+  }
+temp_post3 <- as.mitml.list(thing)
+
+MIdata3 <- as.mitml.list(rbind.mitml.list(temp_pre3, temp_post3))
+
+
+```
+
+dredge 2 level
 ```{r}
 options(na.action = "na.fail")
 #gain8 <- with(MIdata,(lmer(gain ~1 + stud_pre_cent + retake + gend_URM*(asian_no_int + black_no_int + hispanic_no_int + race_other_no_int  + pacisland_no_int)*lecture +  (1|course_id))))
+
 dredge <- with(MIdata,{dredge(lmer(gain ~1 + stud_pre_cent + retake + gend_URM*(asian_no_int + black_no_int + hispanic_no_int + race_other_no_int  + pacisland_no_int)*lecture +  (1|course_id)))})
 #intro_mod_dredge <- glmer(m_all, data=red_introPhys,family = binomial)
 #intro_dredge <- dredge(intro_mod_dredge)
 model.sel(dredge[[1]], rank=AIC)
+#best model is (gain ~1 + stud_pre_cent + retake + gend_URM*(asian_no_int + black_no_int + hispanic_no_int + race_other_no_int  + pacisland_no_int)*lecture +  (1|course_id))
+save(dredge, file="dredge")
+```
+
+dredge 3 level
+```{r}
+options(na.action = "na.fail")
+#gain8 <- with(MIdata,(lmer(gain ~1 + stud_pre_cent + retake + gend_URM*(asian_no_int + black_no_int + hispanic_no_int + race_other_no_int  + pacisland_no_int)*lecture +  (1|course_id))))
+
+dredge3 <- with(MIdata3,{dredge(lmer(score ~1 + test*(stud_pre_cent + retake + gend_URM*(asian_no_int + black_no_int + hispanic_no_int + race_other_no_int  + pacisland_no_int)*lecture) +  (1|course_id:student_id)))})
+#intro_mod_dredge <- glmer(m_all, data=red_introPhys,family = binomial)
+#intro_dredge <- dredge(intro_mod_dredge)
+model.sel3(dredge[[1]], rank=AIC)
 #best model is (gain ~1 + stud_pre_cent + retake + gend_URM*(asian_no_int + black_no_int + hispanic_no_int + race_other_no_int  + pacisland_no_int)*lecture +  (1|course_id))
 save(dredge, file="dredge")
 ```
@@ -83,22 +141,22 @@ gain_ve <- with(MIdata,{lmer(gain~1 + stud_pre_cent + retake + gend_URM*(asian_n
 
 gain_ic <- with(MIdata,{lmer(gain ~1 + stud_pre_cent + retake + gend_URM*(asian_no_int + black_no_int + hispanic_no_int + race_other_no_int  + pacisland_no_int)*lecture +  (1|course_id))})
 
-testEstimates(gain_ve, var.comp=TRUE)
 testEstimates(gain_ss, var.comp=TRUE)
+testEstimates(gain_ve, var.comp=TRUE)
 testEstimates(gain_ic, var.comp=TRUE)
 ```
 
 3-level models models selection 
 ```{r}
-gain_ss <- with(MIdata,{lmer(gain ~1 + stud_pre_cent + retake + gend_URM + (asian_no_int + black_no_int + hispanic_no_int + race_other_no_int  + pacisland_no_int) + lecture +  (1|course_id))})
+gain_ss3 <- with(MIdata3,{lmer(score ~1 + stud_pre_cent + retake + test*(gend_URM + (asian_no_int + black_no_int + hispanic_no_int + race_other_no_int  + pacisland_no_int) + lecture) +  (1|course_id:student_id))})
 
-gain_ve <- with(MIdata,{lmer(gain~1 + stud_pre_cent + retake + gend_URM*(asian_no_int + black_no_int + hispanic_no_int + race_other_no_int  + pacisland_no_int) + lecture + (1|course_id))})
+gain_ve3 <- with(MIdata3,{lmer(score~1 + test*(stud_pre_cent + retake + gend_URM*(asian_no_int + black_no_int + hispanic_no_int + race_other_no_int  + pacisland_no_int) + lecture) + (1|course_id:student_id))})
 
-gain_ic <- with(MIdata,{lmer(gain ~1 + stud_pre_cent + retake + gend_URM*(asian_no_int + black_no_int + hispanic_no_int + race_other_no_int  + pacisland_no_int)*lecture +  (1|course_id))})
+gain_ic3 <- with(MIdata3,{lmer(score ~1 + test*(stud_pre_cent + retake + gend_URM*(asian_no_int + black_no_int + hispanic_no_int + race_other_no_int  + pacisland_no_int)*lecture) +  (1|course_id:student_id))})
 
-testEstimates(gain_ve, var.comp=TRUE)
-testEstimates(gain_ss, var.comp=TRUE)
-testEstimates(gain_ic, var.comp=TRUE)
+testEstimates(gain_ss3, var.comp=TRUE)
+testEstimates(gain_ve3, var.comp=TRUE)
+testEstimates(gain_ic3, var.comp=TRUE)
 ```
 
 The next two blocks make the figures 
