@@ -338,6 +338,202 @@ ggsave("~/Physics_Equity/model_specification/Figures/mod_ic.png", plot= last_plo
 kable(contrast_ve_est[c(1,2,6,7)], digits = 2)
 ```
 
+Combined graph for SS
+```{r}
+#     c(I,pre,R,F, A,B,H,O,P ,l)
+WML = c(1,0,0,0, 0,0,0,0,0, 1)
+WFL = c(1,0,0,1, 0,0,0,0,0, 1)
+
+AML = c(1,0,0,0, 1,0,0,0,0, 1)
+AFL = c(1,0,0,1, 1,0,0,0,0, 1)
+
+BML = c(1,0,0,0, 0,1,0,0,0, 1)
+BFL = c(1,0,0,1, 0,1,0,0,0, 1)
+
+HML = c(1,0,0,0, 0,0,1,0,0, 1)
+HFL = c(1,0,0,1, 0,0,1,0,0, 1)
+
+
+#     c(I,pre,R,F, A,B,H,O,P ,l)
+WMLc = c(1,0,0,0, 0,0,0,0,0, 0)
+WFLc = c(1,0,0,1, 0,0,0,0,0, 0)
+
+AMLc = c(1,0,0,0, 1,0,0,0,0, 0)
+AFLc = c(1,0,0,1, 1,0,0,0,0, 0)
+
+BMLc = c(1,0,0,0, 0,1,0,0,0, 0)
+BFLc = c(1,0,0,1, 0,1,0,0,0, 0)
+
+HMLc = c(1,0,0,0, 0,0,1,0,0, 0)
+HFLc = c(1,0,0,1, 0,0,1,0,0, 0)
+
+
+
+contrast_forms_modss <- rbind('White Men'=WML,  
+                          'White Women'=WFL,
+                          'Black Men'=BML,  
+                          'Black Women'=BFL,
+                          'Asian Men'=AML, 
+                          'Asian Women'=AFL,
+                          'Hispanic Men'=HML, 
+                          'Hispanic Women'=HFL,
+                          'White Men Collab'=WMLc,  
+                          'White Women Collab'=WFLc,
+                          'Black Men Collab'=BMLc,  
+                          'Black Women Collab'=BFLc,
+                          'Asian Men Collab'=AMLc, 
+                          'Asian Women Collab'=AFLc,
+                          'Hispanic Men Collab'=HMLc, 
+                          'Hispanic Women Collab'=HFLc
+                      )
+
+contrast_ss_est <- pool_and_cov_diffwm(gain_ss,contrast_forms_modss)
+
+contrast_ss_est$race <- factor(contrast_ss_est$race, levels = c("Black", "Hispanic", "Asian",    "White"))
+
+contrast_ss_est$gender <- c("Men","Men Collab","Women","Women Collab", "Men","Men Collab","Women","Women Collab", "Men","Men Collab","Women","Women Collab", "Men","Men Collab","Women","Women Collab")
+contrast_ss_est$gender <- factor(contrast_ss_est$gender, levels = c("Women","Men","Women Collab","Men Collab"))
+
+ggplot(data=contrast_ss_est, aes(x=race, y=Q, fill=gender)) + geom_bar(stat = "identity", position = "dodge") + geom_errorbar(aes( ymax= Q+SE, ymin=Q-SE), position="dodge")+
+  theme(legend.position = "right",  axis.text.x=element_text(angle=90) , axis.title.x = element_blank(), axis.ticks.x=element_blank(),panel.grid.major = element_blank(), panel.grid.minor = element_blank(),panel.background = element_blank(), axis.line = element_line(colour = "black"),text = element_text(size=16, color = "black")) +
+  ylab("Gain (Percentage Points)") +
+  scale_fill_manual(name="Gender",
+                     breaks= c("Women","Men","Women Collab","Men Collab"),
+                     values=cbbpalette) 
+ggsave("~/Physics_Equity/model_specification/Figures/mod_ss_combo.png", plot= last_plot(), dpi=300, width = 7.3, height = 3.25, units = "in", device = "png")
+kable(contrast_ss_est[c(1,2,6,7)], digits = 2)
+```
+
+Combined graph for VE
+```{r}
+#     c(I,pre,reta, F,A,B, H,O,P, l,fa,fb, fh,fo,fp)
+WML = c(1,0,0, 0,0,0, 0,0,0, 1,0,0, 0,0,0)
+WFL = c(1,0,0, 1,0,0, 0,0,0, 1,0,0, 0,0,0)
+
+AML = c(1,0,0, 0,1,0, 0,0,0, 1,0,0, 0,0,0)
+AFL = c(1,0,0, 1,1,0, 0,0,0, 1,1,0, 0,0,0)
+
+BML = c(1,0,0, 0,0,1, 0,0,0, 1,0,0, 0,0,0)
+BFL = c(1,0,0, 1,0,1, 0,0,0, 1,0,1, 0,0,0)
+
+HML = c(1,0,0, 0,0,0, 1,0,0, 1,0,0, 0,0,0)
+HFL = c(1,0,0, 1,0,0, 1,0,0, 1,0,0, 1,0,0)
+
+WMLc = c(1,0,0, 0,0,0, 0,0,0, 0,0,0, 0,0,0)
+WFLc = c(1,0,0, 1,0,0, 0,0,0, 0,0,0, 0,0,0)
+
+AMLc = c(1,0,0, 0,1,0, 0,0,0, 0,0,0, 0,0,0)
+AFLc = c(1,0,0, 1,1,0, 0,0,0, 0,1,0, 0,0,0)
+
+BMLc = c(1,0,0, 0,0,1, 0,0,0, 0,0,0, 0,0,0)
+BFLc = c(1,0,0, 1,0,1, 0,0,0, 0,0,1, 0,0,0)
+
+HMLc = c(1,0,0, 0,0,0, 1,0,0, 0,0,0, 0,0,0)
+HFLc = c(1,0,0, 1,0,0, 1,0,0, 0,0,0, 1,0,0)
+
+
+
+contrast_forms_modve <- rbind('White Men'=WML,  
+                          'White Women'=WFL,
+                          'Black Men'=BML,  
+                          'Black Women'=BFL,
+                          'Asian Men'=AML, 
+                          'Asian Women'=AFL,
+                          'Hispanic Men'=HML, 
+                          'Hispanic Women'=HFL,
+                          'White Men Collab'=WMLc,  
+                          'White Women Collab'=WFLc,
+                          'Black Men Collab'=BMLc,  
+                          'Black Women Collab'=BFLc,
+                          'Asian Men Collab'=AMLc, 
+                          'Asian Women Collab'=AFLc,
+                          'Hispanic Men Collab'=HMLc, 
+                          'Hispanic Women Collab'=HFLc
+                      )
+                       
+
+contrast_ve_est <- pool_and_cov_diffwm(gain_ve,contrast_forms_modve)
+
+contrast_ve_est$race <- factor(contrast_ve_est$race, levels = c("Black", "Hispanic", "Asian",    "White"))
+contrast_ve_est$gender <- c("Men","Men Collab","Women","Women Collab", "Men","Men Collab","Women","Women Collab", "Men","Men Collab","Women","Women Collab", "Men","Men Collab","Women","Women Collab")
+contrast_ve_est$gender <- factor(contrast_ve_est$gender, levels = c("Women","Men","Women Collab","Men Collab"))
+
+ggplot(data=contrast_ve_est, aes(x=race, y=Q, fill=gender)) + geom_bar(stat = "identity", position = "dodge") + geom_errorbar(aes( ymax= Q+SE, ymin=Q-SE), position="dodge")+
+  theme(legend.position = "right",  axis.text.x=element_text(angle=90) , axis.title.x = element_blank(), axis.ticks.x=element_blank(),panel.grid.major = element_blank(), panel.grid.minor = element_blank(),panel.background = element_blank(), axis.line = element_line(colour = "black"),text = element_text(size=16, color = "black")) +
+  ylab("Gain (Percentage Points)") +
+  scale_fill_manual(name="Gender",
+                     breaks= c("Women","Men","Women Collab","Men Collab"),
+                     values=cbbpalette) 
+ggsave("~/Physics_Equity/model_specification/Figures/mod_ve_combo.png", plot= last_plot(), dpi=300, width = 7.3, height = 3.25, units = "in", device = "png")
+kable(contrast_ve_est[c(1,2,6,7)], digits = 2)
+```
+
+combined graph for IC
+```{r} 
+#(gain~1 + lecture*(asian_no_int + black_no_int + hispanic_no_int + race_other_no_int  + pacisland_no_int)*gend_URM + stud_pre_cent + retake + (1 |course_id))
+
+#     c(I,pre,reta, F, A,B,H,O,P, L, fa,fb,fh,fo,fp, fl, al,bl,hl,ol,pl, fal,fbl,fhl,frl,fpl)
+WML = c(1,0,0, 0, 0,0,0,0,0, 1, 0,0,0,0,0, 0, 0,0,0,0,0,  0,0,0,0,0)
+WFL = c(1,0,0, 1, 0,0,0,0,0, 1, 0,0,0,0,0, 1, 0,0,0,0,0,  0,0,0,0,0)
+
+AML = c(1,0,0, 0, 1,0,0,0,0, 1, 0,0,0,0,0, 0, 1,0,0,0,0,  0,0,0,0,0)
+AFL = c(1,0,0, 1, 1,0,0,0,0, 1, 1,0,0,0,0, 1, 1,0,0,0,0,  1,0,0,0,0)
+
+BML = c(1,0,0, 0, 0,1,0,0,0, 1, 0,0,0,0,0, 0, 0,1,0,0,0,  0,0,0,0,0)
+BFL = c(1,0,0, 1, 0,1,0,0,0, 1, 0,1,0,0,0, 1, 0,1,0,0,0,  0,1,0,0,0)
+
+HML = c(1,0,0, 0, 0,0,1,0,0, 1, 0,0,0,0,0, 0, 0,0,1,0,0,  0,0,0,0,0)
+HFL = c(1,0,0, 1, 0,0,1,0,0, 1, 0,0,1,0,0, 1, 0,0,1,0,0,  0,0,1,0,0)
+
+WMLc = c(1,0,0, 0, 0,0,0,0,0, 0, 0,0,0,0,0, 0, 0,0,0,0,0,  0,0,0,0,0)
+WFLc = c(1,0,0, 1, 0,0,0,0,0, 0, 0,0,0,0,0, 0, 0,0,0,0,0,  0,0,0,0,0)
+
+AMLc = c(1,0,0, 0, 1,0,0,0,0, 0, 0,0,0,0,0, 0, 0,0,0,0,0,  0,0,0,0,0)
+AFLc = c(1,0,0, 1, 1,0,0,0,0, 0, 1,0,0,0,0, 0, 0,0,0,0,0,  0,0,0,0,0)
+
+BMLc = c(1,0,0, 0, 0,1,0,0,0, 0, 0,0,0,0,0, 0, 0,0,0,0,0,  0,0,0,0,0)
+BFLc = c(1,0,0, 1, 0,1,0,0,0, 0, 0,1,0,0,0, 0, 0,0,0,0,0,  0,0,0,0,0)
+
+HMLc = c(1,0,0, 0, 0,0,1,0,0, 0, 0,0,0,0,0, 0, 0,0,0,0,0,  0,0,0,0,0)
+HFLc = c(1,0,0, 1, 0,0,1,0,0, 0, 0,0,1,0,0, 0, 0,0,0,0,0,  0,0,0,0,0)
+
+
+
+
+contrast_forms_modic <- rbind('White Men'=WML,  
+                          'White Women'=WFL,
+                          'Black Men'=BML,  
+                          'Black Women'=BFL,
+                          'Asian Men'=AML, 
+                          'Asian Women'=AFL,
+                          'Hispanic Men'=HML, 
+                          'Hispanic Women'=HFL,
+                          'White Men Collab'=WMLc,  
+                          'White Women Collab'=WFLc,
+                          'Black Men Collab'=BMLc,  
+                          'Black Women Collab'=BFLc,
+                          'Asian Men Collab'=AMLc, 
+                          'Asian Women Collab'=AFLc,
+                          'Hispanic Men Collab'=HMLc, 
+                          'Hispanic Women Collab'=HFLc
+                      )
+
+contrast_ic_est <- pool_and_cov_diffwm(gain_ic,contrast_forms_modic)
+#contrast_gic_est$instruction <- factor(contrast_gic_est$instruction, levels = c("Lecture","Collab"))
+contrast_ic_est$race <- factor(contrast_ic_est$race, levels = c("Black", "Hispanic", "Asian",    "White"))
+contrast_ic_est$gender <- c("Men","Men Collab","Women","Women Collab", "Men","Men Collab","Women","Women Collab", "Men","Men Collab","Women","Women Collab", "Men","Men Collab","Women","Women Collab")
+contrast_ic_est$gender <- factor(contrast_ic_est$gender, levels = c("Women","Men","Women Collab","Men Collab"))
+
+ggplot(data=contrast_ic_est, aes(x=race, y=Q, fill=gender)) + geom_bar(stat = "identity", position = "dodge") + geom_errorbar(aes( ymax= Q+SE, ymin=Q-SE), position="dodge")+
+  theme(legend.position = "right",  axis.text.x=element_text(angle=90) , axis.title.x = element_blank(), axis.ticks.x=element_blank(),panel.grid.major = element_blank(), panel.grid.minor = element_blank(),panel.background = element_blank(), axis.line = element_line(colour = "black"),text = element_text(size=16, color = "black")) +
+  ylab("Gain (Percentage Points)") +
+  scale_fill_manual(name="Gender",
+                     breaks= c("Women","Men","Women Collab","Men Collab"),
+                     values=cbbpalette) 
+ggsave("~/Physics_Equity/model_specification/Figures/mod_ic_combo.png", plot= last_plot(), dpi=300, width = 7.3, height = 3.25, units = "in", device = "png")
+kable(contrast_ve_est[c(1,2,6,7)], digits = 2)
+```
+
 Graph of shift to collab SS
 ```{r}
 #     c(I,pre,R,F, A,B,H,O,P ,l)
