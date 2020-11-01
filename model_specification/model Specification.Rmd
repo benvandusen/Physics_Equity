@@ -116,7 +116,10 @@ long_dredge <- bind_rows(long_dredge,temp)
 }
 
 dred_sum <- long_dredge %>% group_by(rownames) %>% summarize(delta_mean = mean(delta),
-                                                             AICc_mean = mean(AICc))
+                                                             AICc_mean = mean(AICc),
+                                                             BIC_mean= mean(BIC),
+                                                             ICOMP_mean = mean(ICOMP),
+                                                             Cp_mean = mean(Cp))
 dred_sum$rank <- rank(dred_sum$delta_mean)
 
 temp <- dredge_list[[1]]
@@ -133,14 +136,16 @@ dredge 2 level
 options(na.action = "na.fail")
 #gain8 <- with(MIdata,(lmer(gain ~1 + stud_pre_cent + retake + gend_URM*(asian_no_int + black_no_int + hispanic_no_int + race_other_no_int  + pacisland_no_int)*lecture +  (1|course_id))))
 
-dredge <- with(MIdata,{dredge(lmer(gain ~1 + stud_pre_cent + retake + gend_URM*(asian_no_int + black_no_int + hispanic_no_int + race_other_no_int  + pacisland_no_int)*lecture +  (1|course_id)))})
+dredge <- with(MIdata,{dredge(lmer(gain ~1 + stud_pre_cent + retake + gend_URM*(asian_no_int + black_no_int + hispanic_no_int + race_other_no_int  + pacisland_no_int)*lecture +  (1|course_id)), m.lim=c(23,NA), extra = alist(AIC, BIC, ICOMP, Cp))})
 #intro_mod_dredge <- glmer(m_all, data=red_introPhys,family = binomial)
 #intro_dredge <- dredge(intro_mod_dredge)
 
-dredge_small <- best_mods_dred_function(dredge,100)
+
+dredge_small <- best_mods_dred_function(dredge,50)
 
 model.sel(dredge[[1]], rank=AIC)
 #best model is (gain ~1 + stud_pre_cent + retake + gend_URM*(asian_no_int + black_no_int + hispanic_no_int + race_other_no_int  + pacisland_no_int)*lecture +  (1|course_id))
+save(dredge, file="dredge")
 save(dredge_small, file="dredge_small")
 ```
 
