@@ -188,12 +188,6 @@ model.sel3(dredge[[1]], rank=AIC)
 save(dredge, file="dredge")
 ```
 
-Stat significance model selection
-```{r}
-gain_full <- with(MIdata,{lmer(gain ~1 + stud_pre_cent + retake + gend_URM*(asian_no_int + black_no_int + hispanic_no_int + race_other_no_int  + pacisland_no_int)*lecture +  (1|course_id))})
-testEstimates(gain_full, var.comp=TRUE)
-```
-
 Model buildup
 ```{r}
 M1 <- with(MIdata,{lmer(gain ~1 +  (1|course_id))})
@@ -425,32 +419,32 @@ kable(contrast_ve_est[c(1,2,6,7)], digits = 2)
 
 Combined graph for SS
 ```{r}
-#     c(I,pre,R,F, A,B,H,O,P ,c)
-WMLc = c(1,0,0,0, 0,0,0,0,0, 1)
-WFLc = c(1,0,0,1, 0,0,0,0,0, 1)
+#     c(I,pre,R,F, A,B,H,O,P)
+WMLc = c(1,0,0,0, 0,0,0,0,0)
+WFLc = c(1,0,0,1, 0,0,0,0,0)
 
-AMLc = c(1,0,0,0, 1,0,0,0,0, 1)
-AFLc = c(1,0,0,1, 1,0,0,0,0, 1)
+AMLc = c(1,0,0,0, 1,0,0,0,0)
+AFLc = c(1,0,0,1, 1,0,0,0,0)
 
-BMLc = c(1,0,0,0, 0,1,0,0,0, 1)
-BFLc = c(1,0,0,1, 0,1,0,0,0, 1)
+BMLc = c(1,0,0,0, 0,1,0,0,0)
+BFLc = c(1,0,0,1, 0,1,0,0,0)
 
-HMLc = c(1,0,0,0, 0,0,1,0,0, 1)
-HFLc = c(1,0,0,1, 0,0,1,0,0, 1)
+HMLc = c(1,0,0,0, 0,0,1,0,0)
+HFLc = c(1,0,0,1, 0,0,1,0,0)
 
 
-#     c(I,pre,R,F, A,B,H,O,P ,c)
-WML = c(1,0,0,0, 0,0,0,0,0, 0)
-WFL = c(1,0,0,1, 0,0,0,0,0, 0)
+#     c(I,pre,R,F, A,B,H,O,P)
+WML = c(1,0,0,0, 0,0,0,0,0)
+WFL = c(1,0,0,1, 0,0,0,0,0)
 
-AML = c(1,0,0,0, 1,0,0,0,0, 0)
-AFL = c(1,0,0,1, 1,0,0,0,0, 0)
+AML = c(1,0,0,0, 1,0,0,0,0)
+AFL = c(1,0,0,1, 1,0,0,0,0)
 
-BML = c(1,0,0,0, 0,1,0,0,0, 0)
-BFL = c(1,0,0,1, 0,1,0,0,0, 0)
+BML = c(1,0,0,0, 0,1,0,0,0)
+BFL = c(1,0,0,1, 0,1,0,0,0)
 
-HML = c(1,0,0,0, 0,0,1,0,0, 0)
-HFL = c(1,0,0,1, 0,0,1,0,0, 0)
+HML = c(1,0,0,0, 0,0,1,0,0)
+HFL = c(1,0,0,1, 0,0,1,0,0)
 
 
 
