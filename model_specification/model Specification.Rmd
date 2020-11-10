@@ -154,7 +154,8 @@ Information criteria scores
 options(na.action = "na.fail")
 
 dM1 <- with(MIdata,{dredge(lmer(gain ~1 +  (1|course_id)), m.lim=c(0,NA), extra = alist(AIC, BIC, ICOMP, Cp))})
-dM2 <- with(MIdata,{dredge(lmer(gain ~1 +  stud_pre_cent +  (1|course_id)), m.lim=c(1,NA), extra = alist(AIC, BIC, ICOMP, Cp))})
+dM2 <- with(MIdata,{dredge(lmer(gain ~1 +  stud_pre_cent +   (1|course_id)), m.lim=c(1,NA), extra = alist(AIC, BIC, ICOMP, Cp))})
+dM2.5 <- with(MIdata,{dredge(lmer(gain ~1 +  stud_pre_cent + pre_mean_class + (1|course_id)), m.lim=c(2,NA), extra = alist(AIC, BIC, ICOMP, Cp))})
 dM3 <- with(MIdata,{dredge(lmer(gain ~1 + stud_pre_cent + retake +  (1|course_id)), m.lim=c(2,NA), extra = alist(AIC, BIC, ICOMP, Cp))})
 dM4 <- with(MIdata,{dredge(lmer(gain ~1 + stud_pre_cent + retake + coll + (1|course_id)), m.lim=c(3,NA), extra = alist(AIC, BIC, ICOMP, Cp))})
 dM5 <- with(MIdata,{dredge(lmer(gain ~1 + stud_pre_cent + retake + coll + gend_URM + (1|course_id)), m.lim=c(4,NA), extra = alist(AIC, BIC, ICOMP, Cp))})
@@ -166,6 +167,7 @@ dM7 <- with(MIdata,{dredge(lmer(gain ~1 + stud_pre_cent + retake + coll + gend_U
 
 best_M1 <- best_mods_dred_function(dM1,10)
 best_M2 <- best_mods_dred_function(dM2,10)
+best_M2.5 <- best_mods_dred_function(dM2.5,10)
 best_M3 <- best_mods_dred_function(dM3,10)
 best_M4 <- best_mods_dred_function(dM4,10)
 best_M5 <- best_mods_dred_function(dM5,10)
@@ -192,6 +194,7 @@ Model buildup
 ```{r}
 M1 <- with(MIdata,{lmer(gain ~1 +  (1|course_id))})
 M2 <- with(MIdata,{lmer(gain ~1 + stud_pre_cent +  (1|course_id))})
+M2.5 <- with(MIdata,{lmer(gain ~1 + stud_pre_cent + pre_mean_class + (1|course_id))})
 M3 <- with(MIdata,{lmer(gain ~1 + stud_pre_cent + retake +  (1|course_id))})
 M4 <- with(MIdata,{lmer(gain ~1 + stud_pre_cent + retake + coll + (1|course_id))})
 M5 <- with(MIdata,{lmer(gain ~1 + stud_pre_cent + retake + coll + gend_URM + (1|course_id))})
@@ -202,6 +205,7 @@ M7 <- with(MIdata,{lmer(gain ~1 + stud_pre_cent + retake + coll*gend_URM*(asian_
 
 testEstimates(M1, var.comp=TRUE)
 testEstimates(M2, var.comp=TRUE)
+testEstimates(M2.5, var.comp=TRUE)
 testEstimates(M3, var.comp=TRUE)
 testEstimates(M4, var.comp=TRUE)
 testEstimates(M5, var.comp=TRUE)
