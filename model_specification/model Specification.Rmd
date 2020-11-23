@@ -155,26 +155,28 @@ options(na.action = "na.fail")
 
 dM1 <- with(MIdata,{dredge(lmer(gain ~1 +  (1|course_id)), m.lim=c(0,NA), extra = alist(AIC, BIC, ICOMP, Cp))})
 dM2 <- with(MIdata,{dredge(lmer(gain ~1 +  stud_pre_cent +   (1|course_id)), m.lim=c(1,NA), extra = alist(AIC, BIC, ICOMP, Cp))})
-dM2.5 <- with(MIdata,{dredge(lmer(gain ~1 +  stud_pre_cent + pre_mean_class + (1|course_id)), m.lim=c(2,NA), extra = alist(AIC, BIC, ICOMP, Cp))})
-dM3 <- with(MIdata,{dredge(lmer(gain ~1 + stud_pre_cent + retake +  (1|course_id)), m.lim=c(2,NA), extra = alist(AIC, BIC, ICOMP, Cp))})
-dM4 <- with(MIdata,{dredge(lmer(gain ~1 + stud_pre_cent + retake + coll + (1|course_id)), m.lim=c(3,NA), extra = alist(AIC, BIC, ICOMP, Cp))})
-dM5 <- with(MIdata,{dredge(lmer(gain ~1 + stud_pre_cent + retake + coll + gend_URM + (1|course_id)), m.lim=c(4,NA), extra = alist(AIC, BIC, ICOMP, Cp))})
-dM6 <- with(MIdata,{dredge(lmer(gain ~1 + stud_pre_cent + retake + coll + gend_URM + (asian_no_int + black_no_int + hispanic_no_int + race_other_no_int  + pacisland_no_int)+ (1|course_id)), m.lim=c(9,NA), extra = alist(AIC, BIC, ICOMP, Cp))})
-dM6.5 <- with(MIdata,{dredge(lmer(gain ~1 + stud_pre_cent + retake + gend_URM + (asian_no_int + black_no_int + hispanic_no_int + race_other_no_int  + pacisland_no_int)+ (1|course_id)), m.lim=c(8,NA), extra = alist(AIC, BIC, ICOMP, Cp))})
-dM7 <- with(MIdata,{dredge(lmer(gain ~1 + stud_pre_cent + retake + coll + gend_URM*(asian_no_int + black_no_int + hispanic_no_int + race_other_no_int  + pacisland_no_int) + (1|course_id)), m.lim=c(14,NA), extra = alist(AIC, BIC, ICOMP, Cp))})
-#dM8 <- with(MIdata,{dredge(lmer(gain ~1 + stud_pre_cent + retake + coll*gend_URM*(asian_no_int + black_no_int + hispanic_no_int + race_other_no_int  + pacisland_no_int) + (1|course_id)), m.lim=c(27,NA), extra = alist(AIC, BIC, ICOMP, Cp))})
+dM3 <- with(MIdata,{dredge(lmer(gain ~1 +  stud_pre_cent + pre_mean_class + (1|course_id)), m.lim=c(2,NA), extra = alist(AIC, BIC, ICOMP, Cp))})
+dM4 <- with(MIdata,{dredge(lmer(gain ~1 + stud_pre_cent + retake +  (1|course_id)), m.lim=c(2,NA), extra = alist(AIC, BIC, ICOMP, Cp))})
+dM5 <- with(MIdata,{dredge(lmer(gain ~1 + stud_pre_cent + retake + coll + (1|course_id)), m.lim=c(3,NA), extra = alist(AIC, BIC, ICOMP, Cp))})
+dM6 <- with(MIdata,{dredge(lmer(gain ~1 + stud_pre_cent + retake + coll + gend_URM + (1|course_id)), m.lim=c(4,NA), extra = alist(AIC, BIC, ICOMP, Cp))})
+dM7 <- with(MIdata,{dredge(lmer(gain ~1 + stud_pre_cent + retake + coll + gend_URM + (asian_no_int + black_no_int + hispanic_no_int + race_other_no_int  + pacisland_no_int)+ (1|course_id)), m.lim=c(9,NA), extra = alist(AIC, BIC, ICOMP, Cp))})
+dM8 <- with(MIdata,{dredge(lmer(gain ~1 + stud_pre_cent + retake + gend_URM + (asian_no_int + black_no_int + hispanic_no_int + race_other_no_int  + pacisland_no_int)+ (1|course_id)), m.lim=c(8,NA), extra = alist(AIC, BIC, ICOMP, Cp))})
+dM9 <- with(MIdata,{dredge(lmer(gain ~1 + stud_pre_cent + retake + coll + gend_URM*(asian_no_int + black_no_int + hispanic_no_int + race_other_no_int  + pacisland_no_int) + (1|course_id)), m.lim=c(14,NA), extra = alist(AIC, BIC, ICOMP, Cp))})
+dM10 <- with(MIdata,{dredge(lmer(gain ~1 + stud_pre_cent + retake + coll*gend_URM*(asian_no_int + black_no_int + hispanic_no_int + race_other_no_int  + pacisland_no_int) + (1|course_id)), m.lim=c(25,NA), extra = alist(AIC, BIC, ICOMP, Cp))})
+dM11 <- with(MIdata,{dredge(lmer(gain ~1 + stud_pre_cent + pre_mean_class + retake + coll*gend_URM*(asian_no_int + black_no_int + hispanic_no_int + race_other_no_int  + pacisland_no_int) + (1|course_id)), m.lim=c(26,NA), extra = alist(AIC, BIC, ICOMP, Cp))})
 
 
 best_M1 <- best_mods_dred_function(dM1,10)
 best_M2 <- best_mods_dred_function(dM2,10)
-best_M2.5 <- best_mods_dred_function(dM2.5,10)
 best_M3 <- best_mods_dred_function(dM3,10)
 best_M4 <- best_mods_dred_function(dM4,10)
 best_M5 <- best_mods_dred_function(dM5,10)
 best_M6 <- best_mods_dred_function(dM6,10)
-best_M6.5 <- best_mods_dred_function(dM6.5,10)
 best_M7 <- best_mods_dred_function(dM7,10)
-best_M8 <- best_mods_dred_function(dM7,10)
+best_M8 <- best_mods_dred_function(dM8,10)
+best_M9 <- best_mods_dred_function(dM9,10)
+best_M10 <- best_mods_dred_function(dM10,10)
+best_M11 <- best_mods_dred_function(dM11,10)
 ```
 
 dredge 3 level
@@ -194,25 +196,27 @@ Model buildup
 ```{r}
 M1 <- with(MIdata,{lmer(gain ~1 +  (1|course_id))})
 M2 <- with(MIdata,{lmer(gain ~1 + stud_pre_cent +  (1|course_id))})
-M2.5 <- with(MIdata,{lmer(gain ~1 + stud_pre_cent + pre_mean_class + (1|course_id))})
-M3 <- with(MIdata,{lmer(gain ~1 + stud_pre_cent + retake +  (1|course_id))})
-M4 <- with(MIdata,{lmer(gain ~1 + stud_pre_cent + retake + coll + (1|course_id))})
-M5 <- with(MIdata,{lmer(gain ~1 + stud_pre_cent + retake + coll + gend_URM + (1|course_id))})
-M6 <- with(MIdata,{lmer(gain ~1 + stud_pre_cent + retake + coll + gend_URM + (asian_no_int + black_no_int + hispanic_no_int + race_other_no_int  + pacisland_no_int) + (1|course_id))})
-M6.5 <- with(MIdata,{lmer(gain ~1 + stud_pre_cent + retake + gend_URM + (asian_no_int + black_no_int + hispanic_no_int + race_other_no_int  + pacisland_no_int) + (1|course_id))})
-M7 <- with(MIdata,{lmer(gain ~1 + stud_pre_cent + retake + coll + gend_URM*(asian_no_int + black_no_int + hispanic_no_int + race_other_no_int  + pacisland_no_int) + (1|course_id))})
-M7 <- with(MIdata,{lmer(gain ~1 + stud_pre_cent + retake + coll*gend_URM*(asian_no_int + black_no_int + hispanic_no_int + race_other_no_int  + pacisland_no_int) + (1|course_id))})
+M3 <- with(MIdata,{lmer(gain ~1 + stud_pre_cent + pre_mean_class + (1|course_id))})
+M4 <- with(MIdata,{lmer(gain ~1 + stud_pre_cent + retake +  (1|course_id))})
+M5 <- with(MIdata,{lmer(gain ~1 + stud_pre_cent + retake + coll + (1|course_id))})
+M6 <- with(MIdata,{lmer(gain ~1 + stud_pre_cent + retake + coll + gend_URM + (1|course_id))})
+M7 <- with(MIdata,{lmer(gain ~1 + stud_pre_cent + retake + coll + gend_URM + (asian_no_int + black_no_int + hispanic_no_int + race_other_no_int  + pacisland_no_int) + (1|course_id))})
+M8 <- with(MIdata,{lmer(gain ~1 + stud_pre_cent + retake + gend_URM + (asian_no_int + black_no_int + hispanic_no_int + race_other_no_int  + pacisland_no_int) + (1|course_id))})
+M9 <- with(MIdata,{lmer(gain ~1 + stud_pre_cent + retake + coll + gend_URM*(asian_no_int + black_no_int + hispanic_no_int + race_other_no_int  + pacisland_no_int) + (1|course_id))})
+M10 <- with(MIdata,{lmer(gain ~1 + stud_pre_cent + retake + coll*gend_URM*(asian_no_int + black_no_int + hispanic_no_int + race_other_no_int  + pacisland_no_int) + (1|course_id))})
+M11 <- with(MIdata,{lmer(gain ~1 + stud_pre_cent + pre_mean_class + retake + coll*gend_URM*(asian_no_int + black_no_int + hispanic_no_int + race_other_no_int  + pacisland_no_int) + (1|course_id))})
 
 testEstimates(M1, var.comp=TRUE)
 testEstimates(M2, var.comp=TRUE)
-testEstimates(M2.5, var.comp=TRUE)
 testEstimates(M3, var.comp=TRUE)
 testEstimates(M4, var.comp=TRUE)
 testEstimates(M5, var.comp=TRUE)
 testEstimates(M6, var.comp=TRUE)
-testEstimates(M6.5, var.comp=TRUE)
 testEstimates(M7, var.comp=TRUE)
 testEstimates(M8, var.comp=TRUE)
+testEstimates(M9, var.comp=TRUE)
+testEstimates(M10, var.comp=TRUE)
+testEstimates(M11, var.comp=TRUE)
 ```
 
 
@@ -224,9 +228,12 @@ gain_ve <- with(MIdata,{lmer(gain~1 + stud_pre_cent + retake + gend_URM + (asian
 
 gain_ic <- with(MIdata,{lmer(gain ~1 + stud_pre_cent + retake + gend_URM*(asian_no_int + black_no_int + hispanic_no_int + race_other_no_int  + pacisland_no_int)*coll +  (1|course_id))})
 
+gain_ap <- with(MIdata,{lmer(gain ~1 + stud_pre_cent + pre_mean_class + retake + gend_URM*(asian_no_int + black_no_int + hispanic_no_int + race_other_no_int  + pacisland_no_int)*coll +  (1|course_id))})
+
 testEstimates(gain_ss, var.comp=TRUE)
 testEstimates(gain_ve, var.comp=TRUE)
 testEstimates(gain_ic, var.comp=TRUE)
+testEstimates(gain_ap, var.comp=TRUE)
 ```
 
 3-level models models selection 
@@ -421,6 +428,62 @@ ggsave("~/Physics_Equity/model_specification/Figures/mod_ic.png", plot= last_plo
 kable(contrast_ve_est[c(1,2,6,7)], digits = 2)
 ```
 
+graph for AP
+```{r} 
+#(gain~1 + lecture*(asian_no_int + black_no_int + hispanic_no_int + race_other_no_int  + pacisland_no_int)*gend_URM + stud_pre_cent + pre_mean_class + retake + (1 |course_id))
+
+#     c(I,pre,pre_c,reta, F, A,B,H,O,P, L, fa,fb,fh,fo,fp, fl, al,bl,hl,ol,pl, fal,fbl,fhl,frl,fpl)
+WML = c(1,0,0,0, 0, 0,0,0,0,0, 1, 0,0,0,0,0, 0, 0,0,0,0,0,  0,0,0,0,0)
+WFL = c(1,0,0,0, 1, 0,0,0,0,0, 1, 0,0,0,0,0, 1, 0,0,0,0,0,  0,0,0,0,0)
+
+AML = c(1,0,0,0, 0, 1,0,0,0,0, 1, 0,0,0,0,0, 0, 1,0,0,0,0,  0,0,0,0,0)
+AFL = c(1,0,0,0, 1, 1,0,0,0,0, 1, 1,0,0,0,0, 1, 1,0,0,0,0,  1,0,0,0,0)
+
+BML = c(1,0,0,0, 0, 0,1,0,0,0, 1, 0,0,0,0,0, 0, 0,1,0,0,0,  0,0,0,0,0)
+BFL = c(1,0,0,0, 1, 0,1,0,0,0, 1, 0,1,0,0,0, 1, 0,1,0,0,0,  0,1,0,0,0)
+
+HML = c(1,0,0,0, 0, 0,0,1,0,0, 1, 0,0,0,0,0, 0, 0,0,1,0,0,  0,0,0,0,0)
+HFL = c(1,0,0,0, 1, 0,0,1,0,0, 1, 0,0,1,0,0, 1, 0,0,1,0,0,  0,0,1,0,0)
+
+OML = c(1,0,0,0, 0, 0,0,0,1,0, 1, 0,0,0,0,0, 0, 0,0,0,1,0,  0,0,0,0,0)
+OFL = c(1,0,0,0, 1, 0,0,0,1,0, 1, 0,0,0,1,0, 1, 0,0,0,1,0,  0,0,0,1,0)
+
+PML = c(1,0,0,0, 0, 0,0,0,0,1, 1, 0,0,0,0,0, 0, 0,0,0,0,1,  0,0,0,0,0)
+PFL = c(1,0,0,0, 1, 0,0,0,0,1, 1, 0,0,0,0,1, 1, 0,0,0,0,1,  0,0,0,0,1)
+
+
+
+contrast_forms_modic <- rbind('White Men Lecture'=WML,'White Women Lecture'=WFL,
+                              'Black Men Lecture'=BML, 'Black Women Lecture'=BFL,
+                              'Asian Men Lecture'=AML,'Asian Women Lecture'=AFL,
+                              'Hispanic Men Lecture'=HML,'Hispanic Women Lecture'=HFL
+                             )
+
+#contrast_forms_modic_full <- rbind('White Male Lecture'=WML, 'White Male Collab'=WMC, 
+#                          'White Female Lecture'=WFL,'White Female Collab'=WFC,
+###                          'Black Male Lecture'=BML, 'Black Male Collab'=BMC, 
+#                          'Black Female Lecture'=BFL,'Black Female Collab'=BFC,
+#                          'Asian Male Lecture'=AML, 'Asian Male Collab'=AMC, 
+#                          'Asian Female Lecture'=AFL,'Asian Female Collab'=AFC,
+#                          'Hispanic Male Lecture'=HML, 'Hispanic Male Collab'=HMC, 
+#                          'Hispanic Female Lecture'=HFL,'Hispanic Female Collab'=HFC
+#                          )
+
+contrast_gap_est <- pool_and_cov_diffwm(gain_ap,contrast_forms_modic)
+#contrast_gic_est$instruction <- factor(contrast_gic_est$instruction, levels = c("Lecture","Collab"))
+contrast_gap_est$race <- factor(contrast_gap_est$race, levels = c("Black", "Hispanic", "Island", "Other", "Asian",    "White"))
+contrast_gap_est$gender <- factor(contrast_gap_est$gender, levels = c("Women", "Men"))
+
+ggplot(data=contrast_gap_est, aes(x=race, y=Q, fill=gender)) + geom_bar(stat = "identity", position = "dodge") + geom_errorbar(aes( ymax= Q+SE, ymin=Q-SE), position="dodge")+
+  theme(legend.position = "right",  axis.text.x=element_text(angle=90) , axis.title.x = element_blank(), axis.ticks.x=element_blank(),panel.grid.major = element_blank(), panel.grid.minor = element_blank(),panel.background = element_blank(), axis.line = element_line(colour = "black"),text = element_text(size=16, color = "black")) +
+  ylab("Gain (Percentage Points)") +
+  scale_fill_manual(name="Gender",
+                     breaks= c("Women","Men"),
+                     values=cbbpalette) 
+ggsave("~/Physics_Equity/model_specification/Figures/mod_ap.png", plot= last_plot(), dpi=300, width = 7.3, height = 3.25, units = "in", device = "png")
+kable(contrast_ve_est[c(1,2,6,7)], digits = 2)
+```
+
 Combined graph for SS
 ```{r}
 #     c(I,pre,R,F, A,B,H,O,P)
@@ -607,6 +670,72 @@ ggplot(data=contrast_ic_est, aes(x=race, y=Q, fill=gender)) + geom_bar(stat = "i
                      breaks= c("Women","Men","Women Collab","Men Collab"),
                      values=cbbpalette) 
 ggsave("~/Physics_Equity/model_specification/Figures/mod_ic_combo.png", plot= last_plot(), dpi=300, width = 7.3, height = 3.25, units = "in", device = "png")
+kable(contrast_ve_est[c(1,2,6,7)], digits = 2)
+```
+
+combined graph for AP
+```{r} 
+#(gain~1 + lecture*(asian_no_int + black_no_int + hispanic_no_int + race_other_no_int  + pacisland_no_int)*gend_URM + stud_pre_cent + retake + (1 |course_id))
+
+#     c(I,pre,mpre,reta, F, A,B,H,O,P, L, fa,fb,fh,fo,fp, fl, al,bl,hl,ol,pl, fal,fbl,fhl,frl,fpl)
+WMLc = c(1,0,0,0,  0, 0,0,0,0,0, 1, 0,0,0,0,0, 0, 0,0,0,0,0,  0,0,0,0,0)
+WFLc = c(1,0,0,0,   1, 0,0,0,0,0, 1, 0,0,0,0,0, 1, 0,0,0,0,0,  0,0,0,0,0)
+
+AMLc = c(1,0,0,0,   0, 1,0,0,0,0, 1, 0,0,0,0,0, 0, 1,0,0,0,0,  0,0,0,0,0)
+AFLc = c(1,0,0,0,   1, 1,0,0,0,0, 1, 1,0,0,0,0, 1, 1,0,0,0,0,  1,0,0,0,0)
+
+BMLc = c(1,0,0,0,   0, 0,1,0,0,0, 1, 0,0,0,0,0, 0, 0,1,0,0,0,  0,0,0,0,0)
+BFLc = c(1,0,0,0,   1, 0,1,0,0,0, 1, 0,1,0,0,0, 1, 0,1,0,0,0,  0,1,0,0,0)
+
+HMLc = c(1,0,0,0,   0, 0,0,1,0,0, 1, 0,0,0,0,0, 0, 0,0,1,0,0,  0,0,0,0,0)
+HFLc = c(1,0,0,0,   1, 0,0,1,0,0, 1, 0,0,1,0,0, 1, 0,0,1,0,0,  0,0,1,0,0)
+
+WML = c(1,0,0,0,   0, 0,0,0,0,0, 0, 0,0,0,0,0, 0, 0,0,0,0,0,  0,0,0,0,0)
+WFL = c(1,0,0,0,   1, 0,0,0,0,0, 0, 0,0,0,0,0, 0, 0,0,0,0,0,  0,0,0,0,0)
+
+AML = c(1,0,0,0,   0, 1,0,0,0,0, 0, 0,0,0,0,0, 0, 0,0,0,0,0,  0,0,0,0,0)
+AFL = c(1,0,0,0,   1, 1,0,0,0,0, 0, 1,0,0,0,0, 0, 0,0,0,0,0,  0,0,0,0,0)
+
+BML = c(1,0,0,0,   0, 0,1,0,0,0, 0, 0,0,0,0,0, 0, 0,0,0,0,0,  0,0,0,0,0)
+BFL = c(1,0,0,0,   1, 0,1,0,0,0, 0, 0,1,0,0,0, 0, 0,0,0,0,0,  0,0,0,0,0)
+
+HML = c(1,0,0,0,   0, 0,0,1,0,0, 0, 0,0,0,0,0, 0, 0,0,0,0,0,  0,0,0,0,0)
+HFL = c(1,0,0,0,   1, 0,0,1,0,0, 0, 0,0,1,0,0, 0, 0,0,0,0,0,  0,0,0,0,0)
+
+
+
+
+contrast_forms_modic <- rbind('White Men'=WML,  
+                          'White Women'=WFL,
+                          'Black Men'=BML,  
+                          'Black Women'=BFL,
+                          'Asian Men'=AML, 
+                          'Asian Women'=AFL,
+                          'Hispanic Men'=HML, 
+                          'Hispanic Women'=HFL,
+                          'White Men Collab'=WMLc,  
+                          'White Women Collab'=WFLc,
+                          'Black Men Collab'=BMLc,  
+                          'Black Women Collab'=BFLc,
+                          'Asian Men Collab'=AMLc, 
+                          'Asian Women Collab'=AFLc,
+                          'Hispanic Men Collab'=HMLc, 
+                          'Hispanic Women Collab'=HFLc
+                      )
+
+contrast_ap_est <- pool_and_cov_diffwm(gain_ap,contrast_forms_modic)
+#contrast_gic_est$instruction <- factor(contrast_gic_est$instruction, levels = c("Lecture","Collab"))
+contrast_ap_est$race <- factor(contrast_ap_est$race, levels = c("Black", "Hispanic", "Asian",    "White"))
+contrast_ap_est$gender <- c("Men","Men Collab","Women","Women Collab", "Men","Men Collab","Women","Women Collab", "Men","Men Collab","Women","Women Collab", "Men","Men Collab","Women","Women Collab")
+contrast_ap_est$gender <- factor(contrast_ap_est$gender, levels = c("Women","Men","Women Collab","Men Collab"))
+
+ggplot(data=contrast_ap_est, aes(x=race, y=Q, fill=gender)) + geom_bar(stat = "identity", position = "dodge") + geom_errorbar(aes( ymax= Q+SE, ymin=Q-SE), position="dodge")+
+  theme(legend.position = "right",  axis.text.x=element_text(angle=90) , axis.title.x = element_blank(), axis.ticks.x=element_blank(),panel.grid.major = element_blank(), panel.grid.minor = element_blank(),panel.background = element_blank(), axis.line = element_line(colour = "black"),text = element_text(size=16, color = "black")) +
+  ylab("Gain (Percentage Points)") +
+  scale_fill_manual(name="Gender",
+                     breaks= c("Women","Men","Women Collab","Men Collab"),
+                     values=cbbpalette) 
+ggsave("~/Physics_Equity/model_specification/Figures/mod_ap_combo.png", plot= last_plot(), dpi=300, width = 7.3, height = 3.25, units = "in", device = "png")
 kable(contrast_ve_est[c(1,2,6,7)], digits = 2)
 ```
 
