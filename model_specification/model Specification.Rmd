@@ -220,6 +220,35 @@ testEstimates(M10, var.comp=TRUE)
 testEstimates(M11, var.comp=TRUE)
 ```
 
+R2
+```{r}
+
+R1 <- with(MIdata,{r.squaredGLMM(lmer(gain ~1 +  (1|course_id)))})
+R2 <- with(MIdata,{r.squaredGLMM(lmer(gain ~1 + stud_pre_cent +  (1|course_id)))})
+R3 <- with(MIdata,{r.squaredGLMM(lmer(gain ~1 + stud_pre_cent + pre_mean_class + (1|course_id)))})
+R4 <- with(MIdata,{r.squaredGLMM(lmer(gain ~1 + stud_pre_cent + retake +  (1|course_id)))})
+R5 <- with(MIdata,{r.squaredGLMM(lmer(gain ~1 + stud_pre_cent + retake + coll + (1|course_id)))})
+R6 <- with(MIdata,{r.squaredGLMM(lmer(gain ~1 + stud_pre_cent + retake + coll + gend_URM + (1|course_id)))})
+R7 <- with(MIdata,{r.squaredGLMM(lmer(gain ~1 + stud_pre_cent + retake + coll + gend_URM + (asian_no_int + black_no_int + hispanic_no_int + race_other_no_int  + pacisland_no_int) + (1|course_id)))})
+R8 <- with(MIdata,{r.squaredGLMM(lmer(gain ~1 + stud_pre_cent + retake + gend_URM + (asian_no_int + black_no_int + hispanic_no_int + race_other_no_int  + pacisland_no_int) + (1|course_id)))})
+R9 <- with(MIdata,{r.squaredGLMM(lmer(gain ~1 + stud_pre_cent + retake + coll + gend_URM*(asian_no_int + black_no_int + hispanic_no_int + race_other_no_int  + pacisland_no_int) + (1|course_id)))})
+R10 <- with(MIdata,{r.squaredGLMM(lmer(gain ~1 + stud_pre_cent + retake + coll*gend_URM*(asian_no_int + black_no_int + hispanic_no_int + race_other_no_int  + pacisland_no_int) + (1|course_id)))})
+R11 <- with(MIdata,{r.squaredGLMM(lmer(gain ~1 + stud_pre_cent + pre_mean_class + retake + coll*gend_URM*(asian_no_int + black_no_int + hispanic_no_int + race_other_no_int  + pacisland_no_int) + (1|course_id)))})
+
+library(popbio)
+
+mean.list(R1)
+mean.list(R2)
+mean.list(R3)
+mean.list(R4)
+mean.list(R5)
+mean.list(R6)
+mean.list(R7)
+mean.list(R8)
+mean.list(R9)
+mean.list(R10)
+mean.list(R11)
+```
 
 running models for model selection writing
 ```{r}
