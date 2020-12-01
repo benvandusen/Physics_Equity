@@ -21,6 +21,7 @@ library("Matrix")
 library(mitools)
 library(stargazer)
 library(lme4)
+library(lattice)
 library(nlme)
 library(mice)
 library(mitml)
@@ -631,146 +632,52 @@ ggsave("~/Physics_Equity/model_specification/Figures/mod_ap_combo_nl.png", plot=
 #kable(contrast_ve_est[c(1,2,6,7)], digits = 2)
 ```
 
-Graph of shift to collab SS
+############################################
+############################################
+#############################################
+
+
+#Assumption checking
+
 ```{r}
-#     c(I,pre,R,F, A,B,H,O,P ,l)
-WMCss = c(0,0,0,0, 0,0,0,0,0, -1)
-WFCss = c(0,0,0,0, 0,0,0,0,0, -1)
+library(lattice)
 
-AMCss = c(0,0,0,0, 0,0,0,0,0, -1)
-AFCss = c(0,0,0,0, 0,0,0,0,0, -1)
+Mod7 <- (gain ~1 + stud_pre_cent + retake + coll + gend_URM + (asian_no_int + black_no_int + hispanic_no_int + race_other_no_int  + pacisland_no_int) + (1|course_id))
+Mod8 <- (gain ~1 + stud_pre_cent + retake + gend_URM + (asian_no_int + black_no_int + hispanic_no_int + race_other_no_int  + pacisland_no_int) + (1|course_id))
 
-BMCss = c(0,0,0,0, 0,0,0,0,0, -1)
-BFCss = c(0,0,0,0, 0,0,0,0,0, -1)
+Mod10 <- (gain ~1 + stud_pre_cent + retake + coll*gend_URM*(asian_no_int + black_no_int + hispanic_no_int + race_other_no_int  + pacisland_no_int) + (1|course_id))
+Mod11 <- (gain ~1 + stud_pre_cent + pre_mean_class + retake + coll*gend_URM*(asian_no_int + black_no_int + hispanic_no_int + race_other_no_int  + pacisland_no_int) + (1|course_id))
 
-HMCss = c(0,0,0,0, 0,0,0,0,0, -1)
-HFCss = c(0,0,0,0, 0,0,0,0,0, -1)
+	for (i in 1:10) {
+  D1 <- lmer(Mod11,data=MIdata[[i]])
+  print(plot(D1, xlab="Fitted Value", ylab="Residual Variance"))
+}
 
-OMCss = c(0,0,0,0, 0,0,0,0,0, -1)
-OFCss = c(0,0,0,0, 0,0,0,0,0, -1)
+for (i in 1:10) {
+  D1 <- lmer(Mod11,data=MIdata[[i]])
+#visual homogeneity of variance
+MIdata[[i]]$Model.F.Res <- residuals(D1) #extracts the residuals and places them in a new column in our original data table
+MIdata[[i]]$Abs.Model.F.Res <-abs(MIdata[[1]]$Model.F.Res) #creates a new column with the absolute value of the residuals
+print(boxplot(MIdata[[i]]$Model.F.Res ~ MIdata[[i]]$course_id, xlab = "Course", ylab = "Residuals" ))
+}
 
-PMCss = c(0,0,0,0, 0,0,0,0,0, -1)
-PFCss = c(0,0,0,0, 0,0,0,0,0, -1)
-
-
-contrast_forms_modCss <- rbind('White Men'=WMCss,  
-                          'White Women'=WFCss,
-                          'Black Men'=BMCss,  
-                          'Black Women'=BFCss,
-                          'Asian Men'=AMCss, 
-                          'Asian Women'=AFCss,
-                          'Hispanic Men'=HMCss, 
-                          'Hispanic Women'=HFCss
-                          )
-
-contrast_Css_est <- pool_and_cov_diffwm(gain_ss,contrast_forms_modCss)
-unique(contrast_Css_est$race)
-
-contrast_Css_est$race <- factor(contrast_Css_est$race, levels = c("Black", "Hispanic", "Island", "Other", "Asian",    "White"))
-contrast_Css_est$gender <- factor(contrast_Css_est$gender, levels = c("Women", "Men"))
-
-ggplot(data=contrast_Css_est, aes(x=race, y=Q, fill=gender)) + geom_bar(stat = "identity", position = "dodge") + geom_errorbar(aes( ymax= Q+SE, ymin=Q-SE), position="dodge")+
-  theme(legend.position = "right",  axis.text.x=element_text(angle=90) , axis.title.x = element_blank(), axis.ticks.x=element_blank(),panel.grid.major = element_blank(), panel.grid.minor = element_blank(),panel.background = element_blank(), axis.line = element_line(colour = "black"),text = element_text(size=16, color = "black")) +
-  ylab("Gain (Percentage Points)") +
-  scale_fill_manual(name="Gender",
-                     breaks= c("Women","Men"),
-                     values=cbbpalette) 
-ggsave("~/Physics_Equity/model_specification/Figuresmod_Css.png", plot= last_plot(), dpi=300, width = 7.3, height = 3.25, units = "in", device = "png")
-kable(contrast_ss_est[c(1,2,6,7)], digits = 2)
+for (i in 1:10) {
+  D1 <- lmer(Mod11,data=MIdata[[i]])
+#Assumption of Normality or residuals: want points to be near the line
+print(qqmath(D1))
+}
 ```
-
-Graph of shift to collab VE
+ # This produces a table of the pvalues for the correlations between the student level variables for pretest and the residuals. These p values should be large to indicate that there isn't a correlation
 ```{r}
-#     c(I,pre,reta, F,A,B, H,O,P, l,fa,fb, fh,fo,fp)
-WMCve = c(0,0,0, 0,0,0, 0,0,0, -1,0,0, 0,0,0)
-WFCve = c(0,0,0, 0,0,0, 0,0,0, -1,0,0, 0,0,0)
-
-AMCve = c(0,0,0, 0,0,0, 0,0,0, -1,0,0, 0,0,0)
-AFCve = c(0,0,0, 0,0,0, 0,0,0, -1,0,0, 0,0,0)
-
-BMCve = c(0,0,0, 0,0,0, 0,0,0, -1,0,0, 0,0,0)
-BFCve = c(0,0,0, 0,0,0, 0,0,0, -1,0,0, 0,0,0)
-
-HMCve = c(0,0,0, 0,0,0, 0,0,0, -1,0,0, 0,0,0)
-HFCve = c(0,0,0, 0,0,0, 0,0,0, -1,0,0, 0,0,0)
-
-OMCve = c(0,0,0, 0,0,0, 0,0,0, -1,0,0, 0,0,0)
-OFCve = c(0,0,0, 0,0,0, 0,0,0, -1,0,0, 0,0,0)
-
-PMCve = c(0,0,0, 0,0,0, 0,0,0, -1,0,0, 0,0,0)
-PFCve = c(0,0,0, 0,0,0, 0,0,0, -1,0,0, 0,0,0)
-
-
-contrast_forms_modCve <- rbind('White Men'=WMCve,  
-                          'White Women'=WFCve,
-                          'Black Men'=BMCve,  
-                          'Black Women'=BFCve,
-                          'Asian Men'=AMCve, 
-                          'Asian Women'=AFCve,
-                          'Hispanic Men'=HMCve, 
-                          'Hispanic Women'=HFCve
-                        )
-
-contrast_Cve_est <- pool_and_cov_diffwm(gain_ve,contrast_forms_modCve)
-unique(contrast_Cve_est$race)
-
-contrast_Cve_est$race <- factor(contrast_Cve_est$race, levels = c("Black", "Hispanic", "Island", "Other", "Asian",    "White"))
-contrast_Cve_est$gender <- factor(contrast_Cve_est$gender, levels = c("Women", "Men"))
-
-ggplot(data=contrast_Cve_est, aes(x=race, y=Q, fill=gender)) + geom_bar(stat = "identity", position = "dodge") + geom_errorbar(aes( ymax= Q+SE, ymin=Q-SE), position="dodge")+
-  theme(legend.position = "right",  axis.text.x=element_text(angle=90) , axis.title.x = element_blank(), axis.ticks.x=element_blank(),panel.grid.major = element_blank(), panel.grid.minor = element_blank(),panel.background = element_blank(), axis.line = element_line(colour = "black"),text = element_text(size=16, color = "black")) +
-  ylab("Gain (Percentage Points)") +
-  scale_fill_manual(name="Gender",
-                     breaks= c("Women","Men"),
-                     values=cbbpalette) 
-ggsave("~/Physics_Equity/model_specification/Figures/mod_Cve.png", plot= last_plot(), dpi=300, width = 7.3, height = 3.25, units = "in", device = "png")
-kable(contrast_ss_est[c(1,2,6,7)], digits = 2)
-```
-
-Graph of shift to collab IC
-```{r}
-#     c(I,pre,reta, F, A,B,H,O,P, L, fa,fb,fh,fo,fp, fl, al,bl,hl,ol,pl, fal,fbl,fhl,frl,fpl)
-WMCic = c(0,0,0, 0, 0,0,0,0,0, -1, 0,0,0,0,0, 0, 0,0,0,0,0,  0,0,0,0,0)
-WFCic = c(0,0,0, 0, 0,0,0,0,0, -1, 0,0,0,0,0, -1, 0,0,0,0,0,  0,0,0,0,0)
-
-AMCic = c(0,0,0, 0, 0,0,0,0,0, -1, 0,0,0,0,0, 0, -1,0,0,0,0,  0,0,0,0,0)
-AFCic = c(0,0,0, 0, 0,0,0,0,0, -1, 0,0,0,0,0, -1, -1,0,0,0,0,  -1,0,0,0,0)
-
-BMCic = c(0,0,0, 0, 0,0,0,0,0, -1, 0,0,0,0,0, 0, 0,-1,0,0,0,  0,0,0,0,0)
-BFCic = c(0,0,0, 0, 0,0,0,0,0, -1, 0,0,0,0,0, -1, 0,-1,0,0,0,  0,-1,0,0,0)
-
-HMCic = c(0,0,0, 0, 0,0,0,0,0, -1, 0,0,0,0,0, 0, 0,0,-1,0,0,  0,0,0,0,0)
-HFCic = c(0,0,0, 0, 0,0,0,0,0, -1, 0,0,0,0,0, -1, 0,0,-1,0,0,  0,0,-1,0,0)
-
-OMCic = c(0,0,0, 0, 0,0,0,0,0, -1, 0,0,0,0,0, 0, 0,0,0,-1,0,  0,0,0,0,0)
-OFCic = c(0,0,0, 0, 0,0,0,0,0, -1, 0,0,0,0,0, -1, 0,0,0,-1,0,  0,0,0,-1,0)
-
-PMCic = c(0,0,0, 0, 0,0,0,0,0, -1, 0,0,0,0,0, 0, 0,0,0,0,-1,  0,0,0,0,0)
-PFCic = c(0,0,0, 0, 0,0,0,0,0, -1, 0,0,0,0,0, -1, 0,0,0,0,-1,  0,0,0,0,-1)
-
-
-contrast_forms_modCic <- rbind('White Men'=WMCic,  
-                          'White Women'=WFCic,
-                          'Black Men'=BMCic,  
-                          'Black Women'=BFCic,
-                          'Asian Men'=AMCic, 
-                          'Asian Women'=AFCic,
-                          'Hispanic Men'=HMCic, 
-                          'Hispanic Women'=HFCic
-                          )
-
-contrast_Cic_est <- pool_and_cov_diffwm(gain_ic,contrast_forms_modCic)
-unique(contrast_Cic_est$race)
-
-contrast_Cic_est$race <- factor(contrast_Cic_est$race, levels = c("Black", "Hispanic", "Island", "Other", "Asian",    "White"))
-contrast_Cic_est$gender <- factor(contrast_Cic_est$gender, levels = c("Women", "Men"))
-
-ggplot(data=contrast_Cic_est, aes(x=race, y=Q, fill=gender)) + geom_bar(stat = "identity", position = "dodge") + geom_errorbar(aes( ymax= Q+SE, ymin=Q-SE), position="dodge")+
-  theme(legend.position = "right",  axis.text.x=element_text(angle=90) , axis.title.x = element_blank(), axis.ticks.x=element_blank(),panel.grid.major = element_blank(), panel.grid.minor = element_blank(),panel.background = element_blank(), axis.line = element_line(colour = "black"),text = element_text(size=16, color = "black")) +
-  ylab("Gain (Percentage Points)") +
-  scale_fill_manual(name="Gender",
-                     breaks= c("Women","Men"),
-                     values=cbbpalette) 
-ggsave("~/Physics_Equity/model_specification/Figures/mod_Cic.png", plot= last_plot(), dpi=300, width = 7.3, height = 3.25, units = "in", device = "png")
-kable(contrast_ss_est[c(1,2,6,7)], digits = 2)
-```
+res_corr <- data_frame(it =NA,
+                       with_pre_score = NA,
+                       with_cent_pre = NA)
+ for (i in 1:10) {
+res_corr[i,1] <- i
+D1 <- lmer(Mod7,data=MIdata[[i]])
+temp <- cor.test(resid(D1), MIdata[[i]]$pre_score)
+res_corr[i,2] <-  temp$p.value 
+temp <-  cor.test(resid(D1), MIdata[[i]]$stud_pre_cent)
+res_corr[i,3] <- temp$p.value
+}
+```	
